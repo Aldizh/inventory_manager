@@ -1,0 +1,26 @@
+{
+  "name": "inventory",
+  "description": "Manages inventory for a gracery store",
+  "version": "1.0.0",
+  "main": "index.js",
+  "scripts": {
+    "test": "mocha",
+    "start:dev": "concurrently 'cd back_end && nodemon server.js' 'cd front_end && yarn && yarn start'",
+    "start": "concurrently 'cd back_end && node server.js' 'cd front_end && yarn && npm run build'"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "assert": "^1.4.1",
+    "concurrently": "^4.1.0",
+    "ramda": "^0.26.1",
+    "request": "^2.88.0"
+  },
+  "devDependencies": {
+    "nodemon": "^1.18.10"
+  },
+  "engines": {
+    "node": "12.16.1"
+  }
+}
