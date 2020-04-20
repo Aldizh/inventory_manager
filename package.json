@@ -6,7 +6,8 @@
   "scripts": {
     "test": "mocha",
     "start:dev": "concurrently 'cd back_end && nodemon server.js' 'cd front_end && yarn && yarn start'",
-    "start": "concurrently 'cd back_end && node server.js' 'cd front_end && yarn && yarn start'"
+    "start": "cd back_end && node server.js",
+    "heroku-postbuild": "cd front_end && yarn && yarn build"
   },
   "keywords": [],
   "author": "",

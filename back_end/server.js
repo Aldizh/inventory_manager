@@ -1,6 +1,7 @@
 const mongoose = require("mongoose");
 const express = require("express");
-var cors = require("cors");
+const path = require("path");
+const cors = require("cors");
 const bodyParser = require("body-parser");
 const logger = require("morgan");
 const Data = require("./models/data");
@@ -10,6 +11,9 @@ const PORT = process.env.PORT || 3000;
 
 const app = express();
 app.use(cors());
+
+// Serve static files from the React app
+app.use(express.static(path.join(__dirname, '../front_end/build')));
 
 const dbRoute = "mongodb://aldizhupani:" + process.env.DB_PWD + "@ds055594.mlab.com:55594/heroku_gkp9z4nh";
 
