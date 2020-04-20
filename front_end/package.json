@@ -19,8 +19,8 @@
   },
   "main": "src/index.js",
   "scripts": {
-    "start": "webpack-dev-server --mode development --open",
-    "build": "webpack --mode production"
+    "start": "webpack-dev-server --open --config webpack.dev.js",
+    "build": "webpack --config webpack.prod.js"
   },
   "proxy": "http://localhost:5000",
   "browserslist": [
