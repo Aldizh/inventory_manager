@@ -18,10 +18,19 @@ const DataSchema = new Schema(
   {
     id: {
       type: Number,
-      required: [true, "Name field is required"]
+      required: [true, "Id is required"]
     },
     name: {
-      type: String
+      type: String,
+      required: [true, "Name is required"]
+    },
+    buyPrice: {
+      type: Number,
+      required: [true, "buyPrice is required"]
+    },
+    sellPrice: {
+      type: Number,
+      required: [true, "sellPrice is required"]
     },
     weight: {
       type: Number

@@ -9,22 +9,7 @@ label {
 #homepage h1 {
   text-align: center;
 }
-form {
-  max-width: 350px;
-  margin: 30px auto;
-}
-input[type="submit"] {
-  background: #555;
-  color: #fff;
-  border: 0;
-  padding: 10px;
-  font-size: 18px;
-  width: 200px;
-  margin: 0 auto;
-  display: block;
-  cursor: pointer;
-  border-radius: 4px;
-}
+
 ul {
   width: 50%;
   margin: auto;

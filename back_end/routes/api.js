@@ -18,8 +18,8 @@ router.get("/datas", (req, res) => {
 
 // creates a new record in our database
 router.post("/datas", (req, res, next) => {
-  const { id, name, available, geometry } = req.body;
-  let data = new Data({ id: id, name: name, geometry: geometry, available: available });
+  const { id, name, buyPrice, sellPrice, available, geometry } = req.body;
+  let data = new Data({ id: id, name: name, buyPrice: buyPrice, sellPrice: sellPrice, geometry: geometry, available: available });
 
   data
     .save()

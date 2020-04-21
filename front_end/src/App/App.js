@@ -13,7 +13,10 @@ class App extends Component {
     this.state = {
       id: 0,
       data: [],
-      name: null,
+      name: '',
+      buyPrice: 0.0,
+      sellPrice: 0.0,
+      profit: 0.0,
       idToDelete: null,
       idToUpdate: null,
       objectToUpdate: null
@@ -42,7 +45,7 @@ class App extends Component {
 
   // our put method that uses our backend api
   // to create new query into our data base
-  putDataToDB(name) {
+  putDataToDB(name, buyPrice, sellPrice) {
     let currentIds = this.state.data.map(data => data.id);
     let idToBeAdded = 0;
     while (currentIds.includes(idToBeAdded)) {
@@ -50,7 +53,9 @@ class App extends Component {
     }
     const newRecord = {
       id: idToBeAdded,
-      name: name
+      name: name,
+      buyPrice: buyPrice,
+      sellPrice: sellPrice,
     };
     axios.post("/api/datas", newRecord).then(response => {
       if (response.status === 200) {
@@ -116,60 +121,102 @@ class App extends Component {
   // see them render into our screen
   render() {
     const { data } = this.state;
+    let totalBuyPrice = 0.0;
+    let totalSellPrice = 0.0;
+    let totalProfit = 0.0;
     return (
       <div>
         <div class="split left">
-          <ul class="centered">
-            {data.length <= 0
-              ? "NO DB ENTRIES YET"
-              : data.map(dat => (
-                  <li style={{ padding: "10px" }} key={data.name}>
-                    <span style={{ color: "gray" }}> id: </span> {dat.id} <br />
-                    <span style={{ color: "gray" }}> data: </span>
-                    {dat.name}
-                  </li>
-                ))}
-          </ul>
+          <div class="centered">
+            <h3>Shkruaj te dhenat e artikullit dhe shto ne table</h3>
+            <div class="inputDivForm">
+              <form>
+                <label for="name">Emri i artikullit: (p.sh Oriz)</label>
+                <input
+                  type="text"
+                  id="name"
+                  onChange={e => this.setState({ name: e.target.value })}
+                  placeholder="emri i artikullit"
+                />
+                <label for="buyPrice">Cmimi i blerjes: (p.sh 150)</label>
+                <input
+                  type="text"
+                  id="buyPrice"
+                  onChange={e => this.setState({ buyPrice: parseFloat(e.target.value) })}
+                  placeholder="cmimi i blerjes"
+                />
+                <label for="sellPrice">Cmimi i shitjes: (p.sh 170)</label>
+                <input
+                  type="text"
+                  id="sellPrice"
+                  onChange={e => this.setState({ sellPrice: parseFloat(e.target.value) })}
+                  placeholder="cmimi i shitjes"
+                />
+                <button onClick={() => this.putDataToDB(this.state.name, this.state.buyPrice, this.state.sellPrice)}>SHTO NE TABELE</button>
+              </form>
+            </div>
+            <table class="tftable" border="1">
+              <tr>
+                <th>ID</th>
+                <th>Emri i artikullit</th>
+                <th>Cmimi i blerjes</th>
+                <th>Cmimi i shitjes</th>
+                <th>Fitimi</th>
+              </tr>
+              {data.length <= 0
+                ? <tr/>
+                : data.map(dat => {
+                    totalBuyPrice += dat.buyPrice;
+                    totalSellPrice += dat.sellPrice;
+                    totalProfit += dat.sellPrice - dat.buyPrice
+                    return (
+                      <tr>
+                        <td>{dat.id}</td>
+                        <td>{dat.name}</td>
+                        <td>{dat.buyPrice}</td>
+                        <td>{dat.sellPrice}</td>
+                        <td>{dat.sellPrice - dat.buyPrice}</td>
+                      </tr>
+                    )
+                  })
+              }
+            </table>
+            <div class="inputDiv">
+              <span>Blerja: {totalBuyPrice} leke te reja</span>
+              <span>Shitja: {totalSellPrice} leke te reja</span>
+              <span>Fitimi: {totalProfit} leke te reja</span>
+            </div>
+          </div>
         </div>
 
         <div class="split right">
           <a href={"/dashboard"} onClick={this.props.handleLogout}>
-            Logout
+            Dil
           </a>
           <div class="centered">
-            <h3>Database CRUD</h3>
-            <div class="inputDiv">
-              <input
-                type="text"
-                onChange={e => this.setState({ name: e.target.value })}
-                placeholder="add something in the database"
-              />
-              <button onClick={() => this.putDataToDB(this.state.name)}>ADD</button>
-            </div>
-            <div class="inputDiv">
-              <input
-                type="text"
-                onChange={e => this.setState({ idToDelete: e.target.value })}
-                placeholder="put id of item to delete here"
-              />
-              <button onClick={() => this.deleteFromDB(this.state.idToDelete)}>DELETE</button>
-            </div>
-            <div class="inputDiv">
+            <h3>Fshirje/Korrigjim te dhenash</h3>
+            <input
+              type="number"
+              onChange={e => this.setState({ idToDelete: e.target.value })}
+              placeholder="Fut numrin ID"
+            />
+            <button onClick={() => this.deleteFromDB(this.state.idToDelete)}>Fshi nga tabela</button>
+            {/* <div class="inputDiv">
               <input
                 type="text"
                 onChange={e => this.setState({ idToUpdate: e.target.value })}
-                placeholder="id of item to update here"
+                placeholder="Fut numrin ID"
               />
               <input
                 type="text"
                 onChange={e => this.setState({ updateToApply: e.target.value })}
-                placeholder="put new value of the item here"
+                placeholder="Fut vleren e re"
               />
               <button onClick={() => this.updateDB(this.state.idToUpdate, this.state.updateToApply)}>UPDATE</button>
             </div>
             <div class="inputDiv">
               <a href={"/geo_data"}>Geo Location Lookup</a>
-            </div>
+            </div> */}
           </div>
         </div>
       </div>

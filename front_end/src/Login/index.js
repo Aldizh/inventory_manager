@@ -65,8 +65,8 @@ export function LoginForm({ loginAnonymous, loginWithKey }) {
       <CardBody>
         <Form>
           <ButtonRow>
-            <Button onClick={handleLogin}>Log in as Anonymous</Button>
-            <Button onClick={handleLoginWithKey}>Log in using API key</Button>
+            <Button onClick={handleLogin}> Hyr si Anonim </Button>
+            <Button onClick={handleLoginWithKey}>Hyr me celes</Button>
           </ButtonRow>
         </Form>
       </CardBody>

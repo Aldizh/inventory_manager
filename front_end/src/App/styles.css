@@ -34,24 +34,6 @@ h3 {
   text-align: center;
 }
 
-button {
-  background: green;
-  border: 0;
-  padding: 5px 10px;
-  color: #fff;
-  display: inline-block;
-  border-radius: 4px;
-  cursor: pointer;
-}
-
-input[type="text"] {
-  display: block;
-  width: 300px;
-  padding: 10px;
-  border-radius: 4px;
-  border: 1px solid #ddd;
-}
-
 @keyframes App-logo-spin {
   from {
     transform: rotate(0deg);
@@ -80,6 +62,7 @@ input[type="text"] {
 }
 
 .centered {
+  width: 80%;
   position: absolute;
   top: 50%;
   left: 50%;
@@ -88,11 +71,60 @@ input[type="text"] {
 }
 
 .inputDiv {
-  width: 50%;
   margin: auto;
   padding: 10px;
   display: inline-flex;
 }
+
 .inputDiv a {
   width: 300px;
+}
+
+.inputDivForm {
+  border-radius: 5px;
+  background-color: #f2f2f2;
+  padding: 20px;
+}
+
+input[type="text"] {
+  width: 100%;
+  padding: 12px 20px;
+  margin: 8px 0;
+  display: inline-block;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  box-sizing: border-box;
+}
+
+.tftable {
+  font-size: 12px;
+  color: #333333;
+  width: 100%;
+  border-width: 1px;
+  border-color: #729ea5;
+  border-collapse: collapse;
+}
+
+.tftable th {
+  font-size: 12px;
+  background-color: #acc8cc;
+  border-width: 1px;
+  padding: 8px;
+  border-style: solid;
+  border-color: #729ea5;
+  text-align: left;
+}
+.tftable tr {
+  background-color: #d4e3e5;
+}
+.tftable td {
+  font-size: 12px;
+  border-width: 1px;
+  padding: 8px;
+  border-style: solid;
+  border-color: #729ea5;
+}
+
+.tftable tr:hover {
+  background-color: #ffffff;
 }
