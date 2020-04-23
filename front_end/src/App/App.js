@@ -1,5 +1,6 @@
 // /client/App.js
 import React, { Component } from "react";
+import { Button, Form, FormGroup, Label, Input, FormText, Table } from 'reactstrap';
 import axios from "axios";
 import { findIndex, propEq } from "ramda";
 import escapeHTML from "../utils/string";
@@ -130,61 +131,74 @@ class App extends Component {
           <div class="centered">
             <h3>Shkruaj te dhenat e artikullit dhe shto ne table</h3>
             <div class="inputDivForm">
-              <form>
-                <label for="name">Emri i artikullit: (p.sh Oriz)</label>
-                <input
-                  type="text"
-                  id="name"
-                  onChange={e => this.setState({ name: e.target.value })}
-                  placeholder="emri i artikullit"
-                />
-                <label for="buyPrice">Cmimi i blerjes: (p.sh 150)</label>
-                <input
-                  type="text"
-                  id="buyPrice"
-                  onChange={e => this.setState({ buyPrice: parseFloat(e.target.value) })}
-                  placeholder="cmimi i blerjes"
-                />
-                <label for="sellPrice">Cmimi i shitjes: (p.sh 170)</label>
-                <input
-                  type="text"
-                  id="sellPrice"
-                  onChange={e => this.setState({ sellPrice: parseFloat(e.target.value) })}
-                  placeholder="cmimi i shitjes"
-                />
-                <button onClick={() => this.putDataToDB(this.state.name, this.state.buyPrice, this.state.sellPrice)}>SHTO NE TABELE</button>
-              </form>
+              <Form>
+                <FormGroup>
+                  <Label for="name">Emri i artikullit</Label>
+                  <Input
+                    id="name"
+                    type="text"
+                    name="name"
+                    placeholder="Oriz"
+                    onChange={e => this.setState({ name: e.target.value })}
+                  />
+                </FormGroup>
+                <FormGroup>
+                  <Label for="buy_price">Cmimi i blerjes</Label>
+                  <Input
+                    id="buy_price"
+                    type="number"
+                    name="buy_price"
+                    placeholder="120.5"
+                    onChange={e => this.setState({ buyPrice: parseFloat(e.target.value) })}
+                  />
+                </FormGroup>
+                <FormGroup>
+                  <Label for="sell_price">Cmimi i shitjes</Label>
+                  <Input
+                    type="number"
+                    name="sell_price"
+                    id="sell_price"
+                    placeholder="122"
+                    onChange={e => this.setState({ sellPrice: parseFloat(e.target.value) })}
+                  />
+                </FormGroup>
+                <Button onClick={() => this.putDataToDB(this.state.name, this.state.buyPrice, this.state.sellPrice)}>SHTO NE TABELE</Button>
+              </Form>
             </div>
-            <table class="tftable" border="1">
-              <tr>
-                <th>ID</th>
-                <th>Emri i artikullit</th>
-                <th>Cmimi i blerjes</th>
-                <th>Cmimi i shitjes</th>
-                <th>Fitimi</th>
-              </tr>
-              {data.length <= 0
-                ? <tr/>
-                : data.map(dat => {
-                    totalBuyPrice += dat.buyPrice;
-                    totalSellPrice += dat.sellPrice;
-                    totalProfit += dat.sellPrice - dat.buyPrice
-                    return (
-                      <tr>
-                        <td>{dat.id}</td>
-                        <td>{dat.name}</td>
-                        <td>{dat.buyPrice}</td>
-                        <td>{dat.sellPrice}</td>
-                        <td>{dat.sellPrice - dat.buyPrice}</td>
-                      </tr>
-                    )
-                  })
-              }
-            </table>
+            <Table>
+              <thead>
+                <tr>
+                  <th>ID</th>
+                  <th>Emri i artikullit</th>
+                  <th>Cmimi i blerjes</th>
+                  <th>Cmimi i shitjes</th>
+                  <th>Fitimi (Leke te reja)</th>
+                </tr>
+              </thead>
+              <tbody>
+                {data.length <= 0
+                  ? <tr/>
+                  : data.map(dat => {
+                      totalBuyPrice += dat.buyPrice;
+                      totalSellPrice += dat.sellPrice;
+                      totalProfit += dat.sellPrice - dat.buyPrice
+                      return (
+                        <tr>
+                          <th scope="row">{dat.id}</th>
+                          <td>{dat.name}</td>
+                          <td>{dat.buyPrice}</td>
+                          <td>{dat.sellPrice}</td>
+                          <td>{(dat.sellPrice - dat.buyPrice).toFixed(2)}</td>
+                        </tr>
+                      )
+                    })
+                }
+              </tbody>
+            </Table>
             <div class="inputDiv">
-              <span>Blerja: {totalBuyPrice} leke te reja</span>
-              <span>Shitja: {totalSellPrice} leke te reja</span>
-              <span>Fitimi: {totalProfit} leke te reja</span>
+              <span>Blerja: {totalBuyPrice.toFixed(2)} leke te reja</span>
+              <span>Shitja: {totalSellPrice.toFixed(2)} leke te reja</span>
+              <span>Fitimi: {totalProfit.toFixed(2)} leke te reja</span>
             </div>
           </div>
         </div>
