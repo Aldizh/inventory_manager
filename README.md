@@ -16,6 +16,12 @@ _A full stack application using React JS for the front end, Node JS for the back
 npm config set strict-ssl false
 ```
 
+4. Run the following command to start concurrent build for backend and front end
+
+```
+yarn start:dev
+```
+
 5. In order to debug jest tests put a debugger statement in the test you are working with and run the following
 
 ```

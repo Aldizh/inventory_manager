@@ -22,17 +22,22 @@ const DataSchema = new Schema(
     },
     name: {
       type: String,
+      default: '',
+      trim: true,
       required: [true, "Name is required"]
     },
     buyPrice: {
       type: Number,
+      default: 0.0,
       required: [true, "buyPrice is required"]
     },
     sellPrice: {
       type: Number,
+      default: 0.0,
       required: [true, "sellPrice is required"]
     },
     weight: {
+      default: 0.0,
       type: Number
     },
     available: {

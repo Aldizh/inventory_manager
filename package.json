@@ -6,7 +6,7 @@
   "scripts": {
     "test": "mocha",
     "start:dev": "concurrently 'cd back_end && nodemon server.js' 'cd front_end && yarn && yarn start'",
-    "start": "cd back_end && node server.js",
+    "start": "cd back_end && nodemon server.js",
     "heroku-postbuild": "cd front_end && yarn && yarn build"
   },
   "keywords": [],
@@ -14,6 +14,7 @@
   "license": "ISC",
   "dependencies": {
     "assert": "^1.4.1",
+    "bootstrap": "^4.5.2",
     "concurrently": "^4.1.0",
     "ramda": "^0.26.1",
     "request": "^2.88.0"

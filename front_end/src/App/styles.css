@@ -43,30 +43,16 @@ h3 {
   }
 }
 
-.split {
-  height: 100%;
-  width: 50%;
-  position: fixed;
-  z-index: 1;
-  top: 0;
+
+.centeredLeft {
   overflow-x: hidden;
   padding-top: 20px;
+  text-align: center;
 }
 
-.left {
-  left: 0;
-}
-
-.right {
-  right: 0;
-}
-
-.centered {
-  width: 80%;
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
+.centeredRight {
+  overflow-x: hidden;
+  padding-top: 20px;
   text-align: center;
 }
 
@@ -76,14 +62,25 @@ h3 {
   display: inline-flex;
 }
 
+.inputDiv span {
+  width: 33%;
+}
+
 .inputDiv a {
   width: 300px;
+}
+
+.inputDiv button {
+  position: relative;
+  top: 10px;
+  height: 45px;
 }
 
 .inputDivForm {
   border-radius: 5px;
   background-color: #f2f2f2;
   padding: 10px;
+  margin-bottom: 20px;
 }
 
 input[type="text"] {
@@ -94,4 +91,16 @@ input[type="text"] {
   border: 1px solid #ccc;
   border-radius: 4px;
   box-sizing: border-box;
+}
+
+.demo-layout-transparent {
+  background: rgb(174,226,238);
+  background: radial-gradient(circle, rgba(174,226,238,1) 13%, rgba(211,224,238,1) 100%);
+  /* background: url('../images/transparent.png') center / cover; */
+}
+.demo-layout-transparent .mdl-layout__header,
+.demo-layout-transparent .mdl-layout__drawer-button {
+  /* This background is dark, so we set text to white. Use 87% black instead if
+     your background is light. */
+  color: white;
 }
