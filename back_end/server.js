@@ -15,6 +15,9 @@ app.use(cors());
 
 // Serve static files from the React app
 app.use(express.static(path.join(__dirname, '../front_end/build')));
+app.get('*', (req, res) => {
+  res.sendFile(path.join(__dirname, '../front_end/build'))
+})
 
 // ES6 promises
 mongoose.Promise = global.Promise;
