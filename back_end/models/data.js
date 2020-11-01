@@ -36,6 +36,12 @@ const DataSchema = new Schema(
       default: 0.0,
       required: [true, "sellPrice is required"]
     },
+    category: {
+      type: String,
+      default: '',
+      trim: true,
+      required: [true, "Category is required"]
+    },
     weight: {
       default: 0.0,
       type: Number

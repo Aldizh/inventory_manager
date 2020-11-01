@@ -1,5 +1,5 @@
 {
-  "name": "stock_viewer",
+  "name": "inventory_manager",
   "version": "0.1.0",
   "private": true,
   "dependencies": {
@@ -14,14 +14,14 @@
     "react-dom": "^16.13.1",
     "react-error-boundary": "1.2.3",
     "react-router-dom": "^5.1.2",
-    "react-scripts": "3.2.0",
+    "react-scripts": "^4.0.0",
     "reactstrap": "8.4.1",
     "render-if": "0.1.1",
-    "webpack": "4.41.0"
+    "webpack": "^4.44.2"
   },
   "main": "src/index.js",
   "scripts": {
-    "start": "react-scripts start",
+    "start": "PORT=3006 react-scripts start",
     "build": "react-scripts build"
   },
   "proxy": "http://localhost:5000",
@@ -40,14 +40,31 @@
     }
   },
   "devDependencies": {
-    "babel-core": "^6.26.3",
-    "babel-loader": "8.0.6",
-    "babel-preset-env": "^1.7.0",
-    "babel-preset-react": "^6.24.1",
+    "@babel/core": "7.8.4",
+    "@babel/node": "7.8.4",
+    "@babel/plugin-proposal-class-properties": "7.8.3",
+    "@babel/plugin-proposal-decorators": "7.8.3",
+    "@babel/plugin-proposal-optional-chaining": "7.9.0",
+    "@babel/plugin-syntax-dynamic-import": "7.8.3",
+    "@babel/plugin-transform-runtime": "7.9.0",
+    "@babel/preset-env": "7.9.0",
+    "@babel/preset-flow": "7.9.0",
+    "@babel/preset-react": "7.9.0",
+    "autoprefixer": "9.0.2",
+    "babel-core": "^7.0.0-bridge.0",
+    "babel-eslint": "^10.1.0",
+    "babel-jest": "^26.6.0",
+    "babel-loader": "^8.0.6",
+    "babel-plugin-dev-expression": "^0.2.2",
+    "babel-plugin-jsx-control-statements": "^4.0.0",
+    "babel-plugin-module-resolver": "^3.2.0",
+    "babel-plugin-react-css-modules": "^5.2.6",
     "css-loader": "^1.0.0",
+    "eslint": "7.13.0",
+    "eslint-config-prettier": "6.15.0",
     "html-webpack-plugin": "^3.2.0",
     "style-loader": "^0.23.0",
-    "webpack-dev-server": "3.2.1",
-    "webpack-cli": "^3.1.1"
+    "webpack-dev-server": "^3.11.0",
+    "webpack-cli": "^4.2.0"
   }
 }

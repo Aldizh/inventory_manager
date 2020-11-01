@@ -16,10 +16,10 @@ router.get("/datas", (req, res) => {
   })
 });
 
-// creates a new record in our database
+// creates a new record in our database if it does not exists
 router.post("/datas", (req, res, next) => {
-  const { id, name, buyPrice, sellPrice, available, geometry } = req.body;
-  let data = new Data({ id: id, name: name, buyPrice: buyPrice, sellPrice: sellPrice, geometry: geometry, available: available });
+  const { id, name, buyPrice, sellPrice, category, available, geometry } = req.body;
+  let data = new Data({ id: id, name: name, buyPrice: buyPrice, sellPrice: sellPrice, category: category, geometry: geometry, available: available });
 
   data
     .save()
@@ -61,7 +61,6 @@ router.get("/datas/:id", (req, res, next) => {
 router.patch("/datas/:id", (req, res, next) => {
   const { name, buyPrice, sellPrice, id } = req.body
   Data.updateOne({id, name, buyPrice, sellPrice}).then(record => {
-    console.log('updated record', record)
     return res.json({ success: true, record})
   }).catch(err => {
     return res.json({ success: false, error: err})

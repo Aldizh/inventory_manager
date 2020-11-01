@@ -1,21 +1,17 @@
 // /client/App.js
-import React, { Component } from "react";
+import React, { Component } from "react"
 import {
   Container,
   Row,
   Col,
-  Button,
-  Form,
-  FormGroup,
-  Label,
   Input,
-  Table
-} from 'reactstrap';
-import axios from "axios";
-import { findIndex, propEq } from "ramda";
-import escapeHTML from "../utils/string";
-import 'bootstrap/dist/css/bootstrap.min.css';
-import "./styles.css";
+} from 'reactstrap'
+import axios from "axios"
+import { findIndex, propEq } from "ramda"
+import Shitjet from "../Components/Shitjet"
+import escapeHTML from "../utils/string"
+import 'bootstrap/dist/css/bootstrap.min.css'
+import "./styles.css"
 class App extends Component {
   constructor(props) {
     // Required step: always call the parent class' constructor
@@ -50,7 +46,7 @@ class App extends Component {
     fetch("/api/datas")
       .then(data => data.json())
       .then(res => this.setState({ data: res.data }));
-  };
+  }
 
   // our delete method that uses our backend api
   // to remove existing database information
@@ -77,7 +73,7 @@ class App extends Component {
           }
         }
       });
-  };
+  }
 
   // our update method that uses our backend api
   // to overwrite existing data base information
@@ -102,7 +98,7 @@ class App extends Component {
         this.setState({ data: newData });
       }
     });
-  };
+  }
 
   // here is our UI
   // it is easy to understand their functions when you
@@ -117,80 +113,13 @@ class App extends Component {
       <div>
         <Container>
           <Row>
-            <Col lg="6">
-              <div class="centeredLeft">
-                {/* <h3>Shitjet (Pakice)</h3> */}
-                <Table>
-                  <thead>
-                    <tr>
-                      <th>Bar Kodi</th>
-                      <th>Emri i artikullit</th>
-                      <th>Cmimi i blerjes</th>
-                      <th>Cmimi i shitjes</th>
-                      <th>Fitimi (Leke te reja)</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {data.length <= 0
-                      ? <tr/>
-                      : data.map(dat => {
-                          totalBuyPrice += dat.buyPrice;
-                          totalSellPrice += dat.sellPrice;
-                          totalProfit += dat.sellPrice - dat.buyPrice
-                          return (
-                            <tr>
-                              <th scope="row">{dat.id}</th>
-                              <td>{dat.name}</td>
-                              <td>{dat.buyPrice}</td>
-                              <td>{dat.sellPrice}</td>
-                              <td>{(dat.sellPrice - dat.buyPrice).toFixed(2)}</td>
-                            </tr>
-                          )
-                        })
-                    }
-                  </tbody>
-                </Table>
+            <Col lg="12">
+              <div className="centeredRight">
+                <h3>Shitjet</h3>
+                <Shitjet data={this.state.data} />
                 <hr />
-                {/* <h3 id="shitjetShumice">Shitjet (Shumice)</h3> */}
-                <Table>
-                  <thead>
-                    <tr>
-                      <th>Bar Kodi</th>
-                      <th>Emri i artikullit</th>
-                      <th>Cmimi i blerjes</th>
-                      <th>Cmimi i shitjes</th>
-                      <th>Fitimi (Leke te reja)</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {data.length <= 0
-                      ? <tr/>
-                      : data.map(dat => {
-                          totalBuyPrice += dat.buyPrice;
-                          totalSellPrice += dat.sellPrice;
-                          totalProfit += dat.sellPrice - dat.buyPrice
-                          return (
-                            <tr>
-                              <th scope="row">{dat.id}</th>
-                              <td>{dat.name}</td>
-                              <td>{dat.buyPrice}</td>
-                              <td>{dat.sellPrice}</td>
-                              <td>{(dat.sellPrice - dat.buyPrice).toFixed(2)}</td>
-                            </tr>
-                          )
-                        })
-                    }
-                  </tbody>
-                </Table>
-              </div>
-            </Col>
-            <Col lg="6">
-              <div class="centeredRight">
-                {/* <a href={"/dashboard"} onClick={this.props.handleLogout}>
-                  Dil
-                </a> */}
                 <h3>Totalet</h3>
-                <div class="inputDiv">
+                <div className="inputDiv">
                   <span>Blerja: {totalBuyPrice.toFixed(2)} leke te reja</span>
                   <span>Shitja: {totalSellPrice.toFixed(2)} leke te reja</span>
                   <span>Fitimi: {totalProfit.toFixed(2)} leke te reja</span>
@@ -202,40 +131,40 @@ class App extends Component {
                   type="number"
                   name="fshi"
                   placeholder="Bar Kodi"
-                  value={this.state.idToDelete}
+                  value={this.state.idToDelete || ''}
                   onChange={e => this.setState({ idToDelete: e.target.value })}
                 />
                 <button onClick={() => this.deleteFromDB(this.state.idToDelete)}>Fshi nga tabela</button>
-                <div class="inputDiv">
+                <div className="inputDiv">
                   <Input
                     type="text"
                     placeholder="Bar Kodi"
-                    value={this.state.idToUpdate}
+                    value={this.state.idToUpdate || ''}
                     onChange={e => this.setState({ idToUpdate: e.target.value })}
                   />
                   <Input
                     type="text"
                     placeholder="Emri i ri"
-                    value={this.state.name}
+                    value={this.state.name || ''}
                     onChange={e => this.setState({ name: e.target.value })}
                   />
                   <Input
                     type="text"
                     placeholder="Cimimi i ri i blerjes"
-                    value={this.state.buyPrice}
+                    value={this.state.buyPrice || ''}
                     onChange={e => this.setState({ buyPrice: parseFloat(e.target.value) })}
                   />
                   <Input
                     type="text"
                     placeholder="Cimimi i ri i shitjes"
-                    value={this.state.sellPrice}
+                    value={this.state.sellPrice || ''}
                     onChange={e => this.setState({ sellPrice: parseFloat(e.target.value) })}
                   />
                 </div>
                 <button onClick={() => this.updateDB(this.state.idToUpdate, this.state.name, this.state.buyPrice, this.state.sellPrice)}>
                   Korrigjo
                 </button>
-                {/* <div class="inputDiv">
+                {/* <div className="inputDiv">
                   <a href={"/geo_data"}>Geo Location Lookup</a>
                 </div> */}
               </div>
@@ -243,8 +172,8 @@ class App extends Component {
           </Row>    
         </Container>      
       </div>
-    );
+    )
   }
 }
 
-export default App;
+export default App

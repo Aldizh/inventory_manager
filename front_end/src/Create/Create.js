@@ -1,11 +1,15 @@
 import React, { Component } from 'react'
-import axios from "axios";
+import axios from "axios"
 import {
   Form,
   FormGroup,
   Label,
-  Input
-} from 'reactstrap';
+  Input,
+  Dropdown,
+  DropdownToggle,
+  DropdownMenu,
+  DropdownItem
+} from 'reactstrap'
 
 export default class CreateItem extends Component {
   constructor(props) {
@@ -20,13 +24,15 @@ export default class CreateItem extends Component {
       data: [],
       name: '',
       buyPrice: '',
-      sellPrice: ''
+      sellPrice: '',
+      category: '',
+      dropdownOpen: false
     }
   }
 
+  // fetch data from our data base so that we can properly append
+  // TO DO: See if we can refactor later
   componentDidMount() {
-     // our first get method that uses our backend api to
-  // fetch data from our data base
     fetch("/api/datas")
       .then(data => data.json())
       .then(res => this.setState({ data: res.data }))
@@ -47,7 +53,7 @@ export default class CreateItem extends Component {
 
   // our put method that uses our backend api
   // to create new query into our data base
-  putDataToDB(name, buyPrice, sellPrice) {
+  putDataToDB(name, buyPrice, sellPrice, category) {
     let currentIds = this.state.data.map(data => data.id);
     let idToBeAdded = 0;
     while (currentIds.includes(idToBeAdded)) {
@@ -58,6 +64,7 @@ export default class CreateItem extends Component {
       name: name,
       buyPrice: buyPrice,
       sellPrice: sellPrice,
+      category: category,
     };
     axios.post("/api/datas", newRecord).then(response => {
       if (response.status === 200) {
@@ -66,25 +73,37 @@ export default class CreateItem extends Component {
         this.setState({ data: newData });
       }
     });
-  };
+  }
 
 
   onSubmit(e) {
     e.preventDefault()
 
-    const { name, buyPrice, sellPrice } = this.state
-    this.putDataToDB(name, buyPrice, sellPrice)
+    const { name, buyPrice, sellPrice, category } = this.state
+    this.putDataToDB(name, buyPrice, sellPrice, category)
 
     // go back to home after insertion
     window.location = '/'
   }
 
   render() {
-    console.log('data: ', this.state.data)
-
     return (
       <div class="inputDivForm">
         <Form onSubmit={this.onSubmit}>
+          <FormGroup>
+            <Dropdown
+              isOpen={this.state.dropdownOpen}
+              toggle={() => this.setState({dropdownOpen: !this.state.dropdownOpen})}
+            >
+              <DropdownToggle caret>
+                {this.state.category}
+              </DropdownToggle>
+              <DropdownMenu>
+                <DropdownItem onClick={() => this.setState({category: 'shumice'})}>Shumice</DropdownItem>
+                <DropdownItem onClick={() => this.setState({category: 'pakice'})}>Pakice</DropdownItem>
+              </DropdownMenu>
+            </Dropdown>
+          </FormGroup>
           <FormGroup>
             <Label for="name">Emri i artikullit</Label>
             <Input
