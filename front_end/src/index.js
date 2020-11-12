@@ -1,19 +1,31 @@
 import React from "react";
 import ReactDOM from "react-dom";
 import { createBrowserHistory } from "history";
-import "./index.css";
 import Router from "./Router";
+import NavBar from './NavBar'
+import Footer from './Footer'
 import { app, isLoggedIn, loginAnonymous, loginWithKey, logoutUser } from "./Stitch";
-import * as serviceWorker from "./serviceWorker";
 import Login from "./Login";
+import * as serviceWorker from "./serviceWorker";
+import "./index.css";
 
 export const history = createBrowserHistory({ basename: "/dashboard" });
 
 const MyApp = props =>
   isLoggedIn() ? (
-    <Router history={history} handleLogout={() => logoutUser(app.currentUser)} />
+    <React.Fragment>
+      <NavBar />
+      <br/>
+      <Router history={history} handleLogout={() => logoutUser(app.currentUser)} />
+      <Footer />
+    </React.Fragment>
   ) : (
-    <Login loginAnonymous={loginAnonymous} loginWithKey={loginWithKey} />
+    <React.Fragment>
+      <NavBar />
+      <br/>
+      <Login loginAnonymous={loginAnonymous} loginWithKey={loginWithKey} />
+      <Footer />
+    </React.Fragment>
   );
 
 ReactDOM.render(<MyApp />, document.getElementById("root"));
