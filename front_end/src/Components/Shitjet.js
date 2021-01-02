@@ -1,9 +1,10 @@
 import React from 'react'
+import { withTranslation } from 'react-i18next';
 import {
   Table
 } from 'reactstrap';
 
-const SalesComp = ({data}) => {
+const SalesComp = ({data, t}) => {
   let totalBuyPrice = 0.0;
   let totalSellPrice = 0.0;
   let totalProfit = 0.0;
@@ -11,11 +12,11 @@ const SalesComp = ({data}) => {
     <Table>
     <thead>
       <tr>
-        <th>Bar Kodi</th>
-        <th>Emri i artikullit</th>
-        <th>Cmimi i blerjes</th>
-        <th>Cmimi i shitjes</th>
-        <th>Fitimi (Leke te reja)</th>
+        <th>{t('barCode')}</th>
+        <th>{t('item')}</th>
+        <th>{t('buyPrice')}</th>
+        <th>{t('sellPrice')}</th>
+        <th>{t('profit')}</th>
       </tr>
     </thead>
     <tbody>
@@ -41,4 +42,4 @@ const SalesComp = ({data}) => {
   )
 }
 
-export default SalesComp
+export default withTranslation()(SalesComp)

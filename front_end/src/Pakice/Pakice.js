@@ -1,11 +1,11 @@
 import React, { Component } from 'react'
+import { withTranslation } from 'react-i18next';
 import axios from "axios"
 import Shitjet from "../Components/Shitjet"
 
-export default class CreateItem extends Component {
+class Pakice extends Component {
   constructor(props) {
     super(props);
-
 
     this.state = {
       data: [],
@@ -14,7 +14,6 @@ export default class CreateItem extends Component {
       sellPrice: ''
     }
   }
-
 
   componentDidMount() {
     // fetch data from our data base
@@ -28,9 +27,11 @@ export default class CreateItem extends Component {
   render() {
     return (
       <div>
-        <h3 id="shitjetShumice">Shitjet (Pakice)</h3>
+        <h3 id="shitjetShumice">{this.props.t('small')}</h3>
         <Shitjet data={this.state.data} />
       </div>
     )
   }
 }
+
+export default withTranslation()(Pakice)

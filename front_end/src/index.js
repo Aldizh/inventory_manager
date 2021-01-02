@@ -9,7 +9,7 @@ import Login from "./Login";
 import * as serviceWorker from "./serviceWorker";
 import "./index.css";
 
-export const history = createBrowserHistory({ basename: "/dashboard" });
+export const history = createBrowserHistory();
 
 const MyApp = props =>
   isLoggedIn() ? (
