@@ -3,7 +3,7 @@
 }
 
 body {
-  background: #e3ec57;
+  background: #dee299;
 }
 
 h3 {
@@ -44,6 +44,16 @@ h3 {
 }
 
 input[type="text"] {
+  width: 100%;
+  padding: 12px 20px;
+  margin: 8px 0;
+  display: inline-block;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  box-sizing: border-box;
+}
+
+input[type="number"] {
   width: 100%;
   padding: 12px 20px;
   margin: 8px 0;

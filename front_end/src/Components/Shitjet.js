@@ -14,6 +14,7 @@ const SalesComp = ({data, t}) => {
       <tr>
         <th>{t('barCode')}</th>
         <th>{t('item')}</th>
+        <th>{t('quantity')}</th>
         <th>{t('buyPrice')}</th>
         <th>{t('sellPrice')}</th>
         <th>{t('profit')}</th>
@@ -30,6 +31,7 @@ const SalesComp = ({data, t}) => {
               <tr key={`${index} - ${dat.id}`}>
                 <th scope="row">{dat.id}</th>
                 <td>{dat.name}</td>
+                <td>{dat.quantity}</td>
                 <td>{dat.buyPrice}</td>
                 <td>{dat.sellPrice}</td>
                 <td>{(dat.sellPrice - dat.buyPrice).toFixed(2)}</td>

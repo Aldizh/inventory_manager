@@ -7,20 +7,14 @@ class Shumice extends Component {
   constructor(props) {
     super(props);
 
-
-    this.state = {
-      data: [],
-      name: '',
-      buyPrice: '',
-      sellPrice: ''
-    }
+    this.state = { data: [] }
   }
 
   componentDidMount() {
     // fetch data from our data base
     axios.get("/api/datas")
       .then(res => {
-        const filtered = res.data.data.filter((sale) => sale.category === 'shumice')
+        const filtered = res.data.data.filter((sale) => sale.category === 'big')
         this.setState({ data: filtered })
       })
   }

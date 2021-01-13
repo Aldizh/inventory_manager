@@ -1,5 +1,6 @@
 import React, { Component } from 'react'
 import axios from "axios"
+import { withTranslation } from 'react-i18next';
 import {
   Form,
   FormGroup,
@@ -11,21 +12,23 @@ import {
   DropdownItem
 } from 'reactstrap'
 
-export default class CreateItem extends Component {
+class Create extends Component {
   constructor(props) {
     super(props);
 
     this.onChangeName = this.onChangeName.bind(this)
     this.onChangeBuyPrice = this.onChangeBuyPrice.bind(this)
+    this.onChangeQuantity = this.onChangeQuantity.bind(this)
     this.onChangeSellPrice = this.onChangeSellPrice.bind(this)
     this.onSubmit = this.onSubmit.bind(this)
 
     this.state = {
       data: [],
       name: '',
+      quantity: '',
       buyPrice: '',
       sellPrice: '',
-      category: '',
+      category: 'big',
       dropdownOpen: false
     }
   }
@@ -50,18 +53,20 @@ export default class CreateItem extends Component {
     this.setState({ sellPrice: parseFloat(e.target.value)})
   }
 
+  onChangeQuantity(e) {
+    this.setState({ quantity: parseFloat(e.target.value)})
+  }
+
 
   // our put method that uses our backend api
   // to create new query into our data base
-  putDataToDB(name, buyPrice, sellPrice, category) {
+  putDataToDB(name, quantity, buyPrice, sellPrice, category) {
     let currentIds = this.state.data.map(data => data.id);
-    let idToBeAdded = 0;
-    while (currentIds.includes(idToBeAdded)) {
-      ++idToBeAdded;
-    }
+    const id = currentIds.length
     const newRecord = {
-      id: idToBeAdded,
+      id: id,
       name: name,
+      quantity: quantity,
       buyPrice: buyPrice,
       sellPrice: sellPrice,
       category: category,
@@ -79,14 +84,15 @@ export default class CreateItem extends Component {
   onSubmit(e) {
     e.preventDefault()
 
-    const { name, buyPrice, sellPrice, category } = this.state
-    this.putDataToDB(name, buyPrice, sellPrice, category)
+    const { name, quantity, buyPrice, sellPrice, category } = this.state
+    this.putDataToDB(name, quantity, buyPrice, sellPrice, category)
 
     // go back to home after insertion
     window.location = '/'
   }
 
   render() {
+    const { t } = this.props
     return (
       <div class="inputDivForm">
         <Form onSubmit={this.onSubmit}>
@@ -96,50 +102,63 @@ export default class CreateItem extends Component {
               toggle={() => this.setState({dropdownOpen: !this.state.dropdownOpen})}
             >
               <DropdownToggle caret>
-                {this.state.category}
+                {t(this.state.category)}
               </DropdownToggle>
               <DropdownMenu>
-                <DropdownItem onClick={() => this.setState({category: 'shumice'})}>Shumice</DropdownItem>
-                <DropdownItem onClick={() => this.setState({category: 'pakice'})}>Pakice</DropdownItem>
+                <DropdownItem onClick={() => this.setState({category: 'big'})}>{t('big')}</DropdownItem>
+                <DropdownItem onClick={() => this.setState({category: 'small'})}>{t('small')}</DropdownItem>
               </DropdownMenu>
             </Dropdown>
           </FormGroup>
           <FormGroup>
-            <Label for="name">Emri i artikullit</Label>
+            <Label for="name">{t('item')}</Label>
             <Input
               id="name"
               type="text"
               name="name"
-              placeholder="Oriz"
+              placeholder=""
               value={this.state.name}
               onChange={this.onChangeName}
             />
           </FormGroup>
           <FormGroup>
-            <Label for="buy_price">Cmimi i blerjes</Label>
+            <Label for="quantity">{t('quantity')}</Label>
+            <Input
+              id="quantity"
+              type="number"
+              name="quantity"
+              placeholder=""
+              value={this.state.quantity}
+              onChange={this.onChangeQuantity}
+            />
+          </FormGroup>
+          <FormGroup>
+            <Label for="buy_price">{t('buyPrice')}</Label>
             <Input
               id="buy_price"
               type="number"
               name="buy_price"
-              placeholder="120.5"
+              placeholder=""
               value={this.state.buyPrice}
               onChange={this.onChangeBuyPrice}
             />
           </FormGroup>
           <FormGroup>
-            <Label for="sell_price">Cmimi i shitjes</Label>
+            <Label for="sell_price">{t('sellPrice')}</Label>
             <Input
               id="sell_price"
               type="number"
               name="sell_price"
-              placeholder="122"
+              placeholder=""
               value={this.state.sellPrice}
               onChange={this.onChangeSellPrice}
             />
           </FormGroup>
-          <Input type="submit" value="Krijo shitje te re" className="btn btn-primary"/>
+          <Input type="submit" value={this.props.t('newSale')} className="btn btn-primary"/>
         </Form>
       </div>
     )
   }
 }
+
+export default withTranslation()(Create)

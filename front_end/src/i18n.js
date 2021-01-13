@@ -16,8 +16,8 @@ const resources = {
       "item": "Item",
       "buyPrice": "Buy Price",
       "sellPrice": "Sell Price",
-      "buyPriceNew": "New Price",
-      "sellPriceNew": "New Price",
+      "buyPriceNew": "New Buying Price",
+      "sellPriceNew": "New Selling Price",
       "nameNew": "New Name",
       "profit": "Profit",
       "totals": "Totals",
@@ -26,7 +26,9 @@ const resources = {
       "totalProfit": "Total Profit",
       "dataCorrection": "Data Correction/Deletion",
       "delete": "Delete",
-      "correct": "Correct"
+      "correct": "Correct",
+      "newSale": "New Sale",
+      "quantity": "Quantity"
     }
   },
   al: {
@@ -41,8 +43,8 @@ const resources = {
       "item": "Artikulli",
       "buyPrice": "Cmimi i Blerjes",
       "sellPrice": "Cmimi i Shitjes",
-      "buyPriceNew": "Cmimi i Ri",
-      "sellPriceNew": "Cmimi i Ri",
+      "buyPriceNew": "Cmimi i Ri i Blerjes",
+      "sellPriceNew": "Cmimi i Ri i Shitjes",
       "nameNew": "Emri i ri",
       "profit": "Fitimi (Leke te reja)",
       "totals": "Totalet",
@@ -51,7 +53,9 @@ const resources = {
       "totalProfit": "Fitimi Total",
       "dataCorrection": "Fshirje/Korrigjim te dhenash",
       "delete": "Fshi",
-      "correct": "Korrigjo"
+      "correct": "Korrigjo",
+      "newSale": "Shitje e Re",
+      "quantity": "Sasia"
     }
   }
 };

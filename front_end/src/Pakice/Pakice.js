@@ -19,7 +19,7 @@ class Pakice extends Component {
     // fetch data from our data base
     axios.get("/api/datas")
       .then(res => {
-        const filtered = res.data.data.filter((sale) => sale.category === 'pakice')
+        const filtered = res.data.data.filter((sale) => sale.category === 'small')
         this.setState({ data: filtered })
       })
  }

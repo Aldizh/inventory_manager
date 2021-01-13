@@ -87,6 +87,7 @@ class App extends Component {
       if (dat.id === parseInt(idToUpdate)) {
         recordToUpdate.id = dat.id;
         recordToUpdate.name = escapeHTML(name);
+        recordToUpdate.quantity = dat.quantity;
         recordToUpdate.buyPrice = buyPrice;
         recordToUpdate.sellPrice = sellPrice;
       }
@@ -151,9 +152,9 @@ class App extends Component {
                 <hr />
                 <h3>{t('totals')}</h3>
                 <div className="inputDiv">
-                  <span>{t('totalBuys')}: {totalBuyPrice.toFixed(1)}</span>
-                  <span>{t('totalSales')}: {totalSellPrice.toFixed(1)}</span>
-                  <span>{t('totalProfit')}: {totalProfit.toFixed(1)}</span>
+                  <span>{t('totalBuys')}: {totalBuyPrice.toFixed(2)}</span>
+                  <span>{t('totalSales')}: {totalSellPrice.toFixed(2)}</span>
+                  <span>{t('totalProfit')}: {totalProfit.toFixed(2)}</span>
                 </div>
                 <hr />
                 <h3>{t('dataCorrection')}</h3>
@@ -180,13 +181,13 @@ class App extends Component {
                     onChange={e => this.setState({ name: e.target.value })}
                   />
                   <Input
-                    type="text"
+                    type="number"
                     placeholder={t('buyPriceNew')}
                     value={this.state.buyPrice || ''}
                     onChange={e => this.setState({ buyPrice: parseFloat(e.target.value) })}
                   />
                   <Input
-                    type="text"
+                    type="number"
                     placeholder={t('buyPriceNew')}
                     value={this.state.sellPrice || ''}
                     onChange={e => this.setState({ sellPrice: parseFloat(e.target.value) })}

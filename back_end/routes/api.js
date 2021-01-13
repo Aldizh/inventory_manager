@@ -14,8 +14,8 @@ router.get("/datas", (req, res) => {
 
 // creates a new record in our database if it does not exists
 router.post("/datas", (req, res, next) => {
-  const { id, name, buyPrice, sellPrice, category, available, geometry } = req.body;
-  let data = new Data({ id: id, name: name, buyPrice: buyPrice, sellPrice: sellPrice, category: category, geometry: geometry, available: available });
+  const { id, name, quantity, buyPrice, sellPrice, category, available, geometry } = req.body;
+  let data = new Data({ id: id, name: name, quantity: quantity, buyPrice: buyPrice, sellPrice: sellPrice, category: category, geometry: geometry, available: available });
 
   data
     .save()

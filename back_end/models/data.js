@@ -26,6 +26,11 @@ const DataSchema = new Schema(
       trim: true,
       required: [true, "Name is required"]
     },
+    quantity: {
+      type: Number,
+      default: 0.0,
+      required: [true, "quantity is required"]
+    },
     buyPrice: {
       type: Number,
       default: 0.0,
