@@ -1,8 +1,9 @@
 import React, { Component } from 'react'
 import axios from "axios"
+import { withTranslation } from 'react-i18next';
 import Shitjet from "../Components/Shitjet"
 
-export default class CreateItem extends Component {
+class Shumice extends Component {
   constructor(props) {
     super(props);
 
@@ -15,7 +16,6 @@ export default class CreateItem extends Component {
     }
   }
 
-
   componentDidMount() {
     // fetch data from our data base
     axios.get("/api/datas")
@@ -23,14 +23,16 @@ export default class CreateItem extends Component {
         const filtered = res.data.data.filter((sale) => sale.category === 'shumice')
         this.setState({ data: filtered })
       })
- }
+  }
 
   render() {
     return (
       <div>
-        <h3 id="shitjetShumice">Shitjet (Shumice)</h3>
+        <h3 id="shitjetShumice">{this.props.t('big')}</h3>
         <Shitjet data={this.state.data} />
       </div>
     )
   }
 }
+
+export default withTranslation()(Shumice)

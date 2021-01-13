@@ -16,15 +16,11 @@ app.use(cors());
 // appends api to all server requests
 app.use("/api", router);
 
-// Serve static files from the React app
-<<<<<<< Updated upstream
-app.use(express.static(path.join(__dirname, '../front_end/build')));
-=======
+// Serve static files in production
 if (process.env.NODE_ENV === 'production') {
 	app.use(express.static(path.join(__dirname, '../front_end/build')));
 }
 
->>>>>>> Stashed changes
 app.get('*', (req, res) => {
   res.sendFile(path.join(__dirname, '../front_end/build/index.html'));
 })

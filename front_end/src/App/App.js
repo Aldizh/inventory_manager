@@ -1,5 +1,6 @@
 // /client/App.js
 import React, { Component } from "react"
+import { withTranslation } from 'react-i18next';
 import {
   Container,
   Row,
@@ -8,6 +9,7 @@ import {
 } from 'reactstrap'
 import axios from "axios"
 import { findIndex, propEq } from "ramda"
+import '../i18n';
 import Shitjet from "../Components/Shitjet"
 import escapeHTML from "../utils/string"
 import 'bootstrap/dist/css/bootstrap.min.css'
@@ -24,7 +26,8 @@ class App extends Component {
       profit: 0.0,
       idToDelete: null,
       idToUpdate: null,
-      objectToUpdate: null
+      objectToUpdate: null,
+      language: 'en'
     }
   }
 
@@ -100,10 +103,37 @@ class App extends Component {
     });
   }
 
+  onLanguageHandle = (event) => {
+    let newLang = event.target.value;
+    this.setState({ language: newLang })
+    this.props.i18n.changeLanguage(newLang)
+  }
+
+  renderRadioButtons = () => {
+    return (
+      <div>
+        <input
+          checked={this.state.language === 'en'}
+          name="language"
+          onChange={(e) => this.onLanguageHandle(e)}
+          value="en"
+          type="radio" />English &nbsp;
+        <input
+          name="language"
+          value="al"
+          checked={this.state.language === 'al'}
+          type="radio"
+          onChange={(e) => this.onLanguageHandle(e)}
+      />Albanian
+      </div>
+    )
+  }
+
   // here is our UI
   // it is easy to understand their functions when you
   // see them render into our screen
   render() {
+    const { t } = this.props
     const { data } = this.state;
     let totalBuyPrice = 0.0;
     let totalSellPrice = 0.0;
@@ -111,69 +141,70 @@ class App extends Component {
 
     return (
       <div>
+        {this.renderRadioButtons()}
         <Container>
           <Row>
             <Col lg="12">
               <div className="centeredRight">
-                <h3>Shitjet</h3>
+                <h3>{t('sales')}</h3>
                 <Shitjet data={this.state.data} />
                 <hr />
-                <h3>Totalet</h3>
+                <h3>{t('totals')}</h3>
                 <div className="inputDiv">
-                  <span>Blerja: {totalBuyPrice.toFixed(2)} leke te reja</span>
-                  <span>Shitja: {totalSellPrice.toFixed(2)} leke te reja</span>
-                  <span>Fitimi: {totalProfit.toFixed(2)} leke te reja</span>
+                  <span>{t('totalBuys')}: {totalBuyPrice.toFixed(1)}</span>
+                  <span>{t('totalSales')}: {totalSellPrice.toFixed(1)}</span>
+                  <span>{t('totalProfit')}: {totalProfit.toFixed(1)}</span>
                 </div>
                 <hr />
-                <h3>Fshirje/Korrigjim te dhenash</h3>
+                <h3>{t('dataCorrection')}</h3>
                 <Input
                   id="fshi"
                   type="number"
                   name="fshi"
-                  placeholder="Bar Kodi"
+                  placeholder={t('barCode')}
                   value={this.state.idToDelete || ''}
                   onChange={e => this.setState({ idToDelete: e.target.value })}
                 />
-                <button onClick={() => this.deleteFromDB(this.state.idToDelete)}>Fshi nga tabela</button>
+                <button onClick={() => this.deleteFromDB(this.state.idToDelete)}>{t('delete')}</button>
                 <div className="inputDiv">
                   <Input
                     type="text"
-                    placeholder="Bar Kodi"
+                    placeholder={t('barCode')}
                     value={this.state.idToUpdate || ''}
                     onChange={e => this.setState({ idToUpdate: e.target.value })}
                   />
                   <Input
                     type="text"
-                    placeholder="Emri i ri"
+                    placeholder={t('nameNew')}
                     value={this.state.name || ''}
                     onChange={e => this.setState({ name: e.target.value })}
                   />
                   <Input
                     type="text"
-                    placeholder="Cimimi i ri i blerjes"
+                    placeholder={t('buyPriceNew')}
                     value={this.state.buyPrice || ''}
                     onChange={e => this.setState({ buyPrice: parseFloat(e.target.value) })}
                   />
                   <Input
                     type="text"
-                    placeholder="Cimimi i ri i shitjes"
+                    placeholder={t('buyPriceNew')}
                     value={this.state.sellPrice || ''}
                     onChange={e => this.setState({ sellPrice: parseFloat(e.target.value) })}
                   />
                 </div>
                 <button onClick={() => this.updateDB(this.state.idToUpdate, this.state.name, this.state.buyPrice, this.state.sellPrice)}>
-                  Korrigjo
+                  {t('correct')}
                 </button>
                 {/* <div className="inputDiv">
                   <a href={"/geo_data"}>Geo Location Lookup</a>
                 </div> */}
               </div>
             </Col>
-          </Row>    
-        </Container>      
+          </Row>
+        </Container>
       </div>
     )
   }
 }
 
-export default App
+export default withTranslation()(App);

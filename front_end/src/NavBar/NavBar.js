@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { withTranslation } from 'react-i18next';
 import {
   Collapse,
   Navbar,
@@ -14,39 +15,39 @@ import {
   NavbarText
 } from 'reactstrap';
 
-const Example = (props) => {
+const NavBar = ({t}) => {
   const [isOpen, setIsOpen] = useState(false);
   const toggle = () => setIsOpen(!isOpen);
 
   return (
     <Navbar color="light" light expand="md">
-      <NavbarBrand href="/">Market Zhupani</NavbarBrand>
+      <NavbarBrand href="/">{t('title')}</NavbarBrand>
       <NavbarToggler onClick={toggle} />
       <Collapse isOpen={isOpen} navbar>
         <Nav className="mr-auto" navbar>
           <NavItem>
-            <NavLink href="/create">Hedhje te dhenash</NavLink>
+            <NavLink href="/create">{t('dataEntry')}</NavLink>
           </NavItem>
           <UncontrolledDropdown nav inNavbar>
             <DropdownToggle nav caret>
-              Shitjet
+              {t('sales')}
             </DropdownToggle>
             <DropdownMenu right>
               <DropdownItem>
-                <NavLink href="/pakice">Pakice</NavLink>
+                <NavLink href="/pakice">{t('small')}</NavLink>
               </DropdownItem>
               <DropdownItem>
-                <NavLink href="/shumice">Shumice</NavLink>
+                <NavLink href="/shumice">{t('big')}</NavLink>
               </DropdownItem>
             </DropdownMenu>
           </UncontrolledDropdown>
         </Nav>
         <NavbarText>
-          <NavLink href="/dashboard">Kreu</NavLink>
+          <NavLink href="/dashboard">{t('home')}</NavLink>
         </NavbarText>
       </Collapse>
     </Navbar>
   );
 }
 
-export default Example;
+export default withTranslation()(NavBar);
