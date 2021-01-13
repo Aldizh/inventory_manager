@@ -13,11 +13,16 @@ const PORT = process.env.PORT || 5000;
 const app = express();
 app.use(cors());
 
-// Serve static files from the React app
-app.use(express.static(path.join(__dirname, '../front_end/build')));
+// appends api to all server requests
+app.use("/api", router);
+
+// Serve static files in production
+if (process.env.NODE_ENV === 'production') {
+	app.use(express.static(path.join(__dirname, '../front_end/build')));
+}
 
 app.get('*', (req, res) => {
-  res.sendFile(path.join(__dirname, '../front_end/build'))
+  res.sendFile(path.join(__dirname, '../front_end/build/index.html'));
 })
 
 // ES6 promises
@@ -38,9 +43,6 @@ app.use(bodyParser.json());
 
 // (optional) only made for logging
 app.use(morgan("dev"));
-
-// appends api to all server requests
-app.use("/api", router);
 
 // custom middleware for errr parsing
 // ORDER is VERY important here, has to be right after router config

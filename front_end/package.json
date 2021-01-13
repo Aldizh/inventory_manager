@@ -18,7 +18,7 @@
     "react-scripts": "^4.0.1",
     "reactstrap": "8.4.1",
     "render-if": "0.1.1",
-    "webpack": "^4.44.2"
+    "webpack": "4.44.2"
   },
   "main": "src/index.js",
   "scripts": {
