@@ -3,10 +3,6 @@ const Data = require("../models/data");
 const path = require("path")
 const router = express.Router();
 
-router.get('/', (req, res) => {
-  res.sendFile(path.join(__dirname, 'build', 'index.html'))
-})
-
 // fetches all available records from our database
 router.get("/datas", (req, res) => {
   Data.find().then((data) => {
