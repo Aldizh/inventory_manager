@@ -14,15 +14,37 @@ router.get("/datas", (req, res) => {
 
 // creates a new record in our database if it does not exists
 router.post("/datas", (req, res, next) => {
-  const { id, name, quantity, buyPrice, sellPrice, category, available, geometry } = req.body;
-  let data = new Data({ id: id, name: name, quantity: quantity, buyPrice: buyPrice, sellPrice: sellPrice, category: category, geometry: geometry, available: available });
+  const {
+    id,
+    name,
+    quantity,
+    buyPrice,
+    sellPrice,
+    category,
+    available,
+    geometry
+  } = req.body;
+
+  let data = new Data({
+    id,
+    name,
+    quantity,
+    buyPrice,
+    sellPrice,
+    category,
+    geometry,
+    available
+  });
 
   data
     .save()
     .then(result => {
+      console.log('result')
       return res.json({ success: true, id: id });
     })
-    .catch(err => res.json({ success: false, error: err }));
+    .catch(err => {
+      return res.status(400).json({error: 'Bad request'});
+    })
 });
 
 // get data by id
@@ -55,20 +77,37 @@ router.get("/datas/:id", (req, res, next) => {
 
 // updates an existing record in our database
 router.patch("/datas/:id", (req, res, next) => {
-  const { name, buyPrice, sellPrice, id } = req.body
-  Data.updateOne({id, name, buyPrice, sellPrice}).then(record => {
-    return res.json({ success: true, record})
-  }).catch(err => {
-    return res.json({ success: false, error: err})
+  const { name, qunatity, buyPrice, sellPrice, id } = req.body
+  Data.find({ id }).then((records) => {
+    const record = records[0]
+    if (record.id !== null) {
+      Data.updateOne({ id }, {
+        name,
+        qunatity,
+        buyPrice,
+        sellPrice
+      }).then(record => {
+        return res.json({ success: true, record})
+      }).catch(err => {
+        return res.status(400).json({ success: false, error: err})
+      })
+    } else return res.status(400).json({ success: false, error: "This record does not exist" });
   })
 });
 
 // deletes a record from our database
 router.delete("/datas/:id", (req, res, next) => {
   const id = req.params.id;
-  Data.findOneAndDelete(id).then(record => {
-    return res.json({ success: true });
-  });
+  Data.find({ id }).then((records) => {
+    const record = records[0]
+    if (record.id !== null) {
+      Data.deleteOne({ id }).then(record => {
+        return res.json({ success: true, record})
+      }).catch(err => {
+        return res.json({ success: false, error: err})
+      })
+    } else return res.status(400).json({ success: false, error: "This record does not exist" });
+  })
 });
 
 module.exports = router;

@@ -28,7 +28,8 @@ const resources = {
       "delete": "Delete",
       "correct": "Correct",
       "newSale": "New Sale",
-      "quantity": "Quantity"
+      "quantity": "Quantity",
+      "quantityNew": "New Quantity"
     }
   },
   al: {
@@ -55,7 +56,8 @@ const resources = {
       "delete": "Fshi",
       "correct": "Korrigjo",
       "newSale": "Shitje e Re",
-      "quantity": "Sasia"
+      "quantity": "Sasia",
+      "quantityNew": "Sasia e Re"
     }
   }
 };

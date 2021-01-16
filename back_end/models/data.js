@@ -18,6 +18,7 @@ const DataSchema = new Schema(
   {
     id: {
       type: Number,
+      unique: true,
       required: [true, "Id is required"]
     },
     name: {

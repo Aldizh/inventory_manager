@@ -23,7 +23,6 @@ class App extends Component {
     this.state = {
       id: 0,
       data: [],
-      profit: 0.0,
       idToDelete: null,
       idToUpdate: null,
       objectToUpdate: null,
@@ -81,15 +80,17 @@ class App extends Component {
   // our update method that uses our backend api
   // to overwrite existing data base information
   // TO DO: sanitize input
-  updateDB(idToUpdate, name, buyPrice, sellPrice) {
-    const recordToUpdate = { id: null };
+  updateDB(idToUpdate, name = '', qunatity, buyPrice, sellPrice) {
+    let recordToUpdate = {};
     this.state.data.forEach(dat => {
       if (dat.id === parseInt(idToUpdate)) {
-        recordToUpdate.id = dat.id;
-        recordToUpdate.name = escapeHTML(name);
-        recordToUpdate.quantity = dat.quantity;
-        recordToUpdate.buyPrice = buyPrice;
-        recordToUpdate.sellPrice = sellPrice;
+        recordToUpdate = {
+          id: dat.id,
+          name: escapeHTML(name) || dat.name,
+          quantity: qunatity || dat.quantity,
+          buyPrice: buyPrice || dat.buyPrice,
+          sellPrice: sellPrice || dat.sellPrice
+        }
       }
     });
 
@@ -136,9 +137,6 @@ class App extends Component {
   render() {
     const { t } = this.props
     const { data } = this.state;
-    let totalBuyPrice = 0.0;
-    let totalSellPrice = 0.0;
-    let totalProfit = 0.0;
 
     return (
       <div>
@@ -149,13 +147,6 @@ class App extends Component {
               <div className="centeredRight">
                 <h3>{t('sales')}</h3>
                 <Shitjet data={this.state.data} />
-                <hr />
-                <h3>{t('totals')}</h3>
-                <div className="inputDiv">
-                  <span>{t('totalBuys')}: {totalBuyPrice.toFixed(2)}</span>
-                  <span>{t('totalSales')}: {totalSellPrice.toFixed(2)}</span>
-                  <span>{t('totalProfit')}: {totalProfit.toFixed(2)}</span>
-                </div>
                 <hr />
                 <h3>{t('dataCorrection')}</h3>
                 <Input
@@ -182,18 +173,24 @@ class App extends Component {
                   />
                   <Input
                     type="number"
+                    placeholder={t('quantityNew')}
+                    value={this.state.quantity || ''}
+                    onChange={e => this.setState({ quantity: parseFloat(e.target.value) })}
+                  />
+                  <Input
+                    type="number"
                     placeholder={t('buyPriceNew')}
                     value={this.state.buyPrice || ''}
                     onChange={e => this.setState({ buyPrice: parseFloat(e.target.value) })}
                   />
                   <Input
                     type="number"
-                    placeholder={t('buyPriceNew')}
+                    placeholder={t('sellPriceNew')}
                     value={this.state.sellPrice || ''}
                     onChange={e => this.setState({ sellPrice: parseFloat(e.target.value) })}
                   />
                 </div>
-                <button onClick={() => this.updateDB(this.state.idToUpdate, this.state.name, this.state.buyPrice, this.state.sellPrice)}>
+                <button onClick={() => this.updateDB(this.state.idToUpdate, this.state.name, this.state.quantity, this.state.buyPrice, this.state.sellPrice)}>
                   {t('correct')}
                 </button>
                 {/* <div className="inputDiv">
