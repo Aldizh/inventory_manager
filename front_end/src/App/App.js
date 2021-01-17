@@ -113,7 +113,7 @@ class App extends Component {
 
   renderRadioButtons = () => {
     return (
-      <div>
+      <div style={{ marginLeft: 15 }}>
         <input
           checked={this.state.language === 'en'}
           name="language"

@@ -97,20 +97,6 @@ class Create extends Component {
       <div class="inputDivForm">
         <Form onSubmit={this.onSubmit}>
           <FormGroup>
-            <Dropdown
-              isOpen={this.state.dropdownOpen}
-              toggle={() => this.setState({dropdownOpen: !this.state.dropdownOpen})}
-            >
-              <DropdownToggle caret>
-                {t(this.state.category)}
-              </DropdownToggle>
-              <DropdownMenu>
-                <DropdownItem onClick={() => this.setState({category: 'big'})}>{t('big')}</DropdownItem>
-                <DropdownItem onClick={() => this.setState({category: 'small'})}>{t('small')}</DropdownItem>
-              </DropdownMenu>
-            </Dropdown>
-          </FormGroup>
-          <FormGroup>
             <Label for="name">{t('item')}</Label>
             <Input
               id="name"
@@ -153,6 +139,20 @@ class Create extends Component {
               value={this.state.sellPrice}
               onChange={this.onChangeSellPrice}
             />
+          </FormGroup>
+          <FormGroup>
+            <Dropdown
+              isOpen={this.state.dropdownOpen}
+              toggle={() => this.setState({dropdownOpen: !this.state.dropdownOpen})}
+            >
+              <DropdownToggle caret>
+                {t(this.state.category)}
+              </DropdownToggle>
+              <DropdownMenu>
+                <DropdownItem onClick={() => this.setState({category: 'big'})}>{t('big')}</DropdownItem>
+                <DropdownItem onClick={() => this.setState({category: 'small'})}>{t('small')}</DropdownItem>
+              </DropdownMenu>
+            </Dropdown>
           </FormGroup>
           <Input type="submit" value={this.props.t('newSale')} className="btn btn-primary"/>
         </Form>

@@ -35,7 +35,7 @@ const SalesComp = ({data, t}) => {
                   <td>{dat.quantity}</td>
                   <td>{dat.buyPrice}</td>
                   <td>{dat.sellPrice}</td>
-                  <td>{dat.quantity * (dat.sellPrice - dat.buyPrice).toFixed(2)}</td>
+                  <td>{(dat.quantity * (dat.sellPrice - dat.buyPrice)).toFixed(2)}</td>
                 </tr>
               )
             })

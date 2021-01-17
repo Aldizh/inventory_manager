@@ -6,7 +6,7 @@ import { initReactI18next } from "react-i18next";
 const resources = {
   en: {
     translation: {
-      "title": "Zhupani Market",
+      "title": "Grocery Market",
       "sales": "Sales",
       "small": "Small Volume",
       "big": "Large Volume",
@@ -27,14 +27,14 @@ const resources = {
       "dataCorrection": "Data Correction/Deletion",
       "delete": "Delete",
       "correct": "Correct",
-      "newSale": "New Sale",
+      "newSale": "New Entry",
       "quantity": "Quantity",
       "quantityNew": "New Quantity"
     }
   },
   al: {
     translation: {
-      "title": "Market Zhupani",
+      "title": "Ushqimore",
       "sales": "Shitjet",
       "small": "Pakice",
       "big": "Shumice",
@@ -55,7 +55,7 @@ const resources = {
       "dataCorrection": "Fshirje/Korrigjim te dhenash",
       "delete": "Fshi",
       "correct": "Korrigjo",
-      "newSale": "Shitje e Re",
+      "newSale": "Regjistro te dhenat ",
       "quantity": "Sasia",
       "quantityNew": "Sasia e Re"
     }

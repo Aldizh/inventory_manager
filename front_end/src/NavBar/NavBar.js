@@ -14,39 +14,40 @@ import {
   DropdownItem,
   NavbarText
 } from 'reactstrap';
+import './styles.css';
 
 const NavBar = ({t}) => {
   const [isOpen, setIsOpen] = useState(false);
   const toggle = () => setIsOpen(!isOpen);
 
   return (
-    <Navbar color="light" light expand="md">
+    <nav className ="navbar navbar-dark bg-dark">
       <NavbarBrand href="/">{t('title')}</NavbarBrand>
-      <NavbarToggler onClick={toggle} />
+      <NavbarToggler onClick={toggle} className="mr-2" />
       <Collapse isOpen={isOpen} navbar>
-        <Nav className="mr-auto" navbar>
+        <Nav navbar>
           <NavItem>
-            <NavLink href="/create">{t('dataEntry')}</NavLink>
+           <NavLink href="/dashboard">{t('home')}</NavLink>
           </NavItem>
-          <UncontrolledDropdown nav inNavbar>
-            <DropdownToggle nav caret>
-              {t('sales')}
-            </DropdownToggle>
-            <DropdownMenu right>
-              <DropdownItem>
-                <NavLink href="/pakice">{t('small')}</NavLink>
-              </DropdownItem>
-              <DropdownItem>
-                <NavLink href="/shumice">{t('big')}</NavLink>
-              </DropdownItem>
-            </DropdownMenu>
+           <NavItem>
+             <NavLink href="/create">{t('dataEntry')}</NavLink>
+           </NavItem>
+           <UncontrolledDropdown nav inNavbar>
+             <DropdownToggle nav caret>
+               {t('sales')}
+             </DropdownToggle>
+             <DropdownMenu right>
+               <DropdownItem>
+                 <NavLink href="/pakice">{t('small')}</NavLink>
+               </DropdownItem>
+               <DropdownItem>
+                 <NavLink href="/shumice">{t('big')}</NavLink>
+               </DropdownItem>
+             </DropdownMenu>
           </UncontrolledDropdown>
         </Nav>
-        <NavbarText>
-          <NavLink href="/dashboard">{t('home')}</NavLink>
-        </NavbarText>
       </Collapse>
-    </Navbar>
+    </nav>
   );
 }
 
