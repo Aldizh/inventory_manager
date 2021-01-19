@@ -29,7 +29,9 @@ const resources = {
       "correct": "Correct",
       "newSale": "New Entry",
       "quantity": "Quantity",
-      "quantityNew": "New Quantity"
+      "quantityNew": "New Quantity",
+      "anonymous": "Enter as anonymous",
+      "authenticated": "Enter with key"
     }
   },
   al: {
@@ -57,7 +59,9 @@ const resources = {
       "correct": "Korrigjo",
       "newSale": "Regjistro te dhenat ",
       "quantity": "Sasia",
-      "quantityNew": "Sasia e Re"
+      "quantityNew": "Sasia e Re",
+      "anonymous": "Hyr si Anonim",
+      "authenticated": "Hyr me celes"
     }
   }
 };
@@ -67,6 +71,8 @@ i18n
   .init({
     resources,
     lng: "en",
+    lngs: ["en", "al"],
+    defaultLanguage: 'en',
 
     keySeparator: false, // we do not use keys in form messages.welcome
 
