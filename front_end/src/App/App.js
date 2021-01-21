@@ -14,10 +14,15 @@ import Shitjet from "../Components/Shitjet"
 import escapeHTML from "../utils/string"
 import 'bootstrap/dist/css/bootstrap.min.css'
 import "./styles.css"
+
 class App extends Component {
   constructor(props) {
     // Required step: always call the parent class' constructor
     super(props);
+
+    let defaultLang = 'en'
+    let lang = localStorage.getItem("language")
+    if (lang && lang.length) defaultLang = lang
 
     // Set the state directly. Use props if necessary.
     this.state = {
@@ -26,7 +31,7 @@ class App extends Component {
       idToDelete: null,
       idToUpdate: null,
       objectToUpdate: null,
-      language: 'en'
+      language: lang
     }
   }
 
@@ -35,6 +40,12 @@ class App extends Component {
   // changed and implement those changes into our UI
   componentDidMount() {
     this.getDataFromDb();
+    let lang = localStorage.getItem("language")
+    if (lang && lang.length) {
+      this.props.i18n.changeLanguage(lang, (err) => {
+        if (err) return console.log('something went wrong loading', err);
+      })
+    }
   }
 
   // just a note, here, in the front end, we use the id key of our data object
@@ -108,7 +119,10 @@ class App extends Component {
   onLanguageHandle = (event) => {
     let newLang = event.target.value;
     this.setState({ language: newLang })
-    this.props.i18n.changeLanguage(newLang)
+    localStorage.setItem("language", newLang)
+    this.props.i18n.changeLanguage(newLang, (err) => {
+      if (err) return console.log('something went wrong loading', err);
+    })
   }
 
   renderRadioButtons = () => {

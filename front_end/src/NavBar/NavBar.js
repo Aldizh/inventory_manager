@@ -14,11 +14,19 @@ import {
   DropdownItem,
   NavbarText
 } from 'reactstrap';
+import useBeforeFirstRender from '../hooks/useBeforeFirstRender'
 import './styles.css';
 
-const NavBar = ({t}) => {
+const NavBar = ({t, i18n}) => {
   const [isOpen, setIsOpen] = useState(false);
   const toggle = () => setIsOpen(!isOpen);
+
+  useBeforeFirstRender(() => {
+    let lang = localStorage.getItem("language")
+    if (lang && lang.length) {
+      i18n.changeLanguage(lang)
+    }
+  })
 
   return (
     <nav className ="navbar navbar-dark bg-dark">
