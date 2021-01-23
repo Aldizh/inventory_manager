@@ -1,7 +1,8 @@
-const express = require("express");
-const Data = require("../models/data");
-const path = require("path")
-const router = express.Router();
+const express = require('express')
+const path = require('path')
+const Data = require('../models/data')
+
+const router = express.Router()
 
 // fetches all available records from our database
 router.get("/datas", (req, res) => {
@@ -12,39 +13,47 @@ router.get("/datas", (req, res) => {
   })
 });
 
-// creates a new record in our database if it does not exists
+// insert one or many records in our database
 router.post("/datas", (req, res, next) => {
-  const {
-    id,
-    name,
-    quantity,
-    buyPrice,
-    sellPrice,
-    category,
-    available,
-    geometry
-  } = req.body;
-
-  let data = new Data({
-    id,
-    name,
-    quantity,
-    buyPrice,
-    sellPrice,
-    category,
-    geometry,
-    available
-  });
-
-  data
-    .save()
-    .then(result => {
-      console.log('result')
-      return res.json({ success: true, id: id });
+  if (Array.isArray(req.body)) {
+    Data.insertMany(req.body).then((data) => {
+      return res.json({ success: true, data: data });
+    }).catch(err => {
+      return res.status(400).json({ success: false, error: err });
     })
-    .catch(err => {
-      return res.status(400).json({error: 'Bad request'});
-    })
+  } else {
+    const {
+      id,
+      name,
+      quantity,
+      buyPrice,
+      sellPrice,
+      category,
+      available,
+      geometry
+    } = req.body;
+
+    let data = new Data({
+      id,
+      name,
+      quantity,
+      buyPrice,
+      sellPrice,
+      category,
+      geometry,
+      available
+    });
+
+    data
+      .save()
+      .then(result => {
+        console.log('result')
+        return res.json({ success: true, id: id });
+      })
+      .catch(err => {
+        return res.status(400).json({error: 'Bad request'});
+      })
+  }
 });
 
 // get data by id
@@ -107,6 +116,15 @@ router.delete("/datas/:id", (req, res, next) => {
         return res.json({ success: false, error: err})
       })
     } else return res.status(400).json({ success: false, error: "This record does not exist" });
+  })
+});
+
+// deletes all records from our database
+router.delete("/datas", (req, res, next) => {
+  Data.deleteMany({}).then(data => {
+    return res.status(200).json({ success: true, deleteCount: data.deleteCount})
+  }).catch(err => {
+    return res.status(400).json({ success: false, error: err})
   })
 });
 

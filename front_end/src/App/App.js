@@ -9,10 +9,11 @@ import {
 } from 'reactstrap'
 import axios from "axios"
 import { findIndex, propEq } from "ramda"
+import 'bootstrap/dist/css/bootstrap.min.css'
 import '../i18n';
 import Shitjet from "../Components/Shitjet"
 import escapeHTML from "../utils/string"
-import 'bootstrap/dist/css/bootstrap.min.css'
+import sampleData from "../mock_data"
 import "./styles.css"
 
 class App extends Component {
@@ -145,16 +146,54 @@ class App extends Component {
     )
   }
 
+  // our put method that uses our backend api
+  // to create new query into our data base
+  putDataToDB(name, quantity, buyPrice, sellPrice, category) {
+    let currentIds = this.state.data.map(data => data.id);
+    const id = currentIds.length
+    const newRecord = {
+      id: id,
+      name: name,
+      quantity: quantity,
+      buyPrice: buyPrice,
+      sellPrice: sellPrice,
+      category: category,
+    };
+    axios.post("/api/datas", newRecord).then(response => {
+      if (response.status === 200) {
+        const newData = this.state.data;
+        newData.push(newRecord);
+        this.setState({ data: newData });
+      }
+    });
+  }
+
+
   // here is our UI
   // it is easy to understand their functions when you
   // see them render into our screen
   render() {
     const { t } = this.props
     const { data } = this.state;
+    const { name, quantity, buyPrice, sellPrice, category } = this.state
 
     return (
       <div>
-        {this.renderRadioButtons()}
+        <div style={{textAlign: 'center', margin: 'auto', width: '50%' }}>
+          {this.renderRadioButtons()}
+          <button onClick={() => {
+            axios.post("/api/datas", sampleData)
+              .then(res => this.getDataFromDb())
+              .catch(err => console.log('bulk insert failed', err));
+          }}>Load test data
+          </button>
+          <button onClick={() => {
+            axios.delete("/api/datas", sampleData)
+              .then(res => this.getDataFromDb())
+              .catch(err => console.log('bulk delete failed', err));
+          }}>Delete All
+          </button>
+        </div>
         <Container>
           <Row>
             <Col lg="12">

@@ -8,6 +8,7 @@ const resources = {
     translation: {
       "title": "Grocery Market",
       "sales": "Sales",
+      "category": "Select a category from the list",
       "small": "Small Volume",
       "big": "Large Volume",
       "home": "Home",
@@ -38,6 +39,7 @@ const resources = {
     translation: {
       "title": "Ushqimore",
       "sales": "Shitjet",
+      "category": "Zgjidh nje nga kategorite",
       "small": "Pakice",
       "big": "Shumice",
       "home": "Kreu",

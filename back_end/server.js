@@ -4,8 +4,7 @@ const path = require("path");
 const cors = require("cors");
 const bodyParser = require("body-parser");
 const morgan = require("morgan");
-const Data = require("./models/data");
-const router = require("./routes/api");
+const apiRouter = require("./routes/api");
 require('dotenv').config()
 
 const PORT = process.env.PORT || 5000;
@@ -21,6 +20,7 @@ mongoose.connect(process.env.ATLAS_URI, {
   useNewUrlParser: true,
   useCreateIndex: true
 });
+
 mongoose.connection
   .once("open", () => console.log("connected to the database"))
   .on("error", console.error.bind(console, "MongoDB connection error:"));
@@ -33,10 +33,10 @@ app.use(bodyParser.json());
 app.use(morgan("dev"));
 
 // appends api to all server requests
-app.use("/api", router);
+app.use("/api", apiRouter);
 
 // custom middleware for errr parsing
-// ORDER is VERY important here, has to be right after router config
+// ORDER is VERY important here, has to be right after apiRouter config
 app.use(function(err, req, res, next) {
   res.status(422).send({ error: err.message });
 });

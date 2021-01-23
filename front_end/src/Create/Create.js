@@ -1,16 +1,7 @@
 import React, { Component } from 'react'
-import axios from "axios"
-import { withTranslation } from 'react-i18next';
-import {
-  Form,
-  FormGroup,
-  Label,
-  Input,
-  Dropdown,
-  DropdownToggle,
-  DropdownMenu,
-  DropdownItem
-} from 'reactstrap'
+import axios from 'axios'
+import { withTranslation } from 'react-i18next'
+import './styles.css'
 
 class Create extends Component {
   constructor(props) {
@@ -28,8 +19,7 @@ class Create extends Component {
       quantity: '',
       buyPrice: '',
       sellPrice: '',
-      category: 'big',
-      dropdownOpen: false
+      category: 'big'
     }
   }
 
@@ -94,68 +84,61 @@ class Create extends Component {
   render() {
     const { t } = this.props
     return (
-      <div class="inputDivForm">
-        <Form onSubmit={this.onSubmit}>
-          <FormGroup>
-            <Label for="name">{t('item')}</Label>
-            <Input
-              id="name"
-              type="text"
-              name="name"
-              placeholder=""
-              value={this.state.name}
-              onChange={this.onChangeName}
-            />
-          </FormGroup>
-          <FormGroup>
-            <Label for="quantity">{t('quantity')}</Label>
-            <Input
-              id="quantity"
-              type="number"
-              name="quantity"
-              placeholder=""
-              value={this.state.quantity}
-              onChange={this.onChangeQuantity}
-            />
-          </FormGroup>
-          <FormGroup>
-            <Label for="buy_price">{t('buyPrice')}</Label>
-            <Input
-              id="buy_price"
-              type="number"
-              name="buy_price"
-              placeholder=""
-              value={this.state.buyPrice}
-              onChange={this.onChangeBuyPrice}
-            />
-          </FormGroup>
-          <FormGroup>
-            <Label for="sell_price">{t('sellPrice')}</Label>
-            <Input
-              id="sell_price"
-              type="number"
-              name="sell_price"
-              placeholder=""
-              value={this.state.sellPrice}
-              onChange={this.onChangeSellPrice}
-            />
-          </FormGroup>
-          <FormGroup>
-            <Dropdown
-              isOpen={this.state.dropdownOpen}
-              toggle={() => this.setState({dropdownOpen: !this.state.dropdownOpen})}
-            >
-              <DropdownToggle caret>
-                {t(this.state.category)}
-              </DropdownToggle>
-              <DropdownMenu>
-                <DropdownItem onClick={() => this.setState({category: 'big'})}>{t('big')}</DropdownItem>
-                <DropdownItem onClick={() => this.setState({category: 'small'})}>{t('small')}</DropdownItem>
-              </DropdownMenu>
-            </Dropdown>
-          </FormGroup>
-          <Input type="submit" value={this.props.t('newSale')} className="btn btn-primary"/>
-        </Form>
+      <div className="createFormContainer">
+        <form className='add-form' onSubmit={this.onSubmit}>
+          <div className='form-control'>
+            <label>{t('category')}</label>
+            <select name="cars" id="categorySelect" onChange={(e) => this.setState({ category: e.target.value })}>
+              <option value="big">{t('big')}</option>
+              <option value="small">{t('small')}</option>
+            </select>
+          </div>
+         <div className='form-control'>
+           <label>{t('item')}</label>
+           <input
+             id="name"
+             type="text"
+             name="name"
+             placeholder=""
+             value={this.state.name}
+             onChange={this.onChangeName}
+           />
+         </div>
+         <div className='form-control'>
+           <label>{t('quantity')}</label>
+           <input
+             id="quantity"
+             type="number"
+             name="quantity"
+             placeholder=""
+             value={this.state.quantity}
+             onChange={this.onChangeQuantity}
+           />
+         </div>
+         <div className='form-control'>
+           <label>{t('buyPrice')}</label>
+           <input
+             id="buy_price"
+             type="number"
+             name="buy_price"
+             placeholder=""
+             value={this.state.buyPrice}
+             onChange={this.onChangeBuyPrice}
+           />
+         </div>
+         <div className='form-control'>
+           <label>{t('sellPrice')}</label>
+           <input
+             id="sell_price"
+             type="number"
+             name="sell_price"
+             placeholder=""
+             value={this.state.sellPrice}
+             onChange={this.onChangeSellPrice}
+           />
+         </div>
+         <input type="submit" value={this.props.t('newSale')} className="btn btn-block"/>
+       </form>
       </div>
     )
   }
