@@ -1,38 +1,37 @@
 // /client/App.js
-import React, { Component } from "react"
-import { withTranslation } from 'react-i18next';
+import React, { Component } from 'react';
+import { withTranslation } from 'react-i18next'
 import {
   Container,
   Row,
   Col,
   Input,
-} from 'reactstrap'
-import axios from "axios"
-import { findIndex, propEq } from "ramda"
-import 'bootstrap/dist/css/bootstrap.min.css'
+} from 'reactstrap';
+import axios from 'axios';
+import { findIndex, propEq } from 'ramda';
+import 'bootstrap/dist/css/bootstrap.min.css';
 import '../i18n';
-import Shitjet from "../Components/Shitjet"
-import escapeHTML from "../utils/string"
-import sampleData from "../mock_data"
-import "./styles.css"
+import Shitjet from '../Components/Shitjet';
+import escapeHTML from '../utils/string';
+import { generateId } from '../utils/numbers';
+import sampleData from '../mock_data';
+import './styles.css';
 
 class App extends Component {
   constructor(props) {
     // Required step: always call the parent class' constructor
     super(props);
 
-    let defaultLang = 'en'
-    let lang = localStorage.getItem("language")
-    if (lang && lang.length) defaultLang = lang
+    let defaultLang = 'en';
+    const lang = localStorage.getItem('language');
+    if (lang && lang.length) defaultLang = lang;
 
     // Set the state directly. Use props if necessary.
     this.state = {
-      id: 0,
       data: [],
       idToDelete: null,
       idToUpdate: null,
-      objectToUpdate: null,
-      language: lang
+      language: defaultLang
     }
   }
 
@@ -40,11 +39,11 @@ class App extends Component {
   // then we incorporate a polling logic so that we can easily see if our db has
   // changed and implement those changes into our UI
   componentDidMount() {
-    this.getDataFromDb();
-    let lang = localStorage.getItem("language")
+    this.getDataFromDb()
+    const lang = localStorage.getItem('language');
     if (lang && lang.length) {
       this.props.i18n.changeLanguage(lang, (err) => {
-        if (err) return console.log('something went wrong loading', err);
+        if (err) return console.log('something went wrong loading', err)
       })
     }
   }
@@ -57,33 +56,35 @@ class App extends Component {
   // our first get method that uses our backend api to
   // fetch data from our data base
   getDataFromDb() {
-    fetch("/api/datas")
-      .then(data => data.json())
-      .then(res => this.setState({ data: res.data }));
+    fetch('/api/datas')
+      .then((data) => data.json())
+      .then((res) => this.setState({ data: res.data }));
   }
 
   // our delete method that uses our backend api
   // to remove existing database information
   deleteFromDB(idTodelete) {
     const recordToDelete = { id: null };
-    this.state.data.forEach(dat => {
+    this.state.data.forEach((dat) => {
       if (dat.id === parseInt(idTodelete)) {
         recordToDelete.id = dat.id;
       }
     });
     axios
       .delete(`/api/datas/${idTodelete}`, {
-        data: recordToDelete
+        data: recordToDelete,
       })
-      .then(response => {
+      .then((response) => {
         if (response.status === 200) {
-          let newData = this.state.data;
-          const deleteIndex = findIndex(propEq("id", recordToDelete.id))(newData);
+          const { data } = this.state;
+          const deleteIndex = findIndex(propEq('id', recordToDelete.id))(data);
           if (deleteIndex === -1) {
-            alert("No such records exist in our database");
+            alert('No such records exist in our database');
           } else {
-            newData.splice(deleteIndex, 1);
-            this.setState({ data: newData });
+            data.splice(deleteIndex, 1);
+            const updated = data(idTodelete, data.length);
+            // TO DO: Bulk update to increment id for deleted records
+            this.setState({ data });
           }
         }
       });
@@ -94,22 +95,22 @@ class App extends Component {
   // TO DO: sanitize input
   updateDB(idToUpdate, name = '', qunatity, buyPrice, sellPrice) {
     let recordToUpdate = {};
-    this.state.data.forEach(dat => {
+    this.state.data.forEach((dat) => {
       if (dat.id === parseInt(idToUpdate)) {
         recordToUpdate = {
           id: dat.id,
           name: escapeHTML(name) || dat.name,
           quantity: qunatity || dat.quantity,
           buyPrice: buyPrice || dat.buyPrice,
-          sellPrice: sellPrice || dat.sellPrice
-        }
+          sellPrice: sellPrice || dat.sellPrice,
+        };
       }
     });
 
-    axios.patch(`/api/datas/${idToUpdate}`, recordToUpdate).then(response => {
+    axios.patch(`/api/datas/${idToUpdate}`, recordToUpdate).then((response) => {
       if (response.status === 200) {
-        let newData = this.state.data;
-        const updateIndex = findIndex(propEq("id", recordToUpdate.id))(newData);
+        const newData = this.state.data;
+        const updateIndex = findIndex(propEq('id', recordToUpdate.id))(newData);
         newData.splice(updateIndex, 1);
         newData.splice(updateIndex, 0, recordToUpdate);
         this.setState({ data: newData });
@@ -118,48 +119,49 @@ class App extends Component {
   }
 
   onLanguageHandle = (event) => {
-    let newLang = event.target.value;
-    this.setState({ language: newLang })
-    localStorage.setItem("language", newLang)
+    const newLang = event.target.value;
+    this.setState({ language: newLang });
+    localStorage.setItem('language', newLang);
     this.props.i18n.changeLanguage(newLang, (err) => {
       if (err) return console.log('something went wrong loading', err);
-    })
+    });
   }
 
-  renderRadioButtons = () => {
-    return (
-      <div style={{ marginLeft: 15 }}>
-        <input
-          checked={this.state.language === 'en'}
-          name="language"
-          onChange={(e) => this.onLanguageHandle(e)}
-          value="en"
-          type="radio" />English &nbsp;
-        <input
-          name="language"
-          value="al"
-          checked={this.state.language === 'al'}
-          type="radio"
-          onChange={(e) => this.onLanguageHandle(e)}
-      />Albanian
-      </div>
-    )
-  }
+  renderRadioButtons = () => (
+    <div style={{ marginLeft: 15 }}>
+      <input
+        checked={this.state.language === 'en'}
+        name="language"
+        onChange={(e) => this.onLanguageHandle(e)}
+        value="en"
+        type="radio"
+      />
+      English &nbsp;
+      <input
+        name="language"
+        value="al"
+        checked={this.state.language === 'al'}
+        type="radio"
+        onChange={(e) => this.onLanguageHandle(e)}
+      />
+      Albanian
+    </div>
+  )
 
   // our put method that uses our backend api
   // to create new query into our data base
   putDataToDB(name, quantity, buyPrice, sellPrice, category) {
-    let currentIds = this.state.data.map(data => data.id);
-    const id = currentIds.length
+    const currentIds = this.state.data.map((data) => data.id);
+    const id = currentIds.length;
     const newRecord = {
-      id: id,
-      name: name,
-      quantity: quantity,
-      buyPrice: buyPrice,
-      sellPrice: sellPrice,
-      category: category,
+      id,
+      name,
+      quantity,
+      buyPrice,
+      sellPrice,
+      category,
     };
-    axios.post("/api/datas", newRecord).then(response => {
+    axios.post('/api/datas', newRecord).then((response) => {
       if (response.status === 200) {
         const newData = this.state.data;
         newData.push(newRecord);
@@ -168,30 +170,43 @@ class App extends Component {
     });
   }
 
-
   // here is our UI
   // it is easy to understand their functions when you
   // see them render into our screen
   render() {
-    const { t } = this.props
+    const { t } = this.props;
     const { data } = this.state;
-    const { name, quantity, buyPrice, sellPrice, category } = this.state
+    const {
+      name, quantity, buyPrice, sellPrice
+    } = this.state;
 
     return (
       <div>
-        <div style={{textAlign: 'center', margin: 'auto', width: '50%' }}>
+        <div style={{ textAlign: 'center', margin: 'auto', width: '50%' }}>
           {this.renderRadioButtons()}
           <button onClick={() => {
-            axios.post("/api/datas", sampleData)
-              .then(res => this.getDataFromDb())
-              .catch(err => console.log('bulk insert failed', err));
-          }}>Load test data
+            axios.post('/api/datas', sampleData.map((item, idx) => ({
+              ...item,
+              id: generateId(this.state.data) + idx,
+            })))
+              .then((res) => {
+                console.log('bulk insert status', res.status)
+                this.getDataFromDb()
+              })
+              .catch((err) => console.log('bulk insert failed', err));
+          }}
+          >
+            {t('loadAll')}
           </button>
           <button onClick={() => {
-            axios.delete("/api/datas", sampleData)
-              .then(res => this.getDataFromDb())
-              .catch(err => console.log('bulk delete failed', err));
-          }}>Delete All
+            axios.delete('/api/datas', sampleData).then((res) => {
+              console.log('bulk delete status', res.status)
+              this.getDataFromDb()
+            })
+            .catch((err) => console.log('bulk delete failed', err));
+          }}
+          >
+            {t('deleteAll')}
           </button>
         </div>
         <Container>
@@ -208,7 +223,7 @@ class App extends Component {
                   name="fshi"
                   placeholder={t('barCode')}
                   value={this.state.idToDelete || ''}
-                  onChange={e => this.setState({ idToDelete: e.target.value })}
+                  onChange={(e) => this.setState({ idToDelete: e.target.value })}
                 />
                 <button onClick={() => this.deleteFromDB(this.state.idToDelete)}>{t('delete')}</button>
                 <div className="inputDiv">
@@ -216,31 +231,31 @@ class App extends Component {
                     type="text"
                     placeholder={t('barCode')}
                     value={this.state.idToUpdate || ''}
-                    onChange={e => this.setState({ idToUpdate: e.target.value })}
+                    onChange={(e) => this.setState({ idToUpdate: e.target.value })}
                   />
                   <Input
                     type="text"
                     placeholder={t('nameNew')}
-                    value={this.state.name || ''}
-                    onChange={e => this.setState({ name: e.target.value })}
+                    value={name || ''}
+                    onChange={(e) => this.setState({ name: e.target.value })}
                   />
                   <Input
                     type="number"
                     placeholder={t('quantityNew')}
-                    value={this.state.quantity || ''}
-                    onChange={e => this.setState({ quantity: parseFloat(e.target.value) })}
+                    value={quantity || ''}
+                    onChange={(e) => this.setState({ quantity: parseFloat(e.target.value) })}
                   />
                   <Input
                     type="number"
                     placeholder={t('buyPriceNew')}
-                    value={this.state.buyPrice || ''}
-                    onChange={e => this.setState({ buyPrice: parseFloat(e.target.value) })}
+                    value={buyPrice || ''}
+                    onChange={(e) => this.setState({ buyPrice: parseFloat(e.target.value) })}
                   />
                   <Input
                     type="number"
                     placeholder={t('sellPriceNew')}
-                    value={this.state.sellPrice || ''}
-                    onChange={e => this.setState({ sellPrice: parseFloat(e.target.value) })}
+                    value={sellPrice || ''}
+                    onChange={(e) => this.setState({ sellPrice: parseFloat(e.target.value) })}
                   />
                 </div>
                 <button onClick={() => this.updateDB(this.state.idToUpdate, this.state.name, this.state.quantity, this.state.buyPrice, this.state.sellPrice)}>
@@ -254,7 +269,7 @@ class App extends Component {
           </Row>
         </Container>
       </div>
-    )
+    );
   }
 }
 

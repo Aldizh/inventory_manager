@@ -1,3 +1,3 @@
-import Shumice from './Shumice'
+import Shumice from './Shumice';
 
-export default Shumice
+export default Shumice;

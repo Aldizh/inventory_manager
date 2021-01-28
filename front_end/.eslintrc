@@ -15,10 +15,10 @@
     "sourceType": "module"
   },
   "rules": {
-    "no-console": "warn",
+    "no-console": 0,
+    "react/prop-types": 0,
     "no-unused-vars": "warn",
     "no-param-reassign": ["error", { "props": false }],
-    "react/prop-types": 0
   },
   "globals": {
     "window": true,

@@ -1,7 +1,7 @@
-import React, { Component } from 'react'
+import React, { Component } from 'react';
 import { withTranslation } from 'react-i18next';
-import axios from "axios"
-import Shitjet from "../Components/Shitjet"
+import axios from 'axios';
+import Shitjet from '../Components/Shitjet';
 
 class Pakice extends Component {
   constructor(props) {
@@ -11,18 +11,18 @@ class Pakice extends Component {
       data: [],
       name: '',
       buyPrice: '',
-      sellPrice: ''
-    }
+      sellPrice: '',
+    };
   }
 
   componentDidMount() {
     // fetch data from our data base
-    axios.get("/api/datas")
-      .then(res => {
-        const filtered = res.data.data.filter((sale) => sale.category === 'small')
-        this.setState({ data: filtered })
-      })
- }
+    axios.get('/api/datas')
+      .then((res) => {
+        const filtered = res.data.data.filter((sale) => sale.category === 'small');
+        this.setState({ data: filtered });
+      });
+  }
 
   render() {
     return (
@@ -30,8 +30,8 @@ class Pakice extends Component {
         <h3 id="shitjetShumice">{this.props.t('small')}</h3>
         <Shitjet data={this.state.data} />
       </div>
-    )
+    );
   }
 }
 
-export default withTranslation()(Pakice)
+export default withTranslation()(Pakice);

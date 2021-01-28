@@ -1,34 +1,35 @@
-import React from "react";
-import ReactDOM from "react-dom";
-import { createBrowserHistory } from "history";
-import Router from "./Router";
-import NavBar from './NavBar'
-import Footer from './Footer'
-import { app, isLoggedIn, loginAnonymous, loginWithKey, logoutUser } from "./Stitch";
-import Login from "./Login";
-import * as serviceWorker from "./serviceWorker";
-import "./index.css";
+import React from 'react';
+import ReactDOM from 'react-dom';
+import { createBrowserHistory } from 'history';
+import Router from './Router';
+import NavBar from './NavBar';
+import Footer from './Footer';
+import {
+  app, isLoggedIn, loginAnonymous, loginWithKey, logoutUser,
+} from './Stitch';
+import Login from './Login';
+import * as serviceWorker from './serviceWorker';
+import './index.css';
 
 export const history = createBrowserHistory();
 
-const MyApp = props =>
-  isLoggedIn() ? (
-    <React.Fragment>
-      <NavBar />
-      <br/>
-      <Router history={history} handleLogout={() => logoutUser(app.currentUser)} />
-      <Footer />
-    </React.Fragment>
-  ) : (
-    <React.Fragment>
-      <NavBar />
-      <br/>
-      <Login loginAnonymous={loginAnonymous} loginWithKey={loginWithKey} />
-      <Footer />
-    </React.Fragment>
-  );
+const MyApp = () => (isLoggedIn() ? (
+  <>
+    <NavBar />
+    <br />
+    <Router history={history} handleLogout={() => logoutUser(app.currentUser)} />
+    <Footer />
+  </>
+) : (
+  <>
+    <NavBar />
+    <br />
+    <Login loginAnonymous={loginAnonymous} loginWithKey={loginWithKey} />
+    <Footer />
+  </>
+));
 
-ReactDOM.render(<MyApp />, document.getElementById("root"));
+ReactDOM.render(<MyApp />, document.getElementById('root'));
 
 // If you want your app to work offline and load faster, you can change
 // unregister() to register() below. Note this comes with some pitfalls.

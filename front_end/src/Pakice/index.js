@@ -1,3 +1,3 @@
-import Pakice from './Pakice'
+import Pakice from './Pakice';
 
-export default Pakice
+export default Pakice;
