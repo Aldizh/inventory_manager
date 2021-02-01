@@ -1,18 +1,6 @@
 const mongoose = require("mongoose");
 const Schema = mongoose.Schema;
 
-// geo location schema
-const GeoSchema = new Schema({
-  type: {
-    type: String,
-    default: "Point"
-  },
-  coordinates: {
-    type: [Number],
-    index: "2dsphere"
-  }
-});
-
 // this will be our data base's data structure
 const DataSchema = new Schema(
   {
@@ -55,8 +43,7 @@ const DataSchema = new Schema(
     available: {
       type: Boolean,
       default: false
-    },
-    geometry: GeoSchema
+    }
   },
   { timestamps: true }
 );

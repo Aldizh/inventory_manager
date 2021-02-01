@@ -22,7 +22,14 @@ npm config set strict-ssl false
 yarn start:dev
 ```
 
-5. In order to debug jest tests put a debugger statement in the test you are working with and run the following
+5. Install mongodb client and start the daemon in order to run the test suite
+
+```
+brew install mongodb-community@4.4
+mongod --dbpath /usr/local/var/mongodb
+```
+
+6. In order to debug jest tests put a debugger statement in the test you are working with and run the following
 
 ```
 node --debug-brk --inspect ./node_modules/.bin/jest -i --env jest-environment-node-debug
@@ -30,7 +37,7 @@ node --debug-brk --inspect ./node_modules/.bin/jest -i --env jest-environment-no
 
 This will output a link which you can paste into the browser and start the debugger
 
-6. Setup [git hooks](docs/setup.md#git-hooks) to keep the docs updated.
+7. Setup [git hooks](docs/setup.md#git-hooks) to keep the docs updated.
 
 ## Running the application
 
