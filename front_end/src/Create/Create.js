@@ -19,14 +19,13 @@ class Create extends Component {
       quantity: '',
       buyPrice: '',
       sellPrice: '',
-      category: 'big',
+      category: 'large',
     };
   }
 
-  // fetch data from our data base so that we can properly append
-  // TO DO: See if we can refactor later
+  // This is to ensure we get current sales data
   componentDidMount() {
-    fetch('/api/datas')
+    fetch('/api/sales')
       .then((data) => data.json())
       .then((res) => this.setState({ data: res.data }));
   }
@@ -51,22 +50,22 @@ class Create extends Component {
   // to create new query into our data base
   putDataToDB(name, quantity, buyPrice, sellPrice, category) {
     const currentIds = this.state.data.map((data) => data.id);
-    const id = currentIds.length;
+    const saleId = currentIds.length;
     const newRecord = {
-      id,
+      saleId,
       name,
       quantity,
       buyPrice,
       sellPrice,
       category,
     };
-    axios.post('/api/datas', newRecord).then((response) => {
+    axios.post('/api/sales', newRecord).then((response) => {
       if (response.status === 200) {
         const newData = this.state.data;
         newData.push(newRecord);
         this.setState({ data: newData });
       }
-    });
+    }).catch(err => console.log('error', err))
   }
 
   onSubmit(e) {

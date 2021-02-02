@@ -10,6 +10,10 @@ h3 {
   text-align: center;
 }
 
+table {
+  text-align: center;
+}
+
 .centeredRight {
   overflow-x: hidden;
   padding-top: 20px;
@@ -20,20 +24,24 @@ h3 {
   margin: auto;
   padding: 10px;
   display: flex;
-}
 
-.inputDiv span {
-  width: 33%;
-}
+  span {
+    width: 33%;
 
-.inputDiv a {
-  width: 300px;
-}
+    p {
+      text-align: center;
+    }
+  }
 
-.inputDiv button {
-  position: relative;
-  top: 10px;
-  height: 45px;
+  a {
+    width: 300px;
+  }
+
+  button {
+    position: relative;
+    top: 10px;
+    height: 45px;
+  }
 }
 
 input[type="text"] {

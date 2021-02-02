@@ -11,11 +11,10 @@ import axios from 'axios';
 import { findIndex, propEq } from 'ramda';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import '../i18n';
-import Shitjet from '../Components/Shitjet';
+import Inventory from '../Components/Inventory';
 import escapeHTML from '../utils/string';
-import { generateId } from '../utils/numbers';
-import sampleData from '../mock_data';
-import './styles.css';
+import { inventoryData } from '../mock_data';
+import './styles.scss';
 
 class App extends Component {
   constructor(props) {
@@ -93,7 +92,7 @@ class App extends Component {
   // our update method that uses our backend api
   // to overwrite existing data base information
   // TO DO: sanitize input
-  updateDB(idToUpdate, name = '', qunatity, buyPrice, sellPrice) {
+  updateDB(idToUpdate, name = '', qunatity, buyPrice) {
     let recordToUpdate = {};
     this.state.data.forEach((dat) => {
       if (dat.id === parseInt(idToUpdate)) {
@@ -102,7 +101,6 @@ class App extends Component {
           name: escapeHTML(name) || dat.name,
           quantity: qunatity || dat.quantity,
           buyPrice: buyPrice || dat.buyPrice,
-          sellPrice: sellPrice || dat.sellPrice,
         };
       }
     });
@@ -150,7 +148,7 @@ class App extends Component {
 
   // our put method that uses our backend api
   // to create new query into our data base
-  putDataToDB(name, quantity, buyPrice, sellPrice, category) {
+  putDataToDB(name, quantity, buyPrice, category) {
     const currentIds = this.state.data.map((data) => data.id);
     const id = currentIds.length;
     const newRecord = {
@@ -158,7 +156,6 @@ class App extends Component {
       name,
       quantity,
       buyPrice,
-      sellPrice,
       category,
     };
     axios.post('/api/datas', newRecord).then((response) => {
@@ -177,44 +174,19 @@ class App extends Component {
     const { t } = this.props;
     const { data } = this.state;
     const {
-      name, quantity, buyPrice, sellPrice
+      name, quantity, buyPrice
     } = this.state;
 
     return (
       <div>
         <div style={{ textAlign: 'center', margin: 'auto', width: '50%' }}>
           {this.renderRadioButtons()}
-          <button onClick={() => {
-            axios.post('/api/datas', sampleData.map((item, idx) => ({
-              ...item,
-              id: generateId(this.state.data) + idx,
-            })))
-              .then((res) => {
-                console.log('bulk insert status', res.status)
-                this.getDataFromDb()
-              })
-              .catch((err) => console.log('bulk insert failed', err));
-          }}
-          >
-            {t('loadAll')}
-          </button>
-          <button onClick={() => {
-            axios.delete('/api/datas', sampleData).then((res) => {
-              console.log('bulk delete status', res.status)
-              this.getDataFromDb()
-            })
-            .catch((err) => console.log('bulk delete failed', err));
-          }}
-          >
-            {t('deleteAll')}
-          </button>
         </div>
         <Container>
           <Row>
             <Col lg="12">
               <div className="centeredRight">
-                <h3>{t('sales')}</h3>
-                <Shitjet data={this.state.data} />
+                <Inventory syncData={() => this.getDataFromDb()} data={this.state.data} />
                 <hr />
                 <h3>{t('dataCorrection')}</h3>
                 <Input
@@ -251,14 +223,8 @@ class App extends Component {
                     value={buyPrice || ''}
                     onChange={(e) => this.setState({ buyPrice: parseFloat(e.target.value) })}
                   />
-                  <Input
-                    type="number"
-                    placeholder={t('sellPriceNew')}
-                    value={sellPrice || ''}
-                    onChange={(e) => this.setState({ sellPrice: parseFloat(e.target.value) })}
-                  />
                 </div>
-                <button onClick={() => this.updateDB(this.state.idToUpdate, this.state.name, this.state.quantity, this.state.buyPrice, this.state.sellPrice)}>
+                <button onClick={() => this.updateDB(this.state.idToUpdate, this.state.name, this.state.quantity, this.state.buyPrice)}>
                   {t('correct')}
                 </button>
                 {/* <div className="inputDiv">

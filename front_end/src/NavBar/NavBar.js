@@ -28,21 +28,18 @@ const NavBar = ({ t, i18n }) => {
 
   return (
     <nav className="navbar navbar-dark bg-dark">
-      <NavbarBrand href="/">{t('title')}</NavbarBrand>
+      <NavbarBrand href="/">{t('home')}</NavbarBrand>
       <NavbarToggler onClick={toggle} className="mr-2" />
       <Collapse isOpen={isOpen} navbar>
         <Nav navbar>
-          <NavItem>
-            <NavLink href="/dashboard">{t('home')}</NavLink>
-          </NavItem>
-          <NavItem>
-            <NavLink href="/create">{t('dataEntry')}</NavLink>
-          </NavItem>
           <UncontrolledDropdown nav inNavbar>
             <DropdownToggle nav caret>
               {t('sales')}
             </DropdownToggle>
             <DropdownMenu right>
+              <DropdownItem>
+                <NavLink href="/create">{t('dataEntry')}</NavLink>
+              </DropdownItem>
               <DropdownItem>
                 <NavLink href="/pakice">{t('small')}</NavLink>
               </DropdownItem>

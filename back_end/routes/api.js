@@ -1,6 +1,7 @@
 const express = require('express')
 const path = require('path')
 const Data = require('../models/data')
+const Sale = require('../models/sale')
 
 const router = express.Router()
 
@@ -27,7 +28,6 @@ router.post("/datas", (req, res, next) => {
       name,
       quantity,
       buyPrice,
-      sellPrice,
       category,
       available,
       geometry
@@ -38,7 +38,6 @@ router.post("/datas", (req, res, next) => {
       name,
       quantity,
       buyPrice,
-      sellPrice,
       category,
       geometry,
       available
@@ -86,15 +85,14 @@ router.get("/datas/:id", (req, res, next) => {
 
 // updates an existing record in our database
 router.patch("/datas/:id", (req, res, next) => {
-  const { name, qunatity, buyPrice, sellPrice, id } = req.body
+  const { name, qunatity, buyPrice, id } = req.body
   Data.find({ id }).then((records) => {
     const record = records[0]
     if (record.id !== null) {
       Data.updateOne({ id }, {
         name,
         qunatity,
-        buyPrice,
-        sellPrice
+        buyPrice
       }).then(record => {
         return res.json({ success: true, record})
       }).catch(err => {
@@ -126,6 +124,55 @@ router.delete("/datas", (req, res, next) => {
   }).catch(err => {
     return res.status(400).json({ success: false, error: err})
   })
+});
+
+
+// SALES ROUTES
+// fetches all available records from our database
+router.get("/sales", (req, res) => {
+  Sale.find().then((data) => {
+    return res.json({ success: true, data: data });
+  }).catch(err => {
+    return res.json({ success: false, error: err });
+  })
+});
+
+// insert one or many records in our database
+router.post("/sales", (req, res, next) => {
+  if (Array.isArray(req.body)) {
+    Sale.insertMany(req.body).then((data) => {
+      return res.json({ success: true, data: data });
+    }).catch(err => {
+      return res.status(400).json({ success: false, error: err });
+    })
+  } else {
+    const {
+      saleId,
+      name,
+      quantity,
+      buyPrice,
+      sellPrice,
+      category
+    } = req.body;
+
+    let data = new Sale({
+      saleId,
+      name,
+      quantity,
+      buyPrice,
+      sellPrice,
+      category
+    });
+
+    data
+      .save()
+      .then(result => {
+        return res.json({ success: true, saleId });
+      })
+      .catch(err => {
+        return res.status(400).json({error: 'Bad request'});
+      })
+  }
 });
 
 module.exports = router;

@@ -4,10 +4,10 @@ const Schema = mongoose.Schema;
 // this will be our data base's data structure
 const DataSchema = new Schema(
   {
-    id: {
+    saleId: {
       type: Number,
       unique: true,
-      required: [true, "Id is required"]
+      required: [true, "saleId is required"]
     },
     name: {
       type: String,
@@ -25,13 +25,28 @@ const DataSchema = new Schema(
       default: 0.0,
       required: [true, "buyPrice is required"]
     },
+    sellPrice: {
+      type: Number,
+      default: 0.0,
+      required: [true, "sellPrice is required"]
+    },
+    category: {
+      type: String,
+      default: '',
+      trim: true,
+      required: [true, "Category is required"]
+    },
     weight: {
       default: 0.0,
       type: Number
+    },
+    cleared: {
+      type: Boolean,
+      default: false
     }
   },
   { timestamps: true }
 );
 
 // export the new Schema so we could modify it using Node.js
-module.exports = mongoose.model("Data", DataSchema);
+module.exports = mongoose.model("Sale", DataSchema);

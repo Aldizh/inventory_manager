@@ -4,8 +4,7 @@ import {
 } from 'react-router-dom';
 import Dashboard from './App';
 import Create from './Create';
-import Shumice from './Shumice';
-import Pakice from './Pakice';
+import Sales from './Components/Sales';
 
 const Router = (props) => (
   <BrowserRouter>
@@ -22,14 +21,14 @@ const Router = (props) => (
         exact
         path="/shumice"
         render={(innerProps) => (
-          <Shumice {...innerProps} />
+          <Sales {...innerProps} category={'big'} />
         )}
       />
       <Route
         exact
         path="/pakice"
         render={(innerProps) => (
-          <Pakice {...innerProps} />
+          <Sales {...innerProps} category={'small'} />
         )}
       />
       <Route

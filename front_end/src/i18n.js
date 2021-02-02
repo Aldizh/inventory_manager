@@ -6,14 +6,14 @@ import { initReactI18next } from 'react-i18next';
 const resources = {
   en: {
     translation: {
+      home: 'Home',
       title: 'Grocery Market',
       sales: 'Sales',
       category: 'Select a category from the list',
       small: 'Small Volume',
       big: 'Large Volume',
-      home: 'Home',
-      dataEntry: 'Data Entry',
-      barCode: 'Bar Code',
+      dataEntry: 'Sales Entry',
+      barCode: 'Item ID',
       item: 'Item',
       buyPrice: 'Buy Price',
       sellPrice: 'Sell Price',
@@ -39,14 +39,14 @@ const resources = {
   },
   al: {
     translation: {
+      home: 'Kreu',
       title: 'Ushqimore',
       sales: 'Shitjet',
       category: 'Zgjidh nje nga kategorite',
       small: 'Pakice',
       big: 'Shumice',
-      home: 'Kreu',
-      dataEntry: 'Hedhje te Dhenash',
-      barCode: 'Bar Kodi',
+      dataEntry: 'Shitje e Re',
+      barCode: 'Kodi i Artikullit',
       item: 'Artikulli',
       buyPrice: 'Cmimi i Blerjes',
       sellPrice: 'Cmimi i Shitjes',

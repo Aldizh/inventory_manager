@@ -18,7 +18,7 @@ module.exports = {
         },
       },
       {
-        test: /\.css$/,
+        test: /\.(scss|css)$/,
         use: [
           {
             loader: 'style-loader',
@@ -31,8 +31,11 @@ module.exports = {
               localIdentName: '[name]_[local]_[hash:base64]',
               sourceMap: true,
               minimize: true,
-            },
+            }
           },
+          {
+            loader: 'sass-loader'
+          }
         ],
       },
     ],
