@@ -3,7 +3,8 @@ import {
   BrowserRouter, Route, Switch, Redirect,
 } from 'react-router-dom';
 import Dashboard from './App';
-import Create from './Create';
+import Create from './CreateSale';
+import Show from './ShowSale';
 import Sales from './Components/Sales';
 
 const Router = (props) => (
@@ -31,6 +32,7 @@ const Router = (props) => (
           <Sales {...innerProps} category={'small'} />
         )}
       />
+      <Route path="/sales/:saleId" component={Show} />
       <Route
         path="/dashboard"
         render={() => (

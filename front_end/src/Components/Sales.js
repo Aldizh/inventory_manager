@@ -21,6 +21,10 @@ class SalesComp extends Component {
     this.setState({ isLoading: false, data: result.data.data.filter((sale) => sale.category === this.props.category )})
   }
 
+  handleClick(id) {
+    window.location =  `/sales/${id}`;
+  }
+
   render() {
     const { t, category } = this.props
     const text = category === 'large' ? t('big') : t('small')
@@ -42,6 +46,7 @@ class SalesComp extends Component {
               <th>{t('buyPrice')}</th>
               <th>{t('sellPrice')}</th>
               <th>{t('profit')}</th>
+              <th />
             </tr>
           </thead>
           <tbody>
@@ -57,6 +62,7 @@ class SalesComp extends Component {
                   <td>{dat.buyPrice}</td>
                   <td>{dat.sellPrice}</td>
                   <td>{(dat.quantity * (dat.sellPrice - dat.buyPrice)).toFixed(2)}</td>
+                  <td><button onClick={() => this.handleClick(dat.saleId)}>{t('edit')}</button></td>
                 </tr>
               );
             })}

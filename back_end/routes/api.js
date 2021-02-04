@@ -137,6 +137,16 @@ router.get("/sales", (req, res) => {
   })
 });
 
+// get data by id
+router.get("/sales/:id", (req, res, next) => {
+  Sale.find({ saleId: req.params.id } ).then(data => {
+    return res.json({ success: true, data });
+  }).catch(err => {
+    return res.json({ success: false, error: err });
+  })
+});
+
+
 // insert one or many records in our database
 router.post("/sales", (req, res, next) => {
   if (Array.isArray(req.body)) {
@@ -173,6 +183,26 @@ router.post("/sales", (req, res, next) => {
         return res.status(400).json({error: 'Bad request'});
       })
   }
+});
+
+// updates an existing record in our database
+router.put("/sales/:id", (req, res, next) => {
+  const { name, qunatity, buyPrice, sellPrice, saleId } = req.body
+  Sale.find({ saleId }).then((records) => {
+    const record = records[0]
+    if (record.saleId !== null) {
+      Sale.updateOne({ saleId }, {
+        name,
+        qunatity,
+        buyPrice,
+        sellPrice
+      }).then(record => {
+        return res.json({ success: true, record})
+      }).catch(err => {
+        return res.status(400).json({ success: false, error: err})
+      })
+    } else return res.status(400).json({ success: false, error: "This record does not exist" });
+  })
 });
 
 module.exports = router;

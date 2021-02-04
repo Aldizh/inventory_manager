@@ -1,9 +1,6 @@
-import React, { Component } from 'react';
-import axios from 'axios';
-import { withTranslation } from 'react-i18next';
-import './styles.css';
+import React, { Component } from 'react'
 
-class Create extends Component {
+class Form extends Component {
   constructor(props) {
     super(props);
 
@@ -11,23 +8,18 @@ class Create extends Component {
     this.onChangeBuyPrice = this.onChangeBuyPrice.bind(this);
     this.onChangeQuantity = this.onChangeQuantity.bind(this);
     this.onChangeSellPrice = this.onChangeSellPrice.bind(this);
-    this.onSubmit = this.onSubmit.bind(this);
+    this.submitHandler = this.submitHandler.bind(this);
+
+    const {saleId, name = '', quantity = '', buyPrice = '', sellPrice = '', category='big' } = this.props.sale
 
     this.state = {
-      data: [],
-      name: '',
-      quantity: '',
-      buyPrice: '',
-      sellPrice: '',
-      category: 'large',
+      saleId,
+      name,
+      quantity,
+      buyPrice,
+      sellPrice,
+      category
     };
-  }
-
-  // This is to ensure we get current sales data
-  componentDidMount() {
-    fetch('/api/sales')
-      .then((data) => data.json())
-      .then((res) => this.setState({ data: res.data }));
   }
 
   onChangeName(e) {
@@ -46,45 +38,28 @@ class Create extends Component {
     this.setState({ quantity: parseFloat(e.target.value) });
   }
 
-  // our put method that uses our backend api
-  // to create new query into our data base
-  putDataToDB(name, quantity, buyPrice, sellPrice, category) {
-    const currentIds = this.state.data.map((data) => data.id);
-    const saleId = currentIds.length;
-    const newRecord = {
-      saleId,
-      name,
-      quantity,
-      buyPrice,
-      sellPrice,
-      category,
-    };
-    axios.post('/api/sales', newRecord).then((response) => {
-      if (response.status === 200) {
-        const newData = this.state.data;
-        newData.push(newRecord);
-        this.setState({ data: newData });
-      }
-    }).catch(err => console.log('error', err))
-  }
-
-  onSubmit(e) {
+  submitHandler(e){
     e.preventDefault();
 
-    const {
-      name, quantity, buyPrice, sellPrice, category,
-    } = this.state;
-    this.putDataToDB(name, quantity, buyPrice, sellPrice, category);
+    const { onSubmit } = this.props
 
-    // go back to home after insertion
-    window.location = '/';
+    const {
+      saleId, name, quantity, buyPrice, sellPrice, category,
+    } = this.state;
+
+    const updated = {
+      saleId, name, quantity, buyPrice, sellPrice, category
+    }
+
+    onSubmit(updated)
   }
 
   render() {
-    const { t } = this.props;
+    const { t, editMode } = this.props
+
     return (
       <div className="createFormContainer">
-        <form className="add-form" onSubmit={this.onSubmit}>
+        <form className="add-form" onSubmit={this.submitHandler}>
           <div className="form-control">
             <label>{t('category')}</label>
             <select name="cars" id="categorySelect" onChange={(e) => this.setState({ category: e.target.value })}>
@@ -136,11 +111,11 @@ class Create extends Component {
               onChange={this.onChangeSellPrice}
             />
           </div>
-          <input type="submit" value={this.props.t('newSale')} className="btn btn-block" />
+          <input type="submit" value={editMode ? t('updateSale') : t('newSale')} className="btn btn-block" />
         </form>
       </div>
-    );
+    )
   }
 }
 
-export default withTranslation()(Create);
+export default Form

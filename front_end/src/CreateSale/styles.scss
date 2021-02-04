@@ -13,27 +13,27 @@
 .form-control {
   margin: 20px 0;
   height: auto;
-}
 
-.form-control label {
-  padding: 3px 7px;
-  display: block;
-}
+  label {
+    padding: 3px 7px;
+    display: block;
+  }
 
-.form-control input {
-  width: 100%;
-  height: 40px;
-  margin: 5px;
-  padding: 3px 7px;
-  font-size: 17px;
-}
+  input {
+    width: 100%;
+    height: 40px;
+    margin: 5px;
+    padding: 3px 7px;
+    font-size: 17px;
+  }
 
-.form-control select {
-  width: 100%;
-  height: 40px;
-  margin: 5px;
-  padding: 3px 7px;
-  font-size: 17px;
+  select {
+    width: 100%;
+    height: 40px;
+    margin: 5px;
+    padding: 3px 7px;
+    font-size: 17px;
+  }
 }
 
 .btn {
