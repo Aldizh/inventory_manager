@@ -15,26 +15,7 @@ class SalesComp extends Component {
     const { t, category, data, syncData } = this.props
 
     return (
-      <div>
-        <div style={{ textAlign: 'center', margin: 'auto', width: '50%' }}>
-          <button onClick={() => {
-            axios.post('/api/datas', inventoryData.map((item, idx) => ({
-              ...item,
-              id: generateId(this.state.data) + idx,
-            }))).then((res) => {
-              syncData()
-            }).catch((err) => console.log('bulk insert failed', err));
-          }}>
-            {t('loadAll')}
-          </button>
-          <button onClick={() => {
-            axios.delete('/api/datas', inventoryData).then((res) => {
-              syncData()
-            }).catch((err) => console.log('bulk delete failed', err));
-          }}>
-            {t('deleteAll')}
-          </button>
-        </div>
+      <div className="inventory">
         <h3 id="shitjetShumice">Current Inventory</h3>
         <Table>
           <thead>
@@ -56,6 +37,24 @@ class SalesComp extends Component {
             })}
           </tbody>
         </Table>
+        <hr />
+        <button style={{margin: '0 10px'}} onClick={() => {
+          axios.post('/api/datas', inventoryData.map((item, idx) => ({
+            ...item,
+            id: generateId(this.state.data) + idx,
+          }))).then((res) => {
+            syncData()
+          }).catch((err) => console.log('bulk insert failed', err));
+        }}>
+          {t('loadAll')}
+        </button>
+        <button style={{ margin: '0 10px' }} onClick={() => {
+          axios.delete('/api/datas', inventoryData).then((res) => {
+            syncData()
+          }).catch((err) => console.log('bulk delete failed', err));
+        }}>
+          {t('deleteAll')}
+        </button>
       </div>
     )
   }

@@ -1,17 +1,5 @@
 import React, { useState } from 'react';
 import { withTranslation } from 'react-i18next';
-import {
-  Collapse,
-  NavbarToggler,
-  NavbarBrand,
-  Nav,
-  NavItem,
-  NavLink,
-  UncontrolledDropdown,
-  DropdownToggle,
-  DropdownMenu,
-  DropdownItem
-} from 'reactstrap';
 import useBeforeFirstRender from '../hooks/useBeforeFirstRender';
 import './styles.css';
 
@@ -27,30 +15,12 @@ const NavBar = ({ t, i18n }) => {
   });
 
   return (
-    <nav className="navbar navbar-dark bg-dark">
-      <NavbarBrand href="/">{t('home')}</NavbarBrand>
-      <NavbarToggler onClick={toggle} className="mr-2" />
-      <Collapse isOpen={isOpen} navbar>
-        <Nav navbar>
-          <UncontrolledDropdown nav inNavbar>
-            <DropdownToggle nav caret>
-              {t('sales')}
-            </DropdownToggle>
-            <DropdownMenu right>
-              <DropdownItem>
-                <NavLink href="/create">{t('dataEntry')}</NavLink>
-              </DropdownItem>
-              <DropdownItem>
-                <NavLink href="/pakice">{t('small')}</NavLink>
-              </DropdownItem>
-              <DropdownItem>
-                <NavLink href="/shumice">{t('big')}</NavLink>
-              </DropdownItem>
-            </DropdownMenu>
-          </UncontrolledDropdown>
-        </Nav>
-      </Collapse>
-    </nav>
+    <ul>
+      <li><a href="/create">{t('dataEntry')}</a></li>
+      <li><a href="/pakice">{t('small')}</a></li>
+      <li><a href="/shumice">{t('big')}</a></li>
+      <li style={{ float: 'right' }}><a className="active" href="/">{t('home')}</a></li>
+    </ul>
   );
 };
 
