@@ -8,12 +8,12 @@ import {
   Input,
 } from 'reactstrap';
 import axios from 'axios';
-import { findIndex, propEq } from 'ramda';
+import { findIndex, isNil, propEq } from 'ramda';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import '../i18n';
-import Inventory from '../Components/Inventory';
+import Inventory from '../Components/Inventory/';
+import ButtonGroup from '../Components/ButtonGroup'
 import escapeHTML from '../utils/string';
-import { inventoryData } from '../mock_data';
 import './styles.scss';
 
 class App extends Component {
@@ -28,10 +28,13 @@ class App extends Component {
     // Set the state directly. Use props if necessary.
     this.state = {
       data: [],
-      idToDelete: null,
-      idToUpdate: null,
+      item: {},
+      id: 0,
+      editMode: false,
       language: defaultLang
     }
+    this.updateDB = this.updateDB.bind(this)
+    this.deleteFromDB = this.deleteFromDB.bind(this)
   }
 
   // when component mounts, first thing it does is fetch all existing data in our db
@@ -62,15 +65,16 @@ class App extends Component {
 
   // our delete method that uses our backend api
   // to remove existing database information
-  deleteFromDB(idTodelete) {
+  deleteFromDB() {
+    const idToDelete = this.state.item.id
     const recordToDelete = { id: null };
     this.state.data.forEach((dat) => {
-      if (dat.id === parseInt(idTodelete)) {
+      if (dat.id === parseInt(idToDelete)) {
         recordToDelete.id = dat.id;
       }
     });
     axios
-      .delete(`/api/datas/${idTodelete}`, {
+      .delete(`/api/datas/${idToDelete}`, {
         data: recordToDelete,
       })
       .then((response) => {
@@ -81,9 +85,7 @@ class App extends Component {
             alert('No such records exist in our database');
           } else {
             data.splice(deleteIndex, 1);
-            const updated = data(idTodelete, data.length);
-            // TO DO: Bulk update to increment id for deleted records
-            this.setState({ data });
+            this.setState({ data, item: {} });
           }
         }
       });
@@ -92,28 +94,51 @@ class App extends Component {
   // our update method that uses our backend api
   // to overwrite existing data base information
   // TO DO: sanitize input
-  updateDB(idToUpdate, name = '', qunatity, buyPrice) {
+  updateDB() {
+    // update item
     let recordToUpdate = {};
-    this.state.data.forEach((dat) => {
-      if (dat.id === parseInt(idToUpdate)) {
-        recordToUpdate = {
-          id: dat.id,
-          name: escapeHTML(name) || dat.name,
-          quantity: qunatity || dat.quantity,
-          buyPrice: buyPrice || dat.buyPrice,
-        };
-      }
-    });
+    const { id: idToUpdate, name = '', qunatity, buyPrice } = this.state.item
+    if (this.state.editMode) {
+      this.state.data.forEach((dat) => {
+        if (dat.id === parseInt(idToUpdate)) {
+          recordToUpdate = {
+            id: dat.id,
+            name: escapeHTML(name) || dat.name,
+            quantity: qunatity || dat.quantity,
+            buyPrice: buyPrice || dat.buyPrice,
+          };
+        }
+      });
+  
+      axios.patch(`/api/datas/${idToUpdate}`, recordToUpdate).then((response) => {
+        if (response.status === 200) {
+          const newData = this.state.data;
+          const updateIndex = findIndex(propEq('id', recordToUpdate.id))(newData);
+          newData.splice(updateIndex, 1);
+          newData.splice(updateIndex, 0, recordToUpdate);
+          this.setState({ data: newData });
+        }
+      });
+    }
 
-    axios.patch(`/api/datas/${idToUpdate}`, recordToUpdate).then((response) => {
-      if (response.status === 200) {
-        const newData = this.state.data;
-        const updateIndex = findIndex(propEq('id', recordToUpdate.id))(newData);
-        newData.splice(updateIndex, 1);
-        newData.splice(updateIndex, 0, recordToUpdate);
-        this.setState({ data: newData });
-      }
-    });
+    else this.putDataToDB() // create new item
+  
+  }
+
+  onIdUpdate = (e) => {
+    let id = e.target.value
+    this.setState({ id: e.target.value, editMode: false })
+
+    if (isNil(id) || id === '') {
+      this.setState({ item: {} })
+      return
+    }
+    fetch(`/api/datas/${id}`)
+      .then((data) => data.json())
+      .then((res) => {
+        if (res.data) this.setState({ item: res.data, editMode: true })
+        else this.setState({ item: {}, editMode: false })
+      })
   }
 
   onLanguageHandle = (event) => {
@@ -126,7 +151,7 @@ class App extends Component {
   }
 
   renderRadioButtons = () => (
-    <div style={{ marginLeft: 15 }}>
+    <div style={{ textAlign: 'center', margin: 'auto', width: '50%', marginBottom:'15px' }}>
       <input
         checked={this.state.language === 'en'}
         name="language"
@@ -148,7 +173,8 @@ class App extends Component {
 
   // our put method that uses our backend api
   // to create new query into our data base
-  putDataToDB(name, quantity, buyPrice, category) {
+  putDataToDB() {
+    const { name, quantity, buyPrice, category } = this.state.item
     const currentIds = this.state.data.map((data) => data.id);
     const id = currentIds.length;
     const newRecord = {
@@ -174,62 +200,52 @@ class App extends Component {
     const { t } = this.props;
     const { data } = this.state;
     const {
-      name, quantity, buyPrice
+      item
     } = this.state;
 
     return (
       <div>
-        <div style={{ textAlign: 'center', margin: 'auto', width: '50%' }}>
-          {this.renderRadioButtons()}
-        </div>
+        {this.renderRadioButtons()}
         <Container>
           <Row>
-            <Col lg="12">
+            <Col xs="6">
               <div className="centeredRight">
-                <Inventory syncData={() => this.getDataFromDb()} data={this.state.data} />
-                <hr />
-                <h3>{t('dataCorrection')}</h3>
+                <Inventory getData={() => this.getDataFromDb()} data={data} />
+              </div>
+            </Col>
+            <Col xs="6">
+              <h3>{t('dataCorrection')}</h3>
+              <div className="editDiv">
                 <Input
-                  id="fshi"
-                  type="number"
-                  name="fshi"
+                  type="text"
                   placeholder={t('barCode')}
-                  value={this.state.idToDelete || ''}
-                  onChange={(e) => this.setState({ idToDelete: e.target.value })}
+                  value={this.state.id || ''}
+                  onChange={this.onIdUpdate}
                 />
-                <button onClick={() => this.deleteFromDB(this.state.idToDelete)}>{t('delete')}</button>
-                <div className="inputDiv">
-                  <Input
-                    type="text"
-                    placeholder={t('barCode')}
-                    value={this.state.idToUpdate || ''}
-                    onChange={(e) => this.setState({ idToUpdate: e.target.value })}
-                  />
-                  <Input
-                    type="text"
-                    placeholder={t('nameNew')}
-                    value={name || ''}
-                    onChange={(e) => this.setState({ name: e.target.value })}
-                  />
-                  <Input
-                    type="number"
-                    placeholder={t('quantityNew')}
-                    value={quantity || ''}
-                    onChange={(e) => this.setState({ quantity: parseFloat(e.target.value) })}
-                  />
-                  <Input
-                    type="number"
-                    placeholder={t('buyPriceNew')}
-                    value={buyPrice || ''}
-                    onChange={(e) => this.setState({ buyPrice: parseFloat(e.target.value) })}
-                  />
-                </div>
-                <button onClick={() => this.updateDB(this.state.idToUpdate, this.state.name, this.state.quantity, this.state.buyPrice)}>
-                  {t('correct')}
-                </button>
-                {/* <div className="inputDiv">
-                  <a href={"/geo_data"}>Geo Location Lookup</a>
-                </div> */}
+                <Input
+                  type="text"
+                  placeholder={t('nameNew')}
+                  value={item.name || ''}
+                  onChange={(e) => this.setState({ item: { ...item, name: e.target.value }})}
+                />
+                <Input
+                  type="number"
+                  placeholder={t('quantityNew')}
+                  value={item.quantity || ''}
+                  onChange={(e) => this.setState({ item: {  ...item, quantity: parseFloat(e.target.value) }})}
+                />
+                <Input
+                  type="number"
+                  placeholder={t('buyPriceNew')}
+                  value={item.buyPrice || ''}
+                  onChange={(e) => this.setState({ item: {  ...item, buyPrice: parseFloat(e.target.value) }})}
+                />
+                <ButtonGroup
+                  updateHandler={this.updateDB}
+                  deleteHandler={this.deleteFromDB}
+                  updateText={this.state.editMode ? t('correct') : t('inventoryEntry')}
+                  deleteText={t('delete')}
+                />
               </div>
             </Col>
           </Row>

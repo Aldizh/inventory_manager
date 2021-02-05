@@ -1,7 +1,6 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import { createBrowserHistory } from 'history';
-import axios from 'axios'
 import Router from './Router';
 import NavBar from './NavBar';
 import Footer from './Footer';
@@ -17,17 +16,12 @@ export const history = createBrowserHistory();
 class MyApp extends React.Component {
   state = { data: [] }
 
-  async componentWillReceiveProps(nextProps) {
-    const res = await axios.get('/api/datas')
-    this.setState({ data: res.data })
-  }
-
   render() {
     return isLoggedIn() ? (
       <>
         <NavBar />
         <br />
-        <Router history={history} data={this.state.data} handleLogout={() => logoutUser(app.currentUser)} />
+        <Router history={history} handleLogout={() => logoutUser(app.currentUser)} />
         <Footer />
       </>
     ) : (

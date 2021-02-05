@@ -16,14 +16,14 @@ table {
 
 .centeredRight {
   overflow-x: hidden;
-  padding-top: 20px;
   text-align: center;
+  max-height: 850px;
 }
 
-.inputDiv {
+.editDiv {
   margin: auto;
   padding: 10px;
-  display: flex;
+  background-color: #343a40;
 
   span {
     width: 33%;
@@ -36,15 +36,9 @@ table {
   a {
     width: 300px;
   }
-
-  button {
-    position: relative;
-    top: 10px;
-    height: 45px;
-  }
 }
 
-input[type="text"] {
+input[type='text'] {
   width: 100%;
   padding: 12px 20px;
   margin: 8px 0;
@@ -53,7 +47,7 @@ input[type="text"] {
   box-sizing: border-box;
 }
 
-input[type="number"] {
+input[type='number'] {
   width: 100%;
   padding: 12px 20px;
   margin: 8px 0;
@@ -63,8 +57,12 @@ input[type="number"] {
 }
 
 .demo-layout-transparent {
-  background: rgb(174,226,238);
-  background: radial-gradient(circle, rgba(174,226,238,1) 13%, rgba(211,224,238,1) 100%);
+  background: rgb(174, 226, 238);
+  background: radial-gradient(
+    circle,
+    rgba(174, 226, 238, 1) 13%,
+    rgba(211, 224, 238, 1) 100%
+  );
   /* background: url('../images/transparent.png') center / cover; */
 }
 .demo-layout-transparent .mdl-layout__header,

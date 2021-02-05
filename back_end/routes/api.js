@@ -57,31 +57,12 @@ router.post("/datas", (req, res, next) => {
 
 // get data by id
 router.get("/datas/:id", (req, res, next) => {
-  Data.findById(req.params.id).then(record => {
-    return res.json({ success: true, record });
+  Data.find({ id: req.params.id }).then((records) => {
+    return res.json({ success: true, data: records[0] });
   }).catch(err => {
     return res.json({ success: false, error: err });
   })
 });
-
-// // fetches records using url parameters
-// router.get("/datas", (req, res, next) => {
-//   Data.aggregate([
-//     {
-//       $geoNear: {
-//         near: { type: "Point", coordinates: [parseFloat(req.query.lng), parseFloat(req.query.lat)] },
-//         maxDistance: 100000,
-//         distanceField: "dist",
-//         spherical: true
-//       }
-//     }
-//   ])
-//     .then(results => {
-//       console.log("results: ", results);
-//       return res.json({ success: true, data: results });
-//     })
-//     .catch(next);
-// });
 
 // updates an existing record in our database
 router.patch("/datas/:id", (req, res, next) => {

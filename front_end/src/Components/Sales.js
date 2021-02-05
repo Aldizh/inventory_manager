@@ -5,6 +5,7 @@ import {
 } from 'reactstrap';
 import axios from 'axios';
 
+import { formatPrice } from '../utils/numbers'
 import { salesData } from '../mock_data'
 import Totals from './Totals'
 
@@ -27,8 +28,7 @@ class SalesComp extends Component {
 
   render() {
     const { t, category } = this.props
-    const text = category === 'large' ? t('big') : t('small')
-    const data = this.state.data.filter((sale) => sale.category === this.props.category )
+    const data = this.state.data.filter((sale) => sale.category === category )
 
     let totalBuys = 0.0;
     let totalSales = 0.0;
@@ -36,8 +36,7 @@ class SalesComp extends Component {
 
     return this.state.isLoading ? <div>Loading...</div> :
       <div>
-        <h3 id="shitjetShumice">{text}</h3>
-        <Table>
+        <Table dark>
           <thead>
             <tr>
               <th>{t('barCode')}</th>
@@ -59,9 +58,9 @@ class SalesComp extends Component {
                   <th scope="row">{dat.saleId}</th>
                   <td>{dat.name}</td>
                   <td>{dat.quantity}</td>
-                  <td>{dat.buyPrice}</td>
-                  <td>{dat.sellPrice}</td>
-                  <td>{(dat.quantity * (dat.sellPrice - dat.buyPrice)).toFixed(2)}</td>
+                  <td>{formatPrice(dat.buyPrice)}</td>
+                  <td>{formatPrice(dat.sellPrice)}</td>
+                  <td>{formatPrice((dat.quantity * (dat.sellPrice - dat.buyPrice)).toFixed(2))}</td>
                   <td><button onClick={() => this.handleClick(dat.saleId)}>{t('edit')}</button></td>
                 </tr>
               );

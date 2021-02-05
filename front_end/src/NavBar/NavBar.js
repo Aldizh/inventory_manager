@@ -1,12 +1,9 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { withTranslation } from 'react-i18next';
 import useBeforeFirstRender from '../hooks/useBeforeFirstRender';
 import './styles.css';
 
 const NavBar = ({ t, i18n }) => {
-  const [isOpen, setIsOpen] = useState(false);
-  const toggle = () => setIsOpen(!isOpen);
-
   useBeforeFirstRender(() => {
     const lang = localStorage.getItem('language');
     if (lang && lang.length) {

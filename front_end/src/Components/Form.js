@@ -10,7 +10,7 @@ class Form extends Component {
     this.onChangeSellPrice = this.onChangeSellPrice.bind(this);
     this.submitHandler = this.submitHandler.bind(this);
 
-    const {saleId, name = '', quantity = '', buyPrice = '', sellPrice = '', category='big' } = this.props.sale
+    const {saleId, name = '', quantity = '', buyPrice = '', sellPrice = '', category='' } = this.props.sale
 
     this.state = {
       saleId,
@@ -56,13 +56,19 @@ class Form extends Component {
 
   render() {
     const { t, editMode } = this.props
+    const { category, name, quantity, buyPrice, sellPrice } = this.state
 
     return (
       <div className="createFormContainer">
         <form className="add-form" onSubmit={this.submitHandler}>
           <div className="form-control">
             <label>{t('category')}</label>
-            <select name="cars" id="categorySelect" onChange={(e) => this.setState({ category: e.target.value })}>
+            <select
+              value={category}
+              name="cars"
+              id="categorySelect"
+              onChange={(e) => this.setState({ category: e.target.value })}
+            >
               <option value="big">{t('big')}</option>
               <option value="small">{t('small')}</option>
             </select>
@@ -74,7 +80,7 @@ class Form extends Component {
               type="text"
               name="name"
               placeholder=""
-              value={this.state.name}
+              value={name}
               onChange={this.onChangeName}
             />
           </div>
@@ -85,7 +91,7 @@ class Form extends Component {
               type="number"
               name="quantity"
               placeholder=""
-              value={this.state.quantity}
+              value={quantity}
               onChange={this.onChangeQuantity}
             />
           </div>
@@ -95,8 +101,9 @@ class Form extends Component {
               id="buy_price"
               type="number"
               name="buy_price"
+              step="0.1"
               placeholder=""
-              value={this.state.buyPrice}
+              value={buyPrice}
               onChange={this.onChangeBuyPrice}
             />
           </div>
@@ -105,13 +112,16 @@ class Form extends Component {
             <input
               id="sell_price"
               type="number"
+              step="0.1"
               name="sell_price"
               placeholder=""
-              value={this.state.sellPrice}
+              value={sellPrice}
               onChange={this.onChangeSellPrice}
             />
           </div>
-          <input type="submit" value={editMode ? t('updateSale') : t('newSale')} className="btn btn-block" />
+          <div style={{ margin: 10 }}>
+            <input type="submit" value={editMode ? t('updateSale') : t('newSale')} className="btn btn-success btn-block" />
+          </div>
         </form>
       </div>
     )
