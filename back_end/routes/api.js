@@ -5,13 +5,26 @@ const Sale = require('../models/sale')
 
 const router = express.Router()
 
-// fetches all available records from our database
+/*
+ * Fetch available records from our database
+ * @param {req} - Express request
+ * @param {req.query} - Mongo DB query
+ * @return {res} Express response
+*/
 router.get("/datas", (req, res) => {
-  Data.find().then((data) => {
-    return res.json({ success: true, data: data });
-  }).catch(err => {
-    return res.json({ success: false, error: err });
-  })
+  const pageNumber = req.query.pageNumber || 0
+  const resultsPerPage = 10
+  const resPromise = Data.find()
+    .skip(resultsPerPage * pageNumber)
+    .limit(resultsPerPage)
+  const countPromise = Data.find().countDocuments()
+  Promise.all([resPromise, countPromise])
+    .then((results) => {
+      return res.json({ success: true, data: results[0], totalCount: results[1] });
+    }).catch(err => {
+      console.log('err', err)
+      return res.json({ success: false, error: err });
+    })
 });
 
 // insert one or many records in our database

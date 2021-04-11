@@ -31,7 +31,7 @@ class App extends Component {
       item: {},
       id: 0,
       editMode: false,
-      language: defaultLang
+      language: defaultLang,
     }
     this.updateDB = this.updateDB.bind(this)
     this.deleteFromDB = this.deleteFromDB.bind(this)
@@ -41,7 +41,6 @@ class App extends Component {
   // then we incorporate a polling logic so that we can easily see if our db has
   // changed and implement those changes into our UI
   componentDidMount() {
-    this.getDataFromDb()
     const lang = localStorage.getItem('language');
     if (lang && lang.length) {
       this.props.i18n.changeLanguage(lang, (err) => {
@@ -54,14 +53,6 @@ class App extends Component {
   // in order to identify which we want to Update or delete.
   // for our back end, we use the object id assigned by MongoDB to modify
   // data base entries
-
-  // our first get method that uses our backend api to
-  // fetch data from our data base
-  getDataFromDb() {
-    fetch('/api/datas')
-      .then((data) => data.json())
-      .then((res) => this.setState({ data: res.data }));
-  }
 
   // our delete method that uses our backend api
   // to remove existing database information
@@ -151,7 +142,7 @@ class App extends Component {
   }
 
   renderRadioButtons = () => (
-    <div style={{ textAlign: 'center', margin: 'auto', width: '50%', marginBottom:'15px' }}>
+    <div style={{ textAlign: 'center', margin: 'auto', width: '50%', marginBottom:'5px' }}>
       <input
         checked={this.state.language === 'en'}
         name="language"
@@ -193,9 +184,7 @@ class App extends Component {
     });
   }
 
-  // here is our UI
-  // it is easy to understand their functions when you
-  // see them render into our screen
+  // This is our main UI (dashboard) entry point
   render() {
     const { t } = this.props;
     const { data } = this.state;
@@ -210,7 +199,9 @@ class App extends Component {
           <Row>
             <Col xs="6">
               <div className="centeredRight">
-                <Inventory getData={() => this.getDataFromDb()} data={data} />
+                <Inventory
+                  data={data}
+                />
               </div>
             </Col>
             <Col xs="6">

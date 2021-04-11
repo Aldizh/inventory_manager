@@ -1,4 +1,5 @@
-export const generateId = (data) => (Array.isArray(data) ? data.length : 0)
+// get the next array index basically to insert to db
+export const generateId = (dataCount) => (dataCount)
 
 export const formatPrice = (price) => {
   const decimalPrice = parseFloat(price).toFixed(2)
