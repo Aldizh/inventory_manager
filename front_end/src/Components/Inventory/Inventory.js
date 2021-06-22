@@ -6,7 +6,7 @@ import {
 import axios from 'axios';
 
 import ButtonGroup from '../ButtonGroup'
-import { generateId, formatPrice } from '../../utils/numbers';
+import { formatPrice } from '../../utils/numbers';
 import { inventoryData } from '../../mock_data';
 import './styles.scss'
 
@@ -57,7 +57,7 @@ class SalesComp extends Component {
   handleCreateUpdate(){
     axios.post('/api/datas', inventoryData.map((item, idx) => ({
       ...item,
-      id: generateId(this.props.totalCount) + idx,
+      id: this.state.totalCount + idx,
     }))).then((res) => {
       console.log('successfully created', res)
       this.getDataFromDb(0)

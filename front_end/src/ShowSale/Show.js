@@ -38,13 +38,10 @@ class Create extends Component {
 
   onSubmit(updated) {
     this.updateRecord(updated);
-
-    console.log(this.state.sale.category )
-
     const parentLocation = this.state.sale.category === 'big' ? '/shumice' : '/pakice'
-    console.log('parent', parentLocation)
-
-    // go back to home after update
+    
+    // go back to parent page and reload to refelect the update
+    window.location.reload()
     window.location = parentLocation
   }
 

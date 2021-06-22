@@ -18,7 +18,6 @@ class SalesComp extends Component {
       console.log('err', err)
       this.setState({ isLoading: false })
     })
-    console.log('results', result.data)
     this.setState({ isLoading: false, data: result.data.data.filter((sale) => sale.category === this.props.category )})
   }
 
