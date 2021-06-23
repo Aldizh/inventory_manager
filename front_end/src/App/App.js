@@ -47,6 +47,11 @@ class App extends Component {
         if (err) return console.log('something went wrong loading', err)
       })
     }
+    fetch(`/api/articles`)
+      .then((data) => data.json())
+      .then((res) => {
+        if (res.data) this.setState({ data: res.data })
+      })
   }
 
   // just a note, here, in the front end, we use the id key of our data object
@@ -65,7 +70,7 @@ class App extends Component {
       }
     });
     axios
-      .delete(`/api/datas/${idToDelete}`, {
+      .delete(`/api/articles/${idToDelete}`, {
         data: recordToDelete,
       })
       .then((response) => {
@@ -101,7 +106,7 @@ class App extends Component {
         }
       });
   
-      axios.patch(`/api/datas/${idToUpdate}`, recordToUpdate).then((response) => {
+      axios.put(`/api/articles/${idToUpdate}`, recordToUpdate).then((response) => {
         if (response.status === 200) {
           const newData = this.state.data;
           const updateIndex = findIndex(propEq('id', recordToUpdate.id))(newData);
@@ -124,7 +129,7 @@ class App extends Component {
       this.setState({ item: {} })
       return
     }
-    fetch(`/api/datas/${id}`)
+    fetch(`/api/articles/${id}`)
       .then((data) => data.json())
       .then((res) => {
         if (res.data) this.setState({ item: res.data, editMode: true })
@@ -175,7 +180,7 @@ class App extends Component {
       buyPrice,
       category,
     };
-    axios.post('/api/datas', newRecord).then((response) => {
+    axios.post('/api/articles', newRecord).then((response) => {
       if (response.status === 200) {
         const newData = this.state.data;
         newData.push(newRecord);

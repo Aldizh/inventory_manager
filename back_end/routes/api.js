@@ -1,6 +1,6 @@
 const express = require('express')
 const path = require('path')
-const Data = require('../models/data')
+const Article = require('../models/article')
 const Sale = require('../models/sale')
 
 const router = express.Router()
@@ -11,13 +11,13 @@ const router = express.Router()
  * @param {req.query} - Mongo DB query
  * @return {res} Express response
 */
-router.get("/datas", (req, res) => {
+router.get("/articles", (req, res) => {
   const pageNumber = req.query.pageNumber || 0
   const resultsPerPage = 10
-  const resPromise = Data.find()
+  const resPromise = Article.find()
     .skip(resultsPerPage * pageNumber)
     .limit(resultsPerPage)
-  const countPromise = Data.find().countDocuments()
+  const countPromise = Article.find().countDocuments()
   Promise.all([resPromise, countPromise])
     .then((results) => {
       return res.json({ success: true, data: results[0], totalCount: results[1] });
@@ -28,9 +28,9 @@ router.get("/datas", (req, res) => {
 });
 
 // insert one or many records in our database
-router.post("/datas", (req, res, next) => {
+router.post("/articles", (req, res, next) => {
   if (Array.isArray(req.body)) {
-    Data.insertMany(req.body).then((data) => {
+    Article.insertMany(req.body).then((data) => {
       return res.json({ success: true, data: data });
     }).catch(err => {
       return res.status(400).json({ success: false, error: err });
@@ -46,7 +46,7 @@ router.post("/datas", (req, res, next) => {
       geometry
     } = req.body;
 
-    let data = new Data({
+    let data = new Article({
       id,
       name,
       quantity,
@@ -63,14 +63,15 @@ router.post("/datas", (req, res, next) => {
         return res.json({ success: true, id: id });
       })
       .catch(err => {
+        console.log('err', err)
         return res.status(400).json({error: 'Bad request'});
       })
   }
 });
 
 // get data by id
-router.get("/datas/:id", (req, res, next) => {
-  Data.find({ id: req.params.id }).then((records) => {
+router.get("/articles/:id", (req, res, next) => {
+  Article.find({ id: req.params.id }).then((records) => {
     return res.json({ success: true, data: records[0] });
   }).catch(err => {
     return res.json({ success: false, error: err });
@@ -78,12 +79,12 @@ router.get("/datas/:id", (req, res, next) => {
 });
 
 // updates an existing record in our database
-router.patch("/datas/:id", (req, res, next) => {
-  const { name, qunatity, buyPrice, id } = req.body
-  Data.find({ id }).then((records) => {
-    const record = records[0]
+router.put("/articles/:id", (req, res, next) => {
+  const { name, qunatity, buyPrice, id } =  req.body
+  // TO DO: Figure out why request body is missing
+  Article.findOne({ id: req.params.id }).then((record) => {
     if (record.id !== null) {
-      Data.updateOne({ id }, {
+      Article.updateOne({ id }, {
         name,
         qunatity,
         buyPrice
@@ -97,12 +98,12 @@ router.patch("/datas/:id", (req, res, next) => {
 });
 
 // deletes a record from our database
-router.delete("/datas/:id", (req, res, next) => {
+router.delete("/articles/:id", (req, res, next) => {
   const id = req.params.id;
-  Data.find({ id }).then((records) => {
+  Article.find({ id }).then((records) => {
     const record = records[0]
     if (record.id !== null) {
-      Data.deleteOne({ id }).then(record => {
+      Article.deleteOne({ id }).then(record => {
         return res.json({ success: true, record})
       }).catch(err => {
         return res.json({ success: false, error: err})
@@ -112,8 +113,8 @@ router.delete("/datas/:id", (req, res, next) => {
 });
 
 // deletes all records from our database
-router.delete("/datas", (req, res, next) => {
-  Data.deleteMany({}).then(data => {
+router.delete("/articles", (req, res, next) => {
+  Article.deleteMany({}).then(data => {
     return res.status(200).json({ success: true, deleteCount: data.deleteCount})
   }).catch(err => {
     return res.status(400).json({ success: false, error: err})

@@ -38,7 +38,7 @@ class SalesComp extends Component {
   // our first get method that uses our backend api to
   // fetch data from our data base
   getDataFromDb(pageNumber = 0) {
-    fetch(`/api/datas?pageNumber=${pageNumber}`)
+    fetch(`/api/articles?pageNumber=${pageNumber}`)
       .then((data) => data.json())
       .then((res) => this.setState({ data: res.data, totalCount: res.totalCount }))
   }
@@ -55,7 +55,7 @@ class SalesComp extends Component {
   }
 
   handleCreateUpdate(){
-    axios.post('/api/datas', inventoryData.map((item, idx) => ({
+    axios.post('/api/articles', inventoryData.map((item, idx) => ({
       ...item,
       id: this.state.totalCount + idx,
     }))).then((res) => {
@@ -65,7 +65,7 @@ class SalesComp extends Component {
   }
 
   handleDelete(){
-    axios.delete('/api/datas', inventoryData).then((res) => {
+    axios.delete('/api/articles', inventoryData).then((res) => {
       console.log('successfully deleted', res)
       this.getDataFromDb(0)
     }).catch((err) => console.log('bulk delete failed', err));

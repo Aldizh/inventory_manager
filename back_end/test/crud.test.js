@@ -1,5 +1,5 @@
 const assert = require("assert")
-const Data = require("../models/data")
+const Article = require("../models/article")
 
 let record
 
@@ -22,11 +22,11 @@ const secondRecord = {
 }
 
 beforeEach(function(done) {
-  record = new Data(firstRecord)
+  record = new Article(firstRecord)
   record.save().then((rec) => {
     assert(rec.id === record.id)
     assert(rec.name === record.name)
-    newRec = new Data(secondRecord)
+    newRec = new Article(secondRecord)
     newRec.save().then(rec2 => {
       assert(rec2.id === secondRecord.id)
       assert(rec2.name === secondRecord.name)
@@ -37,7 +37,7 @@ beforeEach(function(done) {
 
 describe("test that CRUD operations are working as expected", () => {
   it("finds and reads a saved record", done => {
-    Data.find({
+    Article.find({
       id: record.id
     }).then(results => {
       assert(results.length === 1)
@@ -49,7 +49,7 @@ describe("test that CRUD operations are working as expected", () => {
   })
 
   it("should find two records with large category", done => {
-    Data.find({
+    Article.find({
       category: 'large'
     }).then(results => {
       assert(results.length === 2)
@@ -60,7 +60,7 @@ describe("test that CRUD operations are working as expected", () => {
   it("updates record using instance", done => {
     record
       .updateOne({ id: record.id, name: 'Strawberries' })
-      .then(() => Data.findOne({ id: record.id }))
+      .then(() => Article.findOne({ id: record.id }))
       .then(record => {
         assert(record.name === 'Strawberries')
         done()
@@ -68,8 +68,8 @@ describe("test that CRUD operations are working as expected", () => {
   })
 
   it("increments quantity by 50", done => {
-    Data.updateOne({ id: record.id }, {$inc: { quantity: 50 } }).then(function() {
-      Data.findOne({ id: record.id }).then(function(newRecord) {
+    Article.updateOne({ id: record.id }, {$inc: { quantity: 50 } }).then(function() {
+      Article.findOne({ id: record.id }).then(function(newRecord) {
         assert(newRecord.quantity === 170)
         done()
       })
@@ -77,7 +77,7 @@ describe("test that CRUD operations are working as expected", () => {
   })
 
   it("creates a second record", done => {
-    record = new Data(secondRecord)
+    record = new Article(secondRecord)
     record.save().then(record => {
       assert(record.id === secondRecord.id)
       assert(record.name === secondRecord.name)
@@ -86,8 +86,8 @@ describe("test that CRUD operations are working as expected", () => {
   })
 
   it("removes a saved record by id", done => {
-    Data.findOneAndRemove(record.id)
-      .then(() => Data.findOne({ id: 0 }))
+    Article.findOneAndRemove(record.id)
+      .then(() => Article.findOne({ id: 0 }))
       .then(record => {
         assert(record === null)
         done()

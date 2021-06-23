@@ -1,9 +1,10 @@
 const mongoose = require("mongoose");
 const Schema = mongoose.Schema;
 
-// this will be our data base's data structure
-const DataSchema = new Schema(
+// this is the structure for an article in the inventory
+const ArticleSchema = new Schema(
   {
+    // serves as the barcode
     id: {
       type: Number,
       unique: true,
@@ -34,4 +35,4 @@ const DataSchema = new Schema(
 );
 
 // export the new Schema so we could modify it using Node.js
-module.exports = mongoose.model("Data", DataSchema);
+module.exports = mongoose.model("Article", ArticleSchema);

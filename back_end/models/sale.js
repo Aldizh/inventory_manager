@@ -1,7 +1,7 @@
 const mongoose = require("mongoose");
 const Schema = mongoose.Schema;
 
-// this will be our data base's data structure
+// this is the structure for a sale
 const DataSchema = new Schema(
   {
     saleId: {
