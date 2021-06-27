@@ -81,7 +81,6 @@ router.get("/articles/:id", (req, res, next) => {
 // updates an existing record in our database
 router.put("/articles/:id", (req, res, next) => {
   const { name, qunatity, buyPrice, id } =  req.body
-  // TO DO: Figure out why request body is missing
   Article.findOne({ id: req.params.id }).then((record) => {
     if (record.id !== null) {
       Article.updateOne({ id }, {

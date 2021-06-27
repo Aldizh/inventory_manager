@@ -35,9 +35,15 @@
     "not ie <= 11",
     "not op_mini all"
   ],
+  "husky": {
+    "hooks": {
+      "pre-commit": "lint-staged"
+    }
+  },
   "lint-staged": {
     "linters": {
       "**/src/*.js": [
+        "prettier --write",
         "eslint --fix",
         "git add"
       ]

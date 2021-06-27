@@ -1,5 +1,5 @@
 // /client/App.js
-import React, { Component } from 'react';
+import React, { Component } from 'react'
 import { withTranslation } from 'react-i18next'
 import {
   Container,
@@ -13,7 +13,7 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import '../i18n';
 import Inventory from '../Components/Inventory/';
 import ButtonGroup from '../Components/ButtonGroup'
-import escapeHTML from '../utils/string';
+import escapeHTML from '../utils/string'
 import './styles.scss';
 
 class App extends Component {
@@ -108,11 +108,10 @@ class App extends Component {
   
       axios.put(`/api/articles/${idToUpdate}`, recordToUpdate).then((response) => {
         if (response.status === 200) {
-          const newData = this.state.data;
-          const updateIndex = findIndex(propEq('id', recordToUpdate.id))(newData);
-          newData.splice(updateIndex, 1);
-          newData.splice(updateIndex, 0, recordToUpdate);
-          this.setState({ data: newData });
+          this.setState({ data: {
+            ...this.state.data,
+            recordToUpdate
+          }});
         }
       });
     }
