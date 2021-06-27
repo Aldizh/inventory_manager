@@ -29,6 +29,10 @@ const ArticleSchema = new Schema(
     weight: {
       default: 0.0,
       type: Number
+    },
+    category: {
+      type: String,
+      default: "Produce"
     }
   },
   { timestamps: true }

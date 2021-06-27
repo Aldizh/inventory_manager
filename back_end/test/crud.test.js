@@ -1,59 +1,70 @@
 const assert = require("assert")
+const mongoose = require("mongoose");
 const Article = require("../models/article")
 
 let record
 
 const firstRecord = {
-  id: 0,
-  name: 'Kiwis',
+  id: 1000,
+  name: 'Tomatoes',
   quantity: 120,
   buyPrice: 1.2,
   sellPrice: 1.5,
-  category: 'large'
+  category: "Produce"
 }
 
 const secondRecord = {
-  id: 1,
-  name: 'Oranges',
+  id: 1001,
+  name: 'Cucumber',
   quantity: 10,
   buyPrice: 1.10,
   sellPrice: 1.20,
-  category: 'large'
+  category: "Produce"
 }
+
+beforeEach(function(done) {
+  // Drop the collection before each test
+  // * Make sure it is only a test db
+  mongoose.connection.collections.articles.drop(function() {
+    done();
+  });
+})
+
 
 beforeEach(function(done) {
   record = new Article(firstRecord)
   record.save().then((rec) => {
     assert(rec.id === record.id)
     assert(rec.name === record.name)
-    newRec = new Article(secondRecord)
-    newRec.save().then(rec2 => {
-      assert(rec2.id === secondRecord.id)
-      assert(rec2.name === secondRecord.name)
-      done()
-    })
+    done()
   })
 })
 
 describe("test that CRUD operations are working as expected", () => {
   it("finds and reads a saved record", done => {
-    Article.find({
+    Article.findOne({
       id: record.id
-    }).then(results => {
-      assert(results.length === 1)
-      assert(results[0].id === record.id)
-      assert(results[0].name === 'Kiwis')
-      assert(results[0].category === 'large')
+    }).then(result => {
+      assert(result.id === record.id)
+      assert(result.name === 'Tomatoes')
       done()
     })
   })
 
-  it("should find two records with large category", done => {
-    Article.find({
-      category: 'large'
-    }).then(results => {
-      assert(results.length === 2)
-      done()
+  it("creates a new record", async () => {
+    const newRec = new Article(secondRecord)
+    const rec2 = await newRec.save()
+    assert(rec2.id === secondRecord.id)
+    assert(rec2.name === secondRecord.name)
+    
+    const results = await Article.find({
+      category: 'Produce'
+    })
+    assert(results.length === 2)
+    
+    // insert of existing records should fail
+    Article.insertMany(results).then(res => assert(res.ok === 1)).catch(err => {
+      assert(err.result.nInserted === 0)
     })
   })
 
@@ -67,8 +78,8 @@ describe("test that CRUD operations are working as expected", () => {
       })
   })
 
-  it("increments quantity by 50", done => {
-    Article.updateOne({ id: record.id }, {$inc: { quantity: 50 } }).then(function() {
+  it("increments product quantity by 50", done => {
+    Article.updateOne({ id: record.id }, { $inc: { quantity: 50 } }).then(function() {
       Article.findOne({ id: record.id }).then(function(newRecord) {
         assert(newRecord.quantity === 170)
         done()
@@ -76,20 +87,22 @@ describe("test that CRUD operations are working as expected", () => {
     })
   })
 
-  it("creates a second record", done => {
-    record = new Article(secondRecord)
-    record.save().then(record => {
-      assert(record.id === secondRecord.id)
-      assert(record.name === secondRecord.name)
-      done()
-    })
+  it("removes first saved record by id", done => {
+    Article.findOneAndRemove(record.id)
+      .then(() => Article.findOne({ id: record.id }))
+      .then(firstRecDeleteRes => {
+        assert(firstRecDeleteRes === null)
+        done()
+      })
   })
 
-  it("removes a saved record by id", done => {
-    Article.findOneAndRemove(record.id)
-      .then(() => Article.findOne({ id: 0 }))
-      .then(record => {
-        assert(record === null)
+  it("removes second saved record by id", done => {
+    Article.findOneAndRemove(secondRecord.id)
+      .then((res) => {
+        return Article.findOne({ id: secondRecord.id })
+      })
+      .then(secondRecDeleteRes => {
+        assert(secondRecDeleteRes === null)
         done()
       })
   })

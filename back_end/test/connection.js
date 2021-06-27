@@ -5,7 +5,7 @@ require('dotenv').config()
 mongoose.Promise = global.Promise;
 
 before(function(done) {
-  //connect to db before tests run
+  // connect to db before tests run
   mongoose.connect(process.env.TEST_DB_URI, {
     useNewUrlParser: true,
     useCreateIndex: true
@@ -18,11 +18,4 @@ before(function(done) {
     .on("error", function(error) {
       console.log("Connection error: ", error);
     });
-});
-
-// Drop the collection before each test
-beforeEach(function(done) {
-  mongoose.connection.collections.datas.drop(function() {
-    done();
-  });
 });
