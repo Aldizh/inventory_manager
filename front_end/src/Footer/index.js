@@ -1,7 +1,7 @@
-import React from 'react';
-import { withTranslation } from 'react-i18next';
-import { CardFooter } from 'reactstrap';
-import './styles.css';
+import React from 'react'
+import { withTranslation } from 'react-i18next'
+import { CardFooter } from 'reactstrap'
+import './styles.css'
 
 const Footer = (props) => (
   <div className="footer">
@@ -13,6 +13,6 @@ const Footer = (props) => (
       . All Rights Reserved.
     </CardFooter>
   </div>
-);
+)
 
-export default withTranslation()(Footer);
+export default withTranslation()(Footer)

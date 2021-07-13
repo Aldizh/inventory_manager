@@ -6,24 +6,24 @@ import {
   Row,
   Col,
   Input,
-} from 'reactstrap';
-import axios from 'axios';
-import { findIndex, isNil, propEq } from 'ramda';
-import 'bootstrap/dist/css/bootstrap.min.css';
-import '../i18n';
-import Inventory from '../Components/Inventory/';
+} from 'reactstrap'
+import axios from 'axios'
+import { findIndex, isNil, propEq } from 'ramda'
+import 'bootstrap/dist/css/bootstrap.min.css'
+import '../i18n'
+import Inventory from '../Components/Inventory/'
 import ButtonGroup from '../Components/ButtonGroup'
 import escapeHTML from '../utils/string'
-import './styles.scss';
+import './styles.scss'
 
 class App extends Component {
   constructor(props) {
     // Required step: always call the parent class' constructor
-    super(props);
+    super(props)
 
-    let defaultLang = 'en';
-    const lang = localStorage.getItem('language');
-    if (lang && lang.length) defaultLang = lang;
+    let defaultLang = 'en'
+    const lang = localStorage.getItem('language')
+    if (lang && lang.length) defaultLang = lang
 
     // Set the state directly. Use props if necessary.
     this.state = {
@@ -41,7 +41,7 @@ class App extends Component {
   // then we incorporate a polling logic so that we can easily see if our db has
   // changed and implement those changes into our UI
   componentDidMount() {
-    const lang = localStorage.getItem('language');
+    const lang = localStorage.getItem('language')
     if (lang && lang.length) {
       this.props.i18n.changeLanguage(lang, (err) => {
         if (err) return console.log('something went wrong loading', err)
@@ -63,28 +63,28 @@ class App extends Component {
   // to remove existing database information
   deleteFromDB() {
     const idToDelete = this.state.item.id
-    const recordToDelete = { id: null };
+    const recordToDelete = { id: null }
     this.state.data.forEach((dat) => {
       if (dat.id === parseInt(idToDelete)) {
-        recordToDelete.id = dat.id;
+        recordToDelete.id = dat.id
       }
-    });
+    })
     axios
       .delete(`/api/articles/${idToDelete}`, {
         data: recordToDelete,
       })
       .then((response) => {
         if (response.status === 200) {
-          const { data } = this.state;
-          const deleteIndex = findIndex(propEq('id', recordToDelete.id))(data);
+          const { data } = this.state
+          const deleteIndex = findIndex(propEq('id', recordToDelete.id))(data)
           if (deleteIndex === -1) {
-            alert('No such records exist in our database');
+            alert('No such records exist in our database')
           } else {
-            data.splice(deleteIndex, 1);
-            this.setState({ data, item: {} });
+            data.splice(deleteIndex, 1)
+            this.setState({ data, item: {} })
           }
         }
-      });
+      })
   }
 
   // our update method that uses our backend api
@@ -92,28 +92,30 @@ class App extends Component {
   // TO DO: sanitize input
   updateDB() {
     // update item
-    let recordToUpdate = {};
-    const { id: idToUpdate, name = '', qunatity, buyPrice } = this.state.item
-    if (this.state.editMode) {
-      this.state.data.forEach((dat) => {
+    let recordToUpdate = {}
+    const { data, item, editMode } = this.state
+    const { id: idToUpdate, name = '', qunatity, buyPrice } = item
+    if (editMode) {
+      data.forEach((dat) => {
         if (dat.id === parseInt(idToUpdate)) {
           recordToUpdate = {
             id: dat.id,
             name: escapeHTML(name) || dat.name,
             quantity: qunatity || dat.quantity,
             buyPrice: buyPrice || dat.buyPrice,
-          };
+          }
         }
-      });
+      })
   
       axios.put(`/api/articles/${idToUpdate}`, recordToUpdate).then((response) => {
         if (response.status === 200) {
-          this.setState({ data: {
-            ...this.state.data,
-            recordToUpdate
-          }});
+          const newData = data.map(rec => {
+            if (rec.id === recordToUpdate.id) return recordToUpdate
+            return rec
+          })
+          this.setState({ data: newData})
         }
-      });
+      })
     }
 
     else this.putDataToDB() // create new item
@@ -137,12 +139,12 @@ class App extends Component {
   }
 
   onLanguageHandle = (event) => {
-    const newLang = event.target.value;
-    this.setState({ language: newLang });
-    localStorage.setItem('language', newLang);
+    const newLang = event.target.value
+    this.setState({ language: newLang })
+    localStorage.setItem('language', newLang)
     this.props.i18n.changeLanguage(newLang, (err) => {
-      if (err) return console.log('something went wrong loading', err);
-    });
+      if (err) return console.log('something went wrong loading', err)
+    })
   }
 
   renderRadioButtons = () => (
@@ -170,31 +172,31 @@ class App extends Component {
   // to create new query into our data base
   putDataToDB() {
     const { name, quantity, buyPrice, category } = this.state.item
-    const currentIds = this.state.data.map((data) => data.id);
-    const id = currentIds.length;
+    const currentIds = this.state.data.map((data) => data.id)
+    const id = currentIds.length
     const newRecord = {
       id,
       name,
       quantity,
       buyPrice,
       category,
-    };
+    }
     axios.post('/api/articles', newRecord).then((response) => {
       if (response.status === 200) {
-        const newData = this.state.data;
-        newData.push(newRecord);
-        this.setState({ data: newData });
+        const newData = this.state.data
+        newData.push(newRecord)
+        this.setState({ data: newData })
       }
-    });
+    })
   }
 
   // This is our main UI (dashboard) entry point
   render() {
-    const { t } = this.props;
-    const { data } = this.state;
+    const { t } = this.props
+    const { data } = this.state
     const {
       item
-    } = this.state;
+    } = this.state
 
     return (
       <div>
@@ -246,8 +248,8 @@ class App extends Component {
           </Row>
         </Container>
       </div>
-    );
+    )
   }
 }
 
-export default withTranslation()(App);
+export default withTranslation()(App)

@@ -1,11 +1,11 @@
-import * as React from 'react';
+import * as React from 'react'
 import {
   BrowserRouter, Route, Switch, Redirect,
-} from 'react-router-dom';
-import Dashboard from './App';
-import Create from './CreateSale';
-import Show from './ShowSale';
-import Sales from './Components/Sales';
+} from 'react-router-dom'
+import Dashboard from './App'
+import Create from './CreateSale'
+import Show from './ShowSale'
+import Sales from './Components/Sales'
 
 const Router = (props) => (
   <BrowserRouter>
@@ -47,6 +47,6 @@ const Router = (props) => (
       />
     </Switch>
   </BrowserRouter>
-);
+)
 
-export default Router;
+export default Router

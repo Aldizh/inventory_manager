@@ -14,7 +14,7 @@ export const inventoryData = [
     quantity: 200,
     buyPrice: 1.2,
   },
-];
+]
 
 export const salesData = [
   {

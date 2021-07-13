@@ -1,9 +1,9 @@
-import { app, items } from './Stitch';
+import { app, items } from './Stitch'
 import {
   isLoggedIn, loginAnonymous, loginWithKey, logoutUser,
-} from './authentication';
+} from './authentication'
 
-export { app, items };
+export { app, items }
 export {
   isLoggedIn, loginAnonymous, loginWithKey, logoutUser,
-};
+}

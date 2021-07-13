@@ -7,8 +7,8 @@ import './styles.scss'
 
 class Create extends Component {
   constructor(props) {
-    super(props);
-    this.onSubmit = this.onSubmit.bind(this);
+    super(props)
+    this.onSubmit = this.onSubmit.bind(this)
     this.state = { data: [] }
   }
 
@@ -17,14 +17,14 @@ class Create extends Component {
   componentDidMount() {
     fetch('/api/sales')
       .then((data) => data.json())
-      .then((res) => this.setState({ data: res.data }));
+      .then((res) => this.setState({ data: res.data }))
   }
 
   // our put method that uses our backend api
   // to create new query into our data base
   putDataToDB(name, quantity, buyPrice, sellPrice, category) {
-    const currentIds = this.state.data.map((data) => data.id);
-    const saleId = currentIds.length;
+    const currentIds = this.state.data.map((data) => data.id)
+    const saleId = currentIds.length
     const newRecord = {
       saleId,
       name,
@@ -32,25 +32,25 @@ class Create extends Component {
       buyPrice,
       sellPrice,
       category,
-    };
+    }
     axios.post('/api/sales', newRecord).then((response) => {
       if (response.status === 200) {
-        const newData = this.state.data;
-        newData.push(newRecord);
-        this.setState({ data: newData });
+        const newData = this.state.data
+        newData.push(newRecord)
+        this.setState({ data: newData })
       }
     }).catch(err => console.log('error', err))
   }
 
   onSubmit(updated) {
-    this.putDataToDB(updated);
+    this.putDataToDB(updated)
 
     // go back to home after insertion
-    window.location = '/';
+    window.location = '/'
   }
 
   render() {
-    const { t } = this.props;
+    const { t } = this.props
     return (
       <Form
         t={t}
@@ -64,8 +64,8 @@ class Create extends Component {
           category:'big'
         }}
       />
-    );
+    )
   }
 }
 
-export default withTranslation()(Create);
+export default withTranslation()(Create)

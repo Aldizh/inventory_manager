@@ -1,9 +1,9 @@
-import React, { Component } from 'react';
-import { withTranslation } from 'react-i18next';
+import React, { Component } from 'react'
+import { withTranslation } from 'react-i18next'
 import {
   Table,
-} from 'reactstrap';
-import axios from 'axios';
+} from 'reactstrap'
+import axios from 'axios'
 
 import { formatPrice } from '../utils/numbers'
 import { salesData } from '../mock_data'
@@ -22,16 +22,16 @@ class SalesComp extends Component {
   }
 
   handleClick(id) {
-    window.location =  `/sales/${id}`;
+    window.location =  `/sales/${id}`
   }
 
   render() {
     const { t, category } = this.props
     const data = this.state.data.filter((sale) => sale.category === category )
 
-    let totalBuys = 0.0;
-    let totalSales = 0.0;
-    let totalProfit = 0.0;
+    let totalBuys = 0.0
+    let totalSales = 0.0
+    let totalProfit = 0.0
 
     return this.state.isLoading ? <div>Loading...</div> :
       <div>
@@ -49,9 +49,9 @@ class SalesComp extends Component {
           </thead>
           <tbody>
             {data.map((dat, index) => {
-              totalBuys += dat.quantity * (dat.buyPrice);
-              totalSales += dat.quantity * (dat.sellPrice);
-              totalProfit += dat.quantity * (dat.sellPrice - dat.buyPrice);
+              totalBuys += dat.quantity * (dat.buyPrice)
+              totalSales += dat.quantity * (dat.sellPrice)
+              totalProfit += dat.quantity * (dat.sellPrice - dat.buyPrice)
               return (
                 <tr key={`${index} - ${dat.saleId}`}>
                   <th scope="row">{dat.saleId}</th>
@@ -62,7 +62,7 @@ class SalesComp extends Component {
                   <td>{formatPrice((dat.quantity * (dat.sellPrice - dat.buyPrice)).toFixed(2))}</td>
                   <td><button onClick={() => this.handleClick(dat.saleId)}>{t('edit')}</button></td>
                 </tr>
-              );
+              )
             })}
           </tbody>
         </Table>

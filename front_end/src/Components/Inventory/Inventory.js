@@ -1,13 +1,13 @@
-import React, { Component } from 'react';
-import { withTranslation } from 'react-i18next';
+import React, { Component } from 'react'
+import { withTranslation } from 'react-i18next'
 import {
   Table,
-} from 'reactstrap';
-import axios from 'axios';
+} from 'reactstrap'
+import axios from 'axios'
 
 import ButtonGroup from '../ButtonGroup'
-import { formatPrice } from '../../utils/numbers';
-import { inventoryData } from '../../mock_data';
+import { formatPrice } from '../../utils/numbers'
+import { inventoryData } from '../../mock_data'
 import './styles.scss'
 
 class SalesComp extends Component {
@@ -61,14 +61,14 @@ class SalesComp extends Component {
     }))).then((res) => {
       console.log('successfully created', res)
       this.getDataFromDb(0)
-    }).catch((err) => console.log('bulk insert failed', err));
+    }).catch((err) => console.log('bulk insert failed', err))
   }
 
   handleDelete(){
     axios.delete('/api/articles', inventoryData).then((res) => {
       console.log('successfully deleted', res)
       this.getDataFromDb(0)
-    }).catch((err) => console.log('bulk delete failed', err));
+    }).catch((err) => console.log('bulk delete failed', err))
   }
 
   render() {
@@ -76,9 +76,9 @@ class SalesComp extends Component {
     const { t } = this.props
 
     // Logic for displaying page numbers
-    const pageNumbers = [];
+    const pageNumbers = []
     for (let i = 1; i <= Math.ceil(totalCount / recordsPerPage); i++) {
-      pageNumbers.push(i);
+      pageNumbers.push(i)
     }
 
     return (
@@ -102,7 +102,7 @@ class SalesComp extends Component {
                   <td>{dat.quantity}</td>
                   <td>{formatPrice(dat.buyPrice)}</td>
                 </tr>
-              );
+              )
             })}
           </tbody>
         </Table>

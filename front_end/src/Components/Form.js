@@ -2,13 +2,13 @@ import React, { Component } from 'react'
 
 class Form extends Component {
   constructor(props) {
-    super(props);
+    super(props)
 
-    this.onChangeName = this.onChangeName.bind(this);
-    this.onChangeBuyPrice = this.onChangeBuyPrice.bind(this);
-    this.onChangeQuantity = this.onChangeQuantity.bind(this);
-    this.onChangeSellPrice = this.onChangeSellPrice.bind(this);
-    this.submitHandler = this.submitHandler.bind(this);
+    this.onChangeName = this.onChangeName.bind(this)
+    this.onChangeBuyPrice = this.onChangeBuyPrice.bind(this)
+    this.onChangeQuantity = this.onChangeQuantity.bind(this)
+    this.onChangeSellPrice = this.onChangeSellPrice.bind(this)
+    this.submitHandler = this.submitHandler.bind(this)
 
     const {saleId, name = '', quantity = '', buyPrice = '', sellPrice = '', category='' } = this.props.sale
 
@@ -19,33 +19,33 @@ class Form extends Component {
       buyPrice,
       sellPrice,
       category
-    };
+    }
   }
 
   onChangeName(e) {
-    this.setState({ name: e.target.value });
+    this.setState({ name: e.target.value })
   }
 
   onChangeBuyPrice(e) {
-    this.setState({ buyPrice: parseFloat(e.target.value) });
+    this.setState({ buyPrice: parseFloat(e.target.value) })
   }
 
   onChangeSellPrice(e) {
-    this.setState({ sellPrice: parseFloat(e.target.value) });
+    this.setState({ sellPrice: parseFloat(e.target.value) })
   }
 
   onChangeQuantity(e) {
-    this.setState({ quantity: parseFloat(e.target.value) });
+    this.setState({ quantity: parseFloat(e.target.value) })
   }
 
   submitHandler(e){
-    e.preventDefault();
+    e.preventDefault()
 
     const { onSubmit } = this.props
 
     const {
       saleId, name, quantity, buyPrice, sellPrice, category,
-    } = this.state;
+    } = this.state
 
     const updated = {
       saleId, name, quantity, buyPrice, sellPrice, category

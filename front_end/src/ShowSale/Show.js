@@ -6,8 +6,8 @@ import Form from '../Components/Form'
 
 class Create extends Component {
   constructor(props) {
-    super(props);
-    this.onSubmit = this.onSubmit.bind(this);
+    super(props)
+    this.onSubmit = this.onSubmit.bind(this)
     this.state = {
       sale: {},
       editMode: true
@@ -37,7 +37,7 @@ class Create extends Component {
   }
 
   onSubmit(updated) {
-    this.updateRecord(updated);
+    this.updateRecord(updated)
     const parentLocation = this.state.sale.category === 'big' ? '/shumice' : '/pakice'
     
     // go back to parent page and reload to refelect the update
@@ -46,7 +46,7 @@ class Create extends Component {
   }
 
   render() {
-    const { t } =  this.props;
+    const { t } =  this.props
     return this.state.sale.name ? (
       <Form
         t={t}
@@ -59,4 +59,4 @@ class Create extends Component {
   }
 }
 
-export default withTranslation()(Create);
+export default withTranslation()(Create)

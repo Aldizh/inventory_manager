@@ -15,12 +15,12 @@
     "sourceType": "module"
   },
   "rules": {
-    "semi": 0,
+    "semi": ["warn", "never"],
     "no-undef": 0,
     "no-console": 0,
     "react/prop-types": 0,
     "no-unused-vars": "warn",
-    "no-param-reassign": ["error", { "props": false }],
+    "no-param-reassign": ["error", { "props": false }]
   },
   "globals": {
     "window": true,

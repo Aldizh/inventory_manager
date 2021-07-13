@@ -1,15 +1,15 @@
-import React from 'react';
-import { withTranslation } from 'react-i18next';
-import useBeforeFirstRender from '../hooks/useBeforeFirstRender';
-import './styles.css';
+import React from 'react'
+import { withTranslation } from 'react-i18next'
+import useBeforeFirstRender from '../hooks/useBeforeFirstRender'
+import './styles.css'
 
 const NavBar = ({ t, i18n }) => {
   useBeforeFirstRender(() => {
-    const lang = localStorage.getItem('language');
+    const lang = localStorage.getItem('language')
     if (lang && lang.length) {
-      i18n.changeLanguage(lang);
+      i18n.changeLanguage(lang)
     }
-  });
+  })
 
   return (
     <ul>
@@ -18,7 +18,7 @@ const NavBar = ({ t, i18n }) => {
       <li><a href="/shumice">{t('big')}</a></li>
       <li style={{ float: 'right' }}><a className="active" href="/">{t('home')}</a></li>
     </ul>
-  );
-};
+  )
+}
 
-export default withTranslation()(NavBar);
+export default withTranslation()(NavBar)
