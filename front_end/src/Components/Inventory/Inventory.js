@@ -1,5 +1,6 @@
 import React, { Component } from 'react'
 import { withTranslation } from 'react-i18next'
+import { connect } from 'react-redux'
 import {
   Table,
 } from 'reactstrap'
@@ -14,7 +15,6 @@ class SalesComp extends Component {
   constructor(props){
     super(props)
     this.state = {
-      pageData: [],
       isLoading: false,
       recordsPerPage: 10,
       currentPage: 1
@@ -40,7 +40,7 @@ class SalesComp extends Component {
     fetch(`/api/articles?pageNumber=${pageNumber}`)
       .then((data) => data.json())
       .then((res) => {
-        this.setState({ pageData: res.data })
+        this.props.updatePageData(res.data)
       })
   }
 
@@ -56,28 +56,29 @@ class SalesComp extends Component {
   }
 
   handleCreateUpdate(){
-    this.props.fetchAllData()
-    const totalCount = this.props.initialData.length
+    const currentTotal = this.props.totalCount
     axios.post('/api/articles', inventoryData.map((item, idx) => ({
       ...item,
-      id: totalCount + idx,
+      id: currentTotal + idx,
     }))).then((res) => {
-      console.log('successfully inserted', res)
-      const pageNum = Math.ceil(totalCount / this.state.recordsPerPage)
-      this.updateCurrentPage(pageNum)
+      console.log('successfully inserted these records: ', res.data.data)
+      this.props.refreshData() // ensures redux state is updated properly
+      const totalCount = this.props.totalCount
+      let pageNum = Math.ceil(totalCount / this.state.recordsPerPage)
+      this.updateCurrentPage(pageNum || 1)
     }).catch((err) => console.log('bulk insert failed', err))
   }
 
   handleDelete(){
     axios.delete('/api/articles', inventoryData).then((res) => {
-      console.log('successfully deleted', res)
-      this.props.fetchAllData()
+      if (res.status === 200) console.log('successfully deleted test data')
+      this.props.refreshData()
     }).catch((err) => console.log('bulk delete failed', err))
   }
 
   render() {
-    const { currentPage, pageData, recordsPerPage } = this.state
-    const { t, totalCount  } = this.props
+    const { currentPage, recordsPerPage } = this.state
+    const { t, totalCount, pageData  } = this.props
 
     // Logic for displaying page numbers
     const pageNumbers = []
@@ -133,4 +134,14 @@ class SalesComp extends Component {
   }
 }
 
-export default withTranslation()(SalesComp)
+// useful info from redux state
+const mapStateToProps = (state) => {
+  const { totalCount, pageData } = state
+  return { totalCount, pageData }
+}
+
+const mapDispatchToProps = (dispatch) => ({
+  updatePageData: (data) => dispatch({ type: 'UPDATE_INVENTORY', data }),
+})
+
+export default connect(mapStateToProps, mapDispatchToProps)(withTranslation()(SalesComp))

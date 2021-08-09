@@ -1,5 +1,6 @@
 // /client/App.js
 import React, { Component } from 'react'
+import { connect } from 'react-redux'
 import { withTranslation } from 'react-i18next'
 import {
   Container,
@@ -34,7 +35,7 @@ class App extends Component {
       language: defaultLang,
     }
     this.updateDB = this.updateDB.bind(this)
-    this.fetchAllData = this.fetchAllData.bind(this)
+    this.refreshData = this.refreshData.bind(this)
     this.deleteFromDB = this.deleteFromDB.bind(this)
   }
 
@@ -48,17 +49,19 @@ class App extends Component {
         if (err) return console.log('something went wrong loading', err)
       })
     }
-    this.fetchAllData()
+    this.refreshData()
   }
 
 
   // our first get method that uses our backend api to
   // fetch data from our data base
-  fetchAllData() {
+  refreshData() {
     fetch(`/api/articles`)
       .then((data) => data.json())
       .then((res) => {
-        this.setState({ data: res.data, totalCount: res.totalCount })
+        this.props.updatePageData(res.data)
+        this.props.updateTotalCount(res.totalCount)
+        this.setState({ data: res.data })
       })
   }
 
@@ -118,6 +121,7 @@ class App extends Component {
             return rec
           })
           this.setState({ data: newData })
+          this.props.updatePageData(newData)
         }
       })
     }
@@ -197,7 +201,7 @@ class App extends Component {
   // This is our main UI (dashboard) entry point
   render() {
     const { t } = this.props
-    const { data, totalCount } = this.state
+    const { data } = this.state
     const {
       item
     } = this.state
@@ -211,8 +215,7 @@ class App extends Component {
               <div className="centeredRight">
                 <Inventory
                   initialData={data}
-                  totalCount={totalCount}
-                  fetchAllData={this.fetchAllData}
+                  refreshData={this.refreshData}
                 />
               </div>
             </Col>
@@ -258,4 +261,16 @@ class App extends Component {
   }
 }
 
-export default withTranslation()(App)
+
+// useful info from redux state
+const mapStateToProps = (state) => {
+  const { pageData } = state
+  return { pageData }
+}
+
+const mapDispatchToProps = (dispatch) => ({
+  updatePageData: (data) => dispatch({ type: 'UPDATE_INVENTORY', data }),
+  updateTotalCount: (data) => dispatch({ type: 'UPDATE_TOTAL_COUNT', data})
+})
+
+export default connect(mapStateToProps, mapDispatchToProps)(withTranslation()(App))

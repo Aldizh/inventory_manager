@@ -1,6 +1,9 @@
 import React from 'react'
 import ReactDOM from 'react-dom'
+import { Provider } from 'react-redux'
 import { createBrowserHistory } from 'history'
+
+import store from './store'
 import Router from './Router'
 import NavBar from './NavBar'
 import Footer from './Footer'
@@ -21,7 +24,10 @@ class MyApp extends React.Component {
       <>
         <NavBar />
         <br />
-        <Router history={history} handleLogout={() => logoutUser(app.currentUser)} />
+        <Router
+          history={history}
+          handleLogout={() => logoutUser(app.currentUser)}
+        />
         <Footer />
       </>
     ) : (
@@ -35,7 +41,13 @@ class MyApp extends React.Component {
   }
 }
 
-ReactDOM.render(<MyApp />, document.getElementById('root'))
+const rootElement = document.getElementById('root')
+ReactDOM.render(
+  <Provider store={store}>
+    <MyApp />
+  </Provider>,
+  rootElement
+)
 
 // If you want your app to work offline and load faster, you can change
 // unregister() to register() below. Note this comes with some pitfalls.
