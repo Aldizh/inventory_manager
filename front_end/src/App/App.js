@@ -34,6 +34,7 @@ class App extends Component {
       language: defaultLang,
     }
     this.updateDB = this.updateDB.bind(this)
+    this.fetchAllData = this.fetchAllData.bind(this)
     this.deleteFromDB = this.deleteFromDB.bind(this)
   }
 
@@ -47,10 +48,17 @@ class App extends Component {
         if (err) return console.log('something went wrong loading', err)
       })
     }
+    this.fetchAllData()
+  }
+
+
+  // our first get method that uses our backend api to
+  // fetch data from our data base
+  fetchAllData() {
     fetch(`/api/articles`)
       .then((data) => data.json())
       .then((res) => {
-        if (res.data) this.setState({ data: res.data })
+        this.setState({ data: res.data, totalCount: res.totalCount })
       })
   }
 
@@ -91,21 +99,17 @@ class App extends Component {
   // to overwrite existing data base information
   // TO DO: sanitize input
   updateDB() {
-    // update item
     let recordToUpdate = {}
     const { data, item, editMode } = this.state
     const { id: idToUpdate, name = '', qunatity, buyPrice } = item
     if (editMode) {
-      data.forEach((dat) => {
-        if (dat.id === parseInt(idToUpdate)) {
-          recordToUpdate = {
-            id: dat.id,
-            name: escapeHTML(name) || dat.name,
-            quantity: qunatity || dat.quantity,
-            buyPrice: buyPrice || dat.buyPrice,
-          }
-        }
-      })
+      const existingDat = data.find((dat) => dat.id === parseInt(idToUpdate))
+      recordToUpdate = {
+        ...existingDat,
+        name: escapeHTML(name) || existingDat.name,
+        quantity: qunatity || existingDat.quantity,
+        buyPrice: buyPrice || existingDat.buyPrice,
+      }
   
       axios.put(`/api/articles/${idToUpdate}`, recordToUpdate).then((response) => {
         if (response.status === 200) {
@@ -113,7 +117,7 @@ class App extends Component {
             if (rec.id === recordToUpdate.id) return recordToUpdate
             return rec
           })
-          this.setState({ data: newData})
+          this.setState({ data: newData })
         }
       })
     }
@@ -193,7 +197,7 @@ class App extends Component {
   // This is our main UI (dashboard) entry point
   render() {
     const { t } = this.props
-    const { data } = this.state
+    const { data, totalCount } = this.state
     const {
       item
     } = this.state
@@ -206,7 +210,9 @@ class App extends Component {
             <Col xs="6">
               <div className="centeredRight">
                 <Inventory
-                  data={data}
+                  initialData={data}
+                  totalCount={totalCount}
+                  fetchAllData={this.fetchAllData}
                 />
               </div>
             </Col>

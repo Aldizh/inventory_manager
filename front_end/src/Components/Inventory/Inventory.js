@@ -14,38 +14,39 @@ class SalesComp extends Component {
   constructor(props){
     super(props)
     this.state = {
-      data: [],
-      totalCount: 0,
+      pageData: [],
       isLoading: false,
       recordsPerPage: 10,
       currentPage: 1
     }
 
     this.handlePageClick = this.handlePageClick.bind(this)
-    this.updateCurrentPage = this.updateCurrentPage.bind(this)
     this.handleCreateUpdate = this.handleCreateUpdate.bind(this)
     this.handleDelete = this.handleDelete.bind(this)
-    this.getDataFromDb = this.getDataFromDb.bind(this)
+    this.getCurrentPageData = this.getCurrentPageData.bind(this)
+    this.updateCurrentPage = this.updateCurrentPage.bind(this)
   }
 
   // when component mounts, first thing it does is fetch all existing data in our db
   // then we incorporate a polling logic so that we can easily see if our db has
   // changed and implement those changes into our UI
   componentDidMount() {
-    this.getDataFromDb(0)
+    this.getCurrentPageData(0)
   }
-  
+
   // our first get method that uses our backend api to
   // fetch data from our data base
-  getDataFromDb(pageNumber = 0) {
+  getCurrentPageData(pageNumber = 0) {
     fetch(`/api/articles?pageNumber=${pageNumber}`)
       .then((data) => data.json())
-      .then((res) => this.setState({ data: res.data, totalCount: res.totalCount }))
+      .then((res) => {
+        this.setState({ pageData: res.data })
+      })
   }
 
   // Also refresh the data when updating page number
   updateCurrentPage(newPage){
-    this.getDataFromDb(newPage - 1)
+    this.getCurrentPageData(newPage - 1)
     this.setState({currentPage: newPage})
   }
 
@@ -55,25 +56,28 @@ class SalesComp extends Component {
   }
 
   handleCreateUpdate(){
+    this.props.fetchAllData()
+    const totalCount = this.props.initialData.length
     axios.post('/api/articles', inventoryData.map((item, idx) => ({
       ...item,
-      id: this.state.totalCount + idx,
+      id: totalCount + idx,
     }))).then((res) => {
-      console.log('successfully created', res)
-      this.getDataFromDb(0)
+      console.log('successfully inserted', res)
+      const pageNum = Math.ceil(totalCount / this.state.recordsPerPage)
+      this.updateCurrentPage(pageNum)
     }).catch((err) => console.log('bulk insert failed', err))
   }
 
   handleDelete(){
     axios.delete('/api/articles', inventoryData).then((res) => {
       console.log('successfully deleted', res)
-      this.getDataFromDb(0)
+      this.props.fetchAllData()
     }).catch((err) => console.log('bulk delete failed', err))
   }
 
   render() {
-    const { data, currentPage, totalCount, recordsPerPage } = this.state
-    const { t } = this.props
+    const { currentPage, pageData, recordsPerPage } = this.state
+    const { t, totalCount  } = this.props
 
     // Logic for displaying page numbers
     const pageNumbers = []
@@ -94,7 +98,7 @@ class SalesComp extends Component {
             </tr>
           </thead>
           <tbody>
-            {data.map((dat, index) => {
+            {pageData.map((dat, index) => {
               return (
                 <tr key={`${index} - ${dat.id}`}>
                   <th>{dat.id}</th>
