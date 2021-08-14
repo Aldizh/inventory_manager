@@ -14,7 +14,7 @@ import 'bootstrap/dist/css/bootstrap.min.css'
 import '../i18n'
 import Inventory from '../Components/Inventory/'
 import ButtonGroup from '../Components/ButtonGroup'
-import escapeHTML from '../utils/string'
+import { escapeHTML } from '../utils/string'
 import './styles.scss'
 
 class App extends Component {

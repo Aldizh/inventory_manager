@@ -5,20 +5,29 @@ import {
 } from 'reactstrap'
 import axios from 'axios'
 
-import { formatPrice } from '../utils/numbers'
+import { langToCurrMap } from '../utils/string'
 import { salesData } from '../mock_data'
 import Totals from './Totals'
-
 class SalesComp extends Component {
-  state = { data: salesData, isLoading: false }
+  state = { data: salesData, isLoading: false, conversionRate: 1 }
 
   async componentDidMount() {
     this.setState({ isLoading: true })
-    const result = await axios.get('/api/sales').catch(err => {
+    const salesPromise = axios.get('/api/sales')
+    const currencyPromise = axios(
+      `https://api.exchangerate.host/latest/?base=USD&amount=1&symbols=USD,ALL`
+    );
+    return Promise.all([salesPromise, currencyPromise]).then(res => {
+      const [{data: salesData}, {data: currencyData}] = res
+      this.setState({
+        isLoading: false,
+        conversionRate: currencyData.rates[langToCurrMap()],
+        data: salesData.data.filter((sale) => sale.category === this.props.category)
+      })
+    }).catch(err => {
       console.log('err', err)
       this.setState({ isLoading: false })
-    })
-    this.setState({ isLoading: false, data: result.data.data.filter((sale) => sale.category === this.props.category )})
+    })   
   }
 
   handleClick(id) {
@@ -26,6 +35,7 @@ class SalesComp extends Component {
   }
 
   render() {
+    const { conversionRate, isLoading } = this.state
     const { t, category } = this.props
     const data = this.state.data.filter((sale) => sale.category === category )
 
@@ -33,7 +43,7 @@ class SalesComp extends Component {
     let totalSales = 0.0
     let totalProfit = 0.0
 
-    return this.state.isLoading ? <div>Loading...</div> :
+    return isLoading ? <div>Loading...</div> :
       <div>
         <Table dark>
           <thead>
@@ -57,9 +67,9 @@ class SalesComp extends Component {
                   <th scope="row">{dat.saleId}</th>
                   <td>{dat.name}</td>
                   <td>{dat.quantity}</td>
-                  <td>{formatPrice(dat.buyPrice)}</td>
-                  <td>{formatPrice(dat.sellPrice)}</td>
-                  <td>{formatPrice((dat.quantity * (dat.sellPrice - dat.buyPrice)).toFixed(2))}</td>
+                  <td>{(dat.buyPrice * conversionRate).toFixed(2)}</td>
+                  <td>{(dat.sellPrice * conversionRate).toFixed(2)}</td>
+                  <td>{(dat.quantity * conversionRate * (dat.sellPrice - dat.buyPrice)).toFixed(2)}</td>
                   <td><button onClick={() => this.handleClick(dat.saleId)}>{t('edit')}</button></td>
                 </tr>
               )
