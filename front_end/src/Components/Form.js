@@ -79,7 +79,7 @@ class Form extends Component {
               id="name"
               type="text"
               name="name"
-              placeholder=""
+              placeholder="Kiwis"
               value={name}
               onChange={this.onChangeName}
             />
@@ -90,7 +90,7 @@ class Form extends Component {
               id="quantity"
               type="number"
               name="quantity"
-              placeholder=""
+              placeholder="10"
               value={quantity}
               onChange={this.onChangeQuantity}
             />
@@ -102,7 +102,7 @@ class Form extends Component {
               type="number"
               name="buy_price"
               step="0.1"
-              placeholder=""
+              placeholder="$0.4"
               value={buyPrice}
               onChange={this.onChangeBuyPrice}
             />
@@ -114,7 +114,7 @@ class Form extends Component {
               type="number"
               step="0.1"
               name="sell_price"
-              placeholder=""
+              placeholder="$0.6"
               value={sellPrice}
               onChange={this.onChangeSellPrice}
             />

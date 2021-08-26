@@ -14,9 +14,29 @@ const router = express.Router()
 router.get("/articles", (req, res) => {
   const pageNumber = req.query.pageNumber || 0
   const resultsPerPage = 10
+
   const resPromise = Article.find()
     .skip(resultsPerPage * pageNumber)
     .limit(resultsPerPage)
+  const countPromise = Article.find().countDocuments()
+  Promise.all([resPromise, countPromise])
+    .then((results) => {
+      return res.json({ success: true, data: results[0], totalCount: results[1] });
+    }).catch(err => {
+      console.log('err', err)
+      return res.json({ success: false, error: err });
+    })
+});
+
+
+/*
+ * Fetch available records from our database
+ * @param {req} - Express request
+ * @param {req.query} - Mongo DB query
+ * @return {res} Express response
+*/
+router.get("/articles/all", (req, res) => {
+  const resPromise = Article.find({})
   const countPromise = Article.find().countDocuments()
   Promise.all([resPromise, countPromise])
     .then((results) => {
@@ -80,12 +100,12 @@ router.get("/articles/:id", (req, res, next) => {
 
 // updates an existing record in our database
 router.put("/articles/:id", (req, res, next) => {
-  const { name, qunatity, buyPrice, id } =  req.body
+  const { name, quantity, buyPrice, id } =  req.body
   Article.findOne({ id: req.params.id }).then((record) => {
     if (record.id !== null) {
       Article.updateOne({ id }, {
         name,
-        qunatity,
+        quantity,
         buyPrice
       }).then(record => {
         return res.json({ success: true, record})
@@ -181,13 +201,13 @@ router.post("/sales", (req, res, next) => {
 
 // updates an existing record in our database
 router.put("/sales/:id", (req, res, next) => {
-  const { name, qunatity, buyPrice, sellPrice, saleId } = req.body
+  const { name, quantity, buyPrice, sellPrice, saleId } = req.body
   Sale.find({ saleId }).then((records) => {
     const record = records[0]
     if (record.saleId !== null) {
       Sale.updateOne({ saleId }, {
         name,
-        qunatity,
+        quantity,
         buyPrice,
         sellPrice
       }).then(record => {

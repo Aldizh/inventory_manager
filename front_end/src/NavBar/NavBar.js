@@ -16,7 +16,7 @@ const NavBar = ({ t, i18n }) => {
       <li><a href="/create">{t('dataEntry')}</a></li>
       <li><a href="/pakice">{t('small')}</a></li>
       <li><a href="/shumice">{t('big')}</a></li>
-      <li style={{ float: 'right' }}><a className="active" href="/">{t('home')}</a></li>
+      <li style={{ float: 'right' }}><a href="/">{t('home')}</a></li>
     </ul>
   )
 }

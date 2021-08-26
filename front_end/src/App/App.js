@@ -72,57 +72,46 @@ class App extends Component {
 
   // our delete method that uses our backend api
   // to remove existing database information
-  deleteFromDB() {
+  async deleteFromDB() {
     const idToDelete = this.state.item.id
-    const recordToDelete = { id: null }
-    this.state.data.forEach((dat) => {
-      if (dat.id === parseInt(idToDelete)) {
-        recordToDelete.id = dat.id
-      }
-    })
-    axios
+    const { data: record } = await axios.get(`/api/articles/${idToDelete}`)
+    const { data: allArticles } = await axios.get(`/api/articles/all`)
+    const deleteRes = await axios
       .delete(`/api/articles/${idToDelete}`, {
-        data: recordToDelete,
+        data: record.data,
       })
-      .then((response) => {
-        if (response.status === 200) {
-          const { data } = this.state
-          const deleteIndex = findIndex(propEq('id', recordToDelete.id))(data)
-          if (deleteIndex === -1) {
-            alert('No such records exist in our database')
-          } else {
-            data.splice(deleteIndex, 1)
-            this.setState({ data, item: {} })
-          }
-        }
-      })
+    if (deleteRes.status === 200) {
+      const deleteIndex = findIndex(propEq('id', record.data.id))(allArticles.data)
+      if (deleteIndex === -1) {
+        alert('No such records exist in our database')
+      } else {
+        this.refreshData()
+      }
+    }
   }
 
   // our update method that uses our backend api
   // to overwrite existing data base information
   // TO DO: sanitize input
-  updateDB() {
+  async updateDB() {
     let recordToUpdate = {}
-    const { data, item, editMode } = this.state
-    const { id: idToUpdate, name = '', qunatity, buyPrice } = item
+    const { item, editMode } = this.state
+    const { id: idToUpdate, name = '', quantity, buyPrice } = item
+    const { data } = await axios.get(`/api/articles/${idToUpdate}`)
+    const existingDat = data.data
+
     if (editMode) {
-      const existingDat = data.find((dat) => dat.id === parseInt(idToUpdate))
       recordToUpdate = {
         ...existingDat,
         name: escapeHTML(name) || existingDat.name,
-        quantity: qunatity || existingDat.quantity,
+        quantity: quantity || existingDat.quantity,
         buyPrice: buyPrice || existingDat.buyPrice,
       }
+
+      console.log('recordToUpdate', recordToUpdate)
   
       axios.put(`/api/articles/${idToUpdate}`, recordToUpdate).then((response) => {
-        if (response.status === 200) {
-          const newData = data.map(rec => {
-            if (rec.id === recordToUpdate.id) return recordToUpdate
-            return rec
-          })
-          this.setState({ data: newData })
-          this.props.updatePageData(newData)
-        }
+        if (response.status === 200) this.refreshData()
       })
     }
 

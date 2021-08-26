@@ -16,7 +16,7 @@ class SalesComp extends Component {
     const salesPromise = axios.get('/api/sales')
     const currencyPromise = axios(
       `https://api.exchangerate.host/latest/?base=USD&amount=1&symbols=USD,ALL`
-    );
+    )
     return Promise.all([salesPromise, currencyPromise]).then(res => {
       const [{data: salesData}, {data: currencyData}] = res
       this.setState({
