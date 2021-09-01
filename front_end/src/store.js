@@ -1,21 +1,21 @@
-import { createStore } from 'redux'
+import { createStore } from "redux"
 
 const defaultState = {
   pageData: [],
-  totalCount: 0
+  totalCount: 0,
 }
 
 function manageStore(state, action) {
   switch (action.type) {
-    case 'UPDATE_INVENTORY':
+    case "UPDATE_INVENTORY":
       return {
         ...state,
-        pageData: action.data
+        pageData: action.data,
       }
-    case 'UPDATE_TOTAL_COUNT':
+    case "UPDATE_TOTAL_COUNT":
       return {
         ...state,
-        totalCount: action.data
+        totalCount: action.data,
       }
     default:
       return state

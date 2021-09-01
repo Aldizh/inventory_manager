@@ -1,8 +1,8 @@
-import React from 'react'
-import { Button, Form } from 'reactstrap'
-import { withTranslation } from 'react-i18next'
-import styled from '@emotion/styled'
-import PropTypes from 'prop-types'
+import React from "react"
+import { Button, Form } from "reactstrap"
+import { withTranslation } from "react-i18next"
+import styled from "@emotion/styled"
+import PropTypes from "prop-types"
 
 const ButtonRow = styled.div`
   display: flex;
@@ -26,8 +26,8 @@ const LoginForm = ({ loginAnonymous, loginWithKey, t }) => {
   return (
     <Form>
       <ButtonRow>
-        <Button onClick={handleLogin}>{t('anonymous')}</Button>
-        <Button onClick={handleLoginWithKey}>{t('authenticated')}</Button>
+        <Button onClick={handleLogin}>{t("anonymous")}</Button>
+        <Button onClick={handleLoginWithKey}>{t("authenticated")}</Button>
       </ButtonRow>
     </Form>
   )

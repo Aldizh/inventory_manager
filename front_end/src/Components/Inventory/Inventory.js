@@ -1,23 +1,21 @@
-import React, { Component } from 'react'
-import { withTranslation } from 'react-i18next'
-import { connect } from 'react-redux'
-import {
-  Table,
-} from 'reactstrap'
-import axios from 'axios'
+import React, { Component } from "react"
+import { withTranslation } from "react-i18next"
+import { connect } from "react-redux"
+import { Table } from "reactstrap"
+import axios from "axios"
 
-import ButtonGroup from '../ButtonGroup'
-import { formatPrice } from '../../utils/numbers'
-import { inventoryData } from '../../mock_data'
-import './styles.scss'
+import ButtonGroup from "../ButtonGroup"
+import { formatPrice } from "../../utils/numbers"
+import { inventoryData } from "../../mock_data"
+import "./styles.scss"
 
 class SalesComp extends Component {
-  constructor(props){
+  constructor(props) {
     super(props)
     this.state = {
       isLoading: false,
       recordsPerPage: 10,
-      currentPage: 1
+      currentPage: 1,
     }
 
     this.handlePageClick = this.handlePageClick.bind(this)
@@ -38,47 +36,56 @@ class SalesComp extends Component {
   // fetch data from our data base
   getCurrentPageData(pageNumber = 0) {
     fetch(`/api/articles?pageNumber=${pageNumber}`)
-      .then((data) => data.json())
-      .then((res) => {
+      .then(data => data.json())
+      .then(res => {
         this.props.updatePageData(res.data)
       })
   }
 
   // Also refresh the data when updating page number
-  updateCurrentPage(newPage){
+  updateCurrentPage(newPage) {
     this.getCurrentPageData(newPage - 1)
-    this.setState({currentPage: newPage})
+    this.setState({ currentPage: newPage })
   }
 
-  handlePageClick(event){
+  handlePageClick(event) {
     const pageIndex = Number(event.target.id) - 1
     this.updateCurrentPage(pageIndex + 1)
   }
 
-  handleCreateUpdate(){
+  handleCreateUpdate() {
     const currentTotal = this.props.totalCount
-    axios.post('/api/articles', inventoryData.map((item, idx) => ({
-      ...item,
-      id: currentTotal + idx,
-    }))).then((res) => {
-      console.log('successfully inserted these records: ', res.data.data)
-      this.props.refreshData() // ensures redux state is updated properly
-      const totalCount = this.props.totalCount
-      let pageNum = Math.ceil(totalCount / this.state.recordsPerPage)
-      this.updateCurrentPage(pageNum || 1)
-    }).catch((err) => console.log('bulk insert failed', err))
+    axios
+      .post(
+        "/api/articles",
+        inventoryData.map((item, idx) => ({
+          ...item,
+          id: currentTotal + idx,
+        })),
+      )
+      .then(res => {
+        console.log("successfully inserted these records: ", res.data.data)
+        this.props.refreshData() // ensures redux state is updated properly
+        const totalCount = this.props.totalCount
+        let pageNum = Math.ceil(totalCount / this.state.recordsPerPage)
+        this.updateCurrentPage(pageNum || 1)
+      })
+      .catch(err => console.log("bulk insert failed", err))
   }
 
-  handleDelete(){
-    axios.delete('/api/articles', inventoryData).then((res) => {
-      if (res.status === 200) console.log('successfully deleted test data')
-      this.props.refreshData()
-    }).catch((err) => console.log('bulk delete failed', err))
+  handleDelete() {
+    axios
+      .delete("/api/articles", inventoryData)
+      .then(res => {
+        if (res.status === 200) console.log("successfully deleted test data")
+        this.props.refreshData()
+      })
+      .catch(err => console.log("bulk delete failed", err))
   }
 
   render() {
     const { currentPage, recordsPerPage } = this.state
-    const { t, totalCount, pageData  } = this.props
+    const { t, totalCount, pageData } = this.props
 
     // Logic for displaying page numbers
     const pageNumbers = []
@@ -92,10 +99,10 @@ class SalesComp extends Component {
         <Table dark>
           <thead>
             <tr>
-              <th>{t('barCode')}</th>
-              <th>{t('item')}</th>
-              <th>{t('quantity')}</th>
-              <th>{t('buyPrice')}</th>
+              <th>{t("barCode")}</th>
+              <th>{t("item")}</th>
+              <th>{t("quantity")}</th>
+              <th>{t("buyPrice")}</th>
             </tr>
           </thead>
           <tbody>
@@ -117,8 +124,7 @@ class SalesComp extends Component {
               key={number}
               id={number}
               onClick={this.handlePageClick}
-              className={i + 1 === currentPage ? "highlight" : ""}
-            >
+              className={i + 1 === currentPage ? "highlight" : ""}>
               {number}
             </li>
           ))}
@@ -126,8 +132,8 @@ class SalesComp extends Component {
         <ButtonGroup
           updateHandler={this.handleCreateUpdate}
           deleteHandler={this.handleDelete}
-          updateText={t('loadAll')}
-          deleteText={t('deleteAll')}
+          updateText={t("loadAll")}
+          deleteText={t("deleteAll")}
         />
       </div>
     )
@@ -135,13 +141,16 @@ class SalesComp extends Component {
 }
 
 // useful info from redux state
-const mapStateToProps = (state) => {
+const mapStateToProps = state => {
   const { totalCount, pageData } = state
   return { totalCount, pageData }
 }
 
-const mapDispatchToProps = (dispatch) => ({
-  updatePageData: (data) => dispatch({ type: 'UPDATE_INVENTORY', data }),
+const mapDispatchToProps = dispatch => ({
+  updatePageData: data => dispatch({ type: "UPDATE_INVENTORY", data }),
 })
 
-export default connect(mapStateToProps, mapDispatchToProps)(withTranslation()(SalesComp))
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps,
+)(withTranslation()(SalesComp))

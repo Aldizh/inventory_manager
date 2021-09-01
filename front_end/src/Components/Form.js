@@ -1,4 +1,4 @@
-import React, { Component } from 'react'
+import React, { Component } from "react"
 
 class Form extends Component {
   constructor(props) {
@@ -10,7 +10,14 @@ class Form extends Component {
     this.onChangeSellPrice = this.onChangeSellPrice.bind(this)
     this.submitHandler = this.submitHandler.bind(this)
 
-    const {saleId, name = '', quantity = '', buyPrice = '', sellPrice = '', category='' } = this.props.sale
+    const {
+      saleId,
+      name = "",
+      quantity = "",
+      buyPrice = "",
+      sellPrice = "",
+      category = "",
+    } = this.props.sale
 
     this.state = {
       saleId,
@@ -18,7 +25,7 @@ class Form extends Component {
       quantity,
       buyPrice,
       sellPrice,
-      category
+      category,
     }
   }
 
@@ -38,17 +45,20 @@ class Form extends Component {
     this.setState({ quantity: parseFloat(e.target.value) })
   }
 
-  submitHandler(e){
+  submitHandler(e) {
     e.preventDefault()
 
     const { onSubmit } = this.props
 
-    const {
-      saleId, name, quantity, buyPrice, sellPrice, category,
-    } = this.state
+    const { saleId, name, quantity, buyPrice, sellPrice, category } = this.state
 
     const updated = {
-      saleId, name, quantity, buyPrice, sellPrice, category
+      saleId,
+      name,
+      quantity,
+      buyPrice,
+      sellPrice,
+      category,
     }
 
     onSubmit(updated)
@@ -62,19 +72,18 @@ class Form extends Component {
       <div className="createFormContainer">
         <form className="add-form" onSubmit={this.submitHandler}>
           <div className="form-control">
-            <label>{t('category')}</label>
+            <label>{t("category")}</label>
             <select
               value={category}
               name="cars"
               id="categorySelect"
-              onChange={(e) => this.setState({ category: e.target.value })}
-            >
-              <option value="big">{t('big')}</option>
-              <option value="small">{t('small')}</option>
+              onChange={e => this.setState({ category: e.target.value })}>
+              <option value="big">{t("big")}</option>
+              <option value="small">{t("small")}</option>
             </select>
           </div>
           <div className="form-control">
-            <label>{t('item')}</label>
+            <label>{t("item")}</label>
             <input
               id="name"
               type="text"
@@ -85,7 +94,7 @@ class Form extends Component {
             />
           </div>
           <div className="form-control">
-            <label>{t('quantity')}</label>
+            <label>{t("quantity")}</label>
             <input
               id="quantity"
               type="number"
@@ -96,7 +105,7 @@ class Form extends Component {
             />
           </div>
           <div className="form-control">
-            <label>{t('buyPrice')}</label>
+            <label>{t("buyPrice")}</label>
             <input
               id="buy_price"
               type="number"
@@ -108,7 +117,7 @@ class Form extends Component {
             />
           </div>
           <div className="form-control">
-            <label>{t('sellPrice')}</label>
+            <label>{t("sellPrice")}</label>
             <input
               id="sell_price"
               type="number"
@@ -120,7 +129,11 @@ class Form extends Component {
             />
           </div>
           <div style={{ margin: 10 }}>
-            <input type="submit" value={editMode ? t('updateSale') : t('newSale')} className="btn btn-success btn-block" />
+            <input
+              type="submit"
+              value={editMode ? t("updateSale") : t("newSale")}
+              className="btn btn-success btn-block"
+            />
           </div>
         </form>
       </div>
