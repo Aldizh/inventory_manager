@@ -39,13 +39,19 @@ This will output a link which you can paste into the browser and start the debug
 
 7. Setup [git hooks](docs/setup.md#git-hooks) to keep the docs updated.
 
-## Running the application
+## Package maintenance
 
-From the root folder run
+Some helpful yarn tools to maintain dependencies
 
-```
-npm start
-```
+- For checking any security flaws with past versions
+  ```
+  yarn audit
+  ```
+- And then to add a newer version of the related package
+  ```
+  yarn add package@new_version
+  ```
+- Be sure to commit `yarn.lock` file to help other collaborators
 
 ## Learn
 
