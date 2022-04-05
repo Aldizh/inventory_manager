@@ -1,12 +1,12 @@
 const mongoose = require("mongoose");
-const Schema = mongoose.Schema;
+const { Schema } = mongoose;
 
 // this is the structure for an article in the inventory
 const ArticleSchema = new Schema(
   {
     // serves as the barcode
     id: {
-      type: Number,
+      type: String,
       unique: true,
       required: [true, "Id is required"]
     },

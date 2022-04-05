@@ -1,5 +1,6 @@
 const express = require('express')
 const path = require('path')
+const { v4: uuidv4 } = require("uuid");
 const Article = require('../models/article')
 const Sale = require('../models/sale')
 
@@ -50,14 +51,18 @@ router.get("/articles/all", (req, res) => {
 // insert one or many records in our database
 router.post("/articles", (req, res, next) => {
   if (Array.isArray(req.body)) {
-    Article.insertMany(req.body).then((data) => {
+    const articles = req.body.map(article => ({
+      ...article,
+      id: uuidv4()
+    }))
+    // sanitize input here
+    Article.insertMany(articles).then((data) => {
       return res.json({ success: true, data: data });
     }).catch(err => {
       return res.status(400).json({ success: false, error: err });
     })
   } else {
     const {
-      id,
       name,
       quantity,
       buyPrice,
@@ -67,7 +72,7 @@ router.post("/articles", (req, res, next) => {
     } = req.body;
 
     let data = new Article({
-      id,
+      id: uuidv4(),
       name,
       quantity,
       buyPrice,
