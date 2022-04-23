@@ -11,7 +11,7 @@ class Form extends Component {
     this.submitHandler = this.submitHandler.bind(this)
 
     const {
-      saleId,
+      id,
       name = "",
       quantity = "",
       buyPrice = "",
@@ -20,7 +20,7 @@ class Form extends Component {
     } = this.props.sale
 
     this.state = {
-      saleId,
+      id,
       name,
       quantity,
       buyPrice,
@@ -46,20 +46,21 @@ class Form extends Component {
   }
 
   submitHandler(e) {
+    e.stopPropagation()
     e.preventDefault()
 
     const { onSubmit } = this.props
+    const { id, name, quantity, buyPrice, sellPrice, category } = this.state
 
-    const { saleId, name, quantity, buyPrice, sellPrice, category } = this.state
-
-    const updated = {
-      saleId,
+    let updated = {
       name,
       quantity,
       buyPrice,
       sellPrice,
       category,
     }
+
+    if (id) updated.id = id
 
     onSubmit(updated)
   }

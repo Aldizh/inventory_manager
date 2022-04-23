@@ -36,10 +36,22 @@ class SalesComp extends Component {
     window.location = `/sales/${id}`
   }
 
+  handleDelete(id) {
+    axios
+      .delete(`/api/sales/${id}`)
+      .then(response => {
+        if (response.status === 200) {
+          console.log("successfully deleted")
+        }
+      })
+      .catch(err => console.log("error", err))
+  }
+
   render() {
     const { conversionRate, isLoading } = this.state
+    const stateData = this.state.data || []
     const { t, category } = this.props
-    const data = this.state.data.filter(sale => sale.category === category)
+    const data = stateData.filter(sale => sale.category === category)
 
     let totalBuys = 0.0
     let totalSales = 0.0
@@ -67,8 +79,8 @@ class SalesComp extends Component {
               totalSales += dat.quantity * dat.sellPrice
               totalProfit += dat.quantity * (dat.sellPrice - dat.buyPrice)
               return (
-                <tr key={`${index} - ${dat.saleId}`}>
-                  <th scope="row">{dat.saleId}</th>
+                <tr key={`${index} - ${dat.id}`}>
+                  <th scope="row">{dat.id}</th>
                   <td>{dat.name}</td>
                   <td>{dat.quantity}</td>
                   <td>{(dat.buyPrice * conversionRate).toFixed(2)}</td>
@@ -81,8 +93,11 @@ class SalesComp extends Component {
                     ).toFixed(2)}
                   </td>
                   <td>
-                    <button onClick={() => this.handleClick(dat.saleId)}>
+                    <button onClick={() => this.handleClick(dat.id)}>
                       {t("edit")}
+                    </button>
+                    <button onClick={() => this.handleDelete(dat.id)}>
+                      {t("delete")}
                     </button>
                   </td>
                 </tr>

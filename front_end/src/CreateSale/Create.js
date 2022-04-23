@@ -21,17 +21,7 @@ class Create extends Component {
 
   // our put method that uses our backend api
   // to create new query into our data base
-  putDataToDB(name, quantity, buyPrice, sellPrice, category) {
-    const currentIds = this.state.data.map(data => data.id)
-    const saleId = currentIds.length
-    const newRecord = {
-      saleId,
-      name,
-      quantity,
-      buyPrice,
-      sellPrice,
-      category,
-    }
+  putDataToDB(newRecord) {
     axios
       .post("/api/sales", newRecord)
       .then(response => {
@@ -48,6 +38,7 @@ class Create extends Component {
     this.putDataToDB(updated)
 
     // go back to home after insertion
+    // TO DO: Show success notification then redirect
     window.location = "/"
   }
 

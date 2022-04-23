@@ -16,12 +16,13 @@ class Create extends Component {
 
   // This is to ensure we get current sales data
   async componentDidMount() {
-    const saleId = this.props.location.pathname.split("/")[2]
+    const id = this.props.location.pathname.split("/")[2]
 
     const { data } = await axios
-      .get(`/api/sales/${saleId}`)
+      .get(`/api/sales/${id}`)
       .catch(err => console.log("err", err))
-    this.setState({ sale: data.data[0] })
+    
+    this.setState({ sale: data.data })
   }
 
   // edit mode toggle
@@ -31,7 +32,7 @@ class Create extends Component {
 
   updateRecord(updated) {
     axios
-      .put(`/api/sales/${updated.saleId}`, updated)
+      .put(`/api/sales/${updated.id}`, updated)
       .then(response => {
         if (response.status === 200) {
           console.log("successfully updated")

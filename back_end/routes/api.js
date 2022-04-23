@@ -1,5 +1,4 @@
 const express = require('express')
-const path = require('path')
 const { v4: uuidv4 } = require("uuid");
 const Article = require('../models/article')
 const Sale = require('../models/sale')
@@ -149,8 +148,8 @@ router.delete("/articles", (req, res, next) => {
 // SALES ROUTES
 // fetches all available records from our database
 router.get("/sales", (req, res) => {
-  Sale.find().then((data) => {
-    return res.json({ success: true, data: data });
+  Sale.find({}).then((data) => {
+    return res.json({ success: true, data });
   }).catch(err => {
     return res.json({ success: false, error: err });
   })
@@ -158,7 +157,7 @@ router.get("/sales", (req, res) => {
 
 // get data by id
 router.get("/sales/:id", (req, res, next) => {
-  Sale.find({ saleId: req.params.id } ).then(data => {
+  Sale.findOne({ id: req.params.id } ).then(data => {
     return res.json({ success: true, data });
   }).catch(err => {
     return res.json({ success: false, error: err });
@@ -169,14 +168,17 @@ router.get("/sales/:id", (req, res, next) => {
 // insert one or many records in our database
 router.post("/sales", (req, res, next) => {
   if (Array.isArray(req.body)) {
-    Sale.insertMany(req.body).then((data) => {
+    const sales = req.body.map(sale => ({
+      ...sale,
+      id: uuidv4()
+    }))
+    Sale.insertMany(sales).then((data) => {
       return res.json({ success: true, data: data });
     }).catch(err => {
       return res.status(400).json({ success: false, error: err });
     })
   } else {
     const {
-      saleId,
       name,
       quantity,
       buyPrice,
@@ -184,8 +186,8 @@ router.post("/sales", (req, res, next) => {
       category
     } = req.body;
 
-    let data = new Sale({
-      saleId,
+    let sale = new Sale({
+      id: uuidv4(),
       name,
       quantity,
       buyPrice,
@@ -193,12 +195,13 @@ router.post("/sales", (req, res, next) => {
       category
     });
 
-    data
+    sale
       .save()
       .then(result => {
-        return res.json({ success: true, saleId });
+        return res.json({ success: true, sale });
       })
       .catch(err => {
+        console.log('error creating sale', err)
         return res.status(400).json({error: 'Bad request'});
       })
   }
@@ -206,11 +209,11 @@ router.post("/sales", (req, res, next) => {
 
 // updates an existing record in our database
 router.put("/sales/:id", (req, res, next) => {
-  const { name, quantity, buyPrice, sellPrice, saleId } = req.body
-  Sale.find({ saleId }).then((records) => {
-    const record = records[0]
-    if (record.saleId !== null) {
-      Sale.updateOne({ saleId }, {
+  const id = req.params.id
+  const { name, quantity, buyPrice, sellPrice } = req.body
+  Sale.findOne({ id }).then((record) => {
+    if (record.id !== null) {
+      Sale.updateOne({ id }, {
         name,
         quantity,
         buyPrice,
@@ -221,6 +224,17 @@ router.put("/sales/:id", (req, res, next) => {
         return res.status(400).json({ success: false, error: err})
       })
     } else return res.status(400).json({ success: false, error: "This record does not exist" });
+  })
+});
+
+router.delete("/sales/:id", (req, res, next) => {
+  const id = req.params.id
+  Sale.findOne({ id }).then((sale) => {
+    Sale.deleteOne({ id }).then(result => {
+      return res.json({ success: true, result})
+    }).catch(err => {
+      return res.status(400).json({ success: false, error: err})
+    })
   })
 });
 
