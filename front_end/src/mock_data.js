@@ -18,7 +18,6 @@ export const inventoryData = [
 
 export const salesData = [
   {
-    saleId: 0,
     name: "Kiwis",
     quantity: 120,
     buyPrice: 1.2,
@@ -26,7 +25,6 @@ export const salesData = [
     category: "small",
   },
   {
-    saleId: 1,
     name: "Oranges",
     quantity: 140,
     buyPrice: 0.9,
@@ -34,7 +32,6 @@ export const salesData = [
     category: "large",
   },
   {
-    saleId: 2,
     name: "Grapes",
     quantity: 200,
     buyPrice: 1.2,

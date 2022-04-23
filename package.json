@@ -6,7 +6,7 @@
   "scripts": {
     "test": "mocha",
     "start:dev": "concurrently 'cd back_end && nodemon server.js' 'cd front_end && yarn && yarn start'",
-    "start": "cd back_end && node server.js",
+    "start": "cd back_end && yarn && node server.js",
     "heroku-postbuild": "cd front_end && yarn && yarn build"
   },
   "keywords": [],
@@ -23,6 +23,6 @@
     "nodemon": "^2.0.6"
   },
   "engines": {
-    "node": "^15.5.1"
+    "node": "^16.3.1"
   }
 }

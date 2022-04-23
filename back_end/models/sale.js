@@ -4,10 +4,10 @@ const Schema = mongoose.Schema;
 // this is the structure for a sale
 const DataSchema = new Schema(
   {
-    saleId: {
-      type: Number,
+   id: {
+      type: String,
       unique: true,
-      required: [true, "saleId is required"]
+      required: [true, "Id is required"]
     },
     name: {
       type: String,

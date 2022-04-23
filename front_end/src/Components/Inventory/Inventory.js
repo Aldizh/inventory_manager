@@ -54,14 +54,10 @@ class SalesComp extends Component {
   }
 
   handleCreateUpdate() {
-    const currentTotal = this.props.totalCount
     axios
       .post(
         "/api/articles",
-        inventoryData.map((item, idx) => ({
-          ...item,
-          id: currentTotal + idx,
-        })),
+        inventoryData,
       )
       .then(res => {
         console.log("successfully inserted these records: ", res.data.data)
@@ -75,7 +71,9 @@ class SalesComp extends Component {
 
   handleDelete() {
     axios
-      .delete("/api/articles", inventoryData)
+      .delete("/api/articles", {
+        data: inventoryData
+      })
       .then(res => {
         if (res.status === 200) console.log("successfully deleted test data")
         this.props.refreshData()
