@@ -29,9 +29,9 @@ class App extends Component {
       editMode: false,
       language: defaultLang,
     }
-    this.updateDB = this.updateDB.bind(this)
+    this.updateArticles = this.updateArticles.bind(this)
     this.refreshData = this.refreshData.bind(this)
-    this.deleteFromDB = this.deleteFromDB.bind(this)
+    this.deleteArticle = this.deleteArticle.bind(this)
   }
 
   // when component mounts, first thing it does is fetch all existing data in our db
@@ -59,14 +59,8 @@ class App extends Component {
       })
   }
 
-  // just a note, here, in the front end, we use the id key of our data object
-  // in order to identify which we want to Update or delete.
-  // for our back end, we use the object id assigned by MongoDB to modify
-  // data base entries
-
-  // our delete method that uses our backend api
-  // to remove existing database information
-  async deleteFromDB() {
+  // Delete article with the given ID
+  async deleteArticle() {
     const idToDelete = this.state.item.id
     const { data: record } = await axios.get(`/api/articles/${idToDelete}`)
     const { data: allArticles } = await axios.get(`/api/articles/all`)
@@ -87,8 +81,7 @@ class App extends Component {
 
   // our update method that uses our backend api
   // to overwrite existing data base information
-  // TO DO: sanitize input
-  async updateDB() {
+  async updateArticles() {
     let recordToUpdate = {}
     const { item, editMode } = this.state
     const { id: idToUpdate, name = "", quantity, buyPrice } = item
@@ -103,14 +96,12 @@ class App extends Component {
         buyPrice: buyPrice || existingDat.buyPrice,
       }
 
-      console.log("recordToUpdate", recordToUpdate)
-
       axios
         .put(`/api/articles/${idToUpdate}`, recordToUpdate)
         .then(response => {
           if (response.status === 200) this.refreshData()
         })
-    } else this.putDataToDB() // create new item
+    } else this.createArticle()
   }
 
   onIdUpdate = e => {
@@ -167,7 +158,7 @@ class App extends Component {
 
   // our put method that uses our backend api
   // to create new query into our data base
-  putDataToDB() {
+  createArticle() {
     const { name, quantity, buyPrice, category } = this.state.item
     const currentIds = this.state.data.map(data => data.id)
     const id = currentIds.length
@@ -241,8 +232,8 @@ class App extends Component {
                   }
                 />
                 <ButtonGroup
-                  updateHandler={this.updateDB}
-                  deleteHandler={this.deleteFromDB}
+                  updateHandler={this.updateArticles}
+                  deleteHandler={this.deleteArticle}
                   updateText={
                     this.state.editMode ? t("correct") : t("inventoryEntry")
                   }
