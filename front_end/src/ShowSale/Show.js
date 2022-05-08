@@ -20,8 +20,8 @@ class Create extends Component {
 
     const { data } = await axios
       .get(`/api/sales/${id}`)
-      .catch(err => console.log("err", err))
-    
+      .catch((err) => console.log("err", err))
+
     this.setState({ sale: data.data })
   }
 
@@ -33,12 +33,12 @@ class Create extends Component {
   updateRecord(updated) {
     axios
       .put(`/api/sales/${updated.id}`, updated)
-      .then(response => {
+      .then((response) => {
         if (response.status === 200) {
           console.log("successfully updated")
         }
       })
-      .catch(err => console.log("error", err))
+      .catch((err) => console.log("error", err))
   }
 
   onSubmit(updated) {

@@ -40,7 +40,7 @@ class App extends Component {
   componentDidMount() {
     const lang = localStorage.getItem("language")
     if (lang && lang.length) {
-      this.props.i18n.changeLanguage(lang, err => {
+      this.props.i18n.changeLanguage(lang, (err) => {
         if (err) return console.log("something went wrong loading", err)
       })
     }
@@ -51,8 +51,8 @@ class App extends Component {
   // fetch data from our data base
   refreshData() {
     fetch(`/api/articles`)
-      .then(data => data.json())
-      .then(res => {
+      .then((data) => data.json())
+      .then((res) => {
         this.props.updatePageData(res.data)
         this.props.updateTotalCount(res.totalCount)
         this.setState({ data: res.data })
@@ -98,13 +98,13 @@ class App extends Component {
 
       axios
         .put(`/api/articles/${idToUpdate}`, recordToUpdate)
-        .then(response => {
+        .then((response) => {
           if (response.status === 200) this.refreshData()
         })
     } else this.createArticle()
   }
 
-  onIdUpdate = e => {
+  onIdUpdate = (e) => {
     let id = e.target.value
     this.setState({ id: e.target.value, editMode: false })
 
@@ -113,18 +113,18 @@ class App extends Component {
       return
     }
     fetch(`/api/articles/${id}`)
-      .then(data => data.json())
-      .then(res => {
+      .then((data) => data.json())
+      .then((res) => {
         if (res.data) this.setState({ item: res.data, editMode: true })
         else this.setState({ item: {}, editMode: false })
       })
   }
 
-  onLanguageHandle = event => {
+  onLanguageHandle = (event) => {
     const newLang = event.target.value
     this.setState({ language: newLang })
     localStorage.setItem("language", newLang)
-    this.props.i18n.changeLanguage(newLang, err => {
+    this.props.i18n.changeLanguage(newLang, (err) => {
       if (err) return console.log("something went wrong loading", err)
     })
   }
@@ -136,11 +136,12 @@ class App extends Component {
         margin: "auto",
         width: "50%",
         marginBottom: "5px",
-      }}>
+      }}
+    >
       <input
         checked={this.state.language === "en"}
         name="language"
-        onChange={e => this.onLanguageHandle(e)}
+        onChange={(e) => this.onLanguageHandle(e)}
         value="en"
         type="radio"
       />
@@ -150,7 +151,7 @@ class App extends Component {
         value="al"
         checked={this.state.language === "al"}
         type="radio"
-        onChange={e => this.onLanguageHandle(e)}
+        onChange={(e) => this.onLanguageHandle(e)}
       />
       Albanian
     </div>
@@ -160,7 +161,7 @@ class App extends Component {
   // to create new query into our data base
   createArticle() {
     const { name, quantity, buyPrice, category } = this.state.item
-    const currentIds = this.state.data.map(data => data.id)
+    const currentIds = this.state.data.map((data) => data.id)
     const id = currentIds.length
     const newRecord = {
       id,
@@ -169,7 +170,7 @@ class App extends Component {
       buyPrice,
       category,
     }
-    axios.post("/api/articles", newRecord).then(response => {
+    axios.post("/api/articles", newRecord).then((response) => {
       if (response.status === 200) {
         const newData = this.state.data
         newData.push(newRecord)
@@ -207,7 +208,7 @@ class App extends Component {
                   type="text"
                   placeholder={t("nameNew")}
                   value={item.name || ""}
-                  onChange={e =>
+                  onChange={(e) =>
                     this.setState({ item: { ...item, name: e.target.value } })
                   }
                 />
@@ -215,7 +216,7 @@ class App extends Component {
                   type="number"
                   placeholder={t("quantityNew")}
                   value={item.quantity || ""}
-                  onChange={e =>
+                  onChange={(e) =>
                     this.setState({
                       item: { ...item, quantity: parseFloat(e.target.value) },
                     })
@@ -225,7 +226,7 @@ class App extends Component {
                   type="number"
                   placeholder={t("buyPriceNew")}
                   value={item.buyPrice || ""}
-                  onChange={e =>
+                  onChange={(e) =>
                     this.setState({
                       item: { ...item, buyPrice: parseFloat(e.target.value) },
                     })
@@ -249,14 +250,14 @@ class App extends Component {
 }
 
 // useful info from redux state
-const mapStateToProps = state => {
+const mapStateToProps = (state) => {
   const { pageData } = state
   return { pageData }
 }
 
-const mapDispatchToProps = dispatch => ({
-  updatePageData: data => dispatch({ type: "UPDATE_INVENTORY", data }),
-  updateTotalCount: data => dispatch({ type: "UPDATE_TOTAL_COUNT", data }),
+const mapDispatchToProps = (dispatch) => ({
+  updatePageData: (data) => dispatch({ type: "UPDATE_INVENTORY", data }),
+  updateTotalCount: (data) => dispatch({ type: "UPDATE_TOTAL_COUNT", data }),
 })
 
 export default connect(

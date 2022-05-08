@@ -78,7 +78,8 @@ class Form extends Component {
               value={category}
               name="cars"
               id="categorySelect"
-              onChange={e => this.setState({ category: e.target.value })}>
+              onChange={(e) => this.setState({ category: e.target.value })}
+            >
               <option value="big">{t("big")}</option>
               <option value="small">{t("small")}</option>
             </select>

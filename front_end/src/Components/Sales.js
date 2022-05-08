@@ -16,17 +16,17 @@ class SalesComp extends Component {
       `https://api.exchangerate.host/latest/?base=USD&amount=1&symbols=USD,ALL`,
     )
     return Promise.all([salesPromise, currencyPromise])
-      .then(res => {
+      .then((res) => {
         const [{ data: salesData }, { data: currencyData }] = res
         this.setState({
           isLoading: false,
           conversionRate: currencyData.rates[langToCurrMap()],
           data: salesData.data.filter(
-            sale => sale.category === this.props.category,
+            (sale) => sale.category === this.props.category,
           ),
         })
       })
-      .catch(err => {
+      .catch((err) => {
         console.log("err", err)
         this.setState({ isLoading: false })
       })
@@ -39,19 +39,19 @@ class SalesComp extends Component {
   handleDelete(id) {
     axios
       .delete(`/api/sales/${id}`)
-      .then(response => {
+      .then((response) => {
         if (response.status === 200) {
           console.log("successfully deleted")
         }
       })
-      .catch(err => console.log("error", err))
+      .catch((err) => console.log("error", err))
   }
 
   render() {
     const { conversionRate, isLoading } = this.state
     const stateData = this.state.data || []
     const { t, category } = this.props
-    const data = stateData.filter(sale => sale.category === category)
+    const data = stateData.filter((sale) => sale.category === category)
 
     let totalBuys = 0.0
     let totalSales = 0.0

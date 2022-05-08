@@ -15,8 +15,8 @@ class Create extends Component {
   // This is to ensure we get current sales data
   componentDidMount() {
     fetch("/api/sales")
-      .then(data => data.json())
-      .then(res => this.setState({ data: res.data }))
+      .then((data) => data.json())
+      .then((res) => this.setState({ data: res.data }))
   }
 
   // our put method that uses our backend api
@@ -24,14 +24,14 @@ class Create extends Component {
   putDataToDB(newRecord) {
     axios
       .post("/api/sales", newRecord)
-      .then(response => {
+      .then((response) => {
         if (response.status === 200) {
           const newData = this.state.data
           newData.push(newRecord)
           this.setState({ data: newData })
         }
       })
-      .catch(err => console.log("error", err))
+      .catch((err) => console.log("error", err))
   }
 
   onSubmit(updated) {

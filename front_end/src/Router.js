@@ -5,24 +5,24 @@ import Create from "./CreateSale"
 import Show from "./ShowSale"
 import Sales from "./Components/Sales"
 
-const Router = props => (
+const Router = (props) => (
   <BrowserRouter>
     <Switch>
       <Route exact path="/" render={() => <Redirect to="/dashboard" />} />
       <Route
         exact
         path="/create"
-        render={innerProps => <Create {...innerProps} />}
+        render={(innerProps) => <Create {...innerProps} />}
       />
       <Route
         exact
         path="/shumice"
-        render={innerProps => <Sales {...innerProps} category={"big"} />}
+        render={(innerProps) => <Sales {...innerProps} category={"big"} />}
       />
       <Route
         exact
         path="/pakice"
-        render={innerProps => <Sales {...innerProps} category={"small"} />}
+        render={(innerProps) => <Sales {...innerProps} category={"small"} />}
       />
       <Route path="/sales/:saleId" component={Show} />
       <Route
@@ -32,7 +32,7 @@ const Router = props => (
             <Route
               exact
               path="/dashboard"
-              render={innerProps => (
+              render={(innerProps) => (
                 <Dashboard handleLogout={props.handleLogout} {...innerProps} />
               )}
             />

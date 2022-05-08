@@ -1,4 +1,4 @@
-const escapeHTML = unsafe_str =>
+const escapeHTML = (unsafe_str) =>
   unsafe_str
     .replace(/&/g, "&amp;")
     .replace(/</g, "&lt;")

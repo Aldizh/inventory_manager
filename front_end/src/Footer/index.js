@@ -3,7 +3,7 @@ import { withTranslation } from "react-i18next"
 import { CardFooter } from "reactstrap"
 import "./styles.css"
 
-const Footer = props => (
+const Footer = (props) => (
   <div className="footer">
     <CardFooter>
       &copy;

@@ -36,8 +36,8 @@ class SalesComp extends Component {
   // fetch data from our data base
   getCurrentPageData(pageNumber = 0) {
     fetch(`/api/articles?pageNumber=${pageNumber}`)
-      .then(data => data.json())
-      .then(res => {
+      .then((data) => data.json())
+      .then((res) => {
         this.props.updatePageData(res.data)
       })
   }
@@ -55,30 +55,27 @@ class SalesComp extends Component {
 
   handleCreateUpdate() {
     axios
-      .post(
-        "/api/articles",
-        inventoryData,
-      )
-      .then(res => {
+      .post("/api/articles", inventoryData)
+      .then((res) => {
         console.log("successfully inserted these records: ", res.data.data)
         this.props.refreshData() // ensures redux state is updated properly
         const totalCount = this.props.totalCount
         let pageNum = Math.ceil(totalCount / this.state.recordsPerPage)
         this.updateCurrentPage(pageNum || 1)
       })
-      .catch(err => console.log("bulk insert failed", err))
+      .catch((err) => console.log("bulk insert failed", err))
   }
 
   handleDelete() {
     axios
       .delete("/api/articles", {
-        data: inventoryData
+        data: inventoryData,
       })
-      .then(res => {
+      .then((res) => {
         if (res.status === 200) console.log("successfully deleted test data")
         this.props.refreshData()
       })
-      .catch(err => console.log("bulk delete failed", err))
+      .catch((err) => console.log("bulk delete failed", err))
   }
 
   render() {
@@ -122,7 +119,8 @@ class SalesComp extends Component {
               key={number}
               id={number}
               onClick={this.handlePageClick}
-              className={i + 1 === currentPage ? "highlight" : ""}>
+              className={i + 1 === currentPage ? "highlight" : ""}
+            >
               {number}
             </li>
           ))}
@@ -139,13 +137,13 @@ class SalesComp extends Component {
 }
 
 // useful info from redux state
-const mapStateToProps = state => {
+const mapStateToProps = (state) => {
   const { totalCount, pageData } = state
   return { totalCount, pageData }
 }
 
-const mapDispatchToProps = dispatch => ({
-  updatePageData: data => dispatch({ type: "UPDATE_INVENTORY", data }),
+const mapDispatchToProps = (dispatch) => ({
+  updatePageData: (data) => dispatch({ type: "UPDATE_INVENTORY", data }),
 })
 
 export default connect(

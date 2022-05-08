@@ -13,7 +13,7 @@ const key = new UserApiKeyCredential("5c9cfd634da69303ebaf53d4")
 export function loginEmailPasswordUser({ email, password }) {
   return app.auth
     .loginWithCredential(new UserPasswordCredential(email, password))
-    .then(stitchUser => {
+    .then((stitchUser) => {
       console.log(`Logged in as: ${email}`)
       return stitchUser
     })
@@ -25,7 +25,7 @@ export function loginEmailPasswordUser({ email, password }) {
 export function loginAnonymous() {
   return app.auth
     .loginWithCredential(new AnonymousCredential())
-    .then(stitchUser => {
+    .then((stitchUser) => {
       console.log("Logged in as Anonymous")
       return stitchUser
     })
@@ -34,7 +34,7 @@ export function loginAnonymous() {
 // Log in a user using API key
 // TO DO: In production we need to make sure this is moved to a config file
 export function loginWithKey() {
-  return app.auth.loginWithCredential(key).then(authedId => {
+  return app.auth.loginWithCredential(key).then((authedId) => {
     console.log(`successfully logged in with id: ${authedId}`)
     return authedId
   })
@@ -50,7 +50,7 @@ export function getAllUsers() {
 }
 
 export function logoutUser(stitchUser) {
-  debugger; //eslint-disable-line
+  debugger //eslint-disable-line
   // Log a user out of the app. Logged out users are still associated with
   // the app and will appear in the result of app.auth.listUsers()
   return app.auth.logoutUserWithId(stitchUser.id)

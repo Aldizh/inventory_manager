@@ -10,13 +10,15 @@ const ButtonGroup = ({
     <button
       onClick={updateHandler}
       style={{ marginRight: "10px" }}
-      className="btn btn-success">
+      className="btn btn-success"
+    >
       {updateText}
     </button>
     <button
       onClick={deleteHandler}
       style={{ marginLeft: "10px" }}
-      className="btn btn-danger">
+      className="btn btn-danger"
+    >
       {deleteText}
     </button>
   </div>
