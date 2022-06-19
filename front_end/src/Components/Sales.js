@@ -1,11 +1,12 @@
 import React, { Component } from "react"
 import { withTranslation } from "react-i18next"
-import { Table } from "reactstrap"
+import { Table, Button } from "reactstrap"
 import axios from "axios"
 
 import { langToCurrMap } from "../utils/string"
 import { salesData } from "../mock_data"
 import Totals from "./Totals"
+
 class SalesComp extends Component {
   state = { data: salesData, isLoading: false, conversionRate: 1 }
 
@@ -32,7 +33,7 @@ class SalesComp extends Component {
       })
   }
 
-  handleClick(id) {
+  handleEdit(id) {
     window.location = `/sales/${id}`
   }
 
@@ -42,6 +43,7 @@ class SalesComp extends Component {
       .then((response) => {
         if (response.status === 200) {
           console.log("successfully deleted")
+          window.location = '/dashboard'
         }
       })
       .catch((err) => console.log("error", err))
@@ -53,6 +55,9 @@ class SalesComp extends Component {
     const { t, category } = this.props
     const data = stateData.filter((sale) => sale.category === category)
 
+    const handleEdit = (id) => this.handleEdit(id)
+    const handleDelete = (id) => this.handleDelete(id)
+
     let totalBuys = 0.0
     let totalSales = 0.0
     let totalProfit = 0.0
@@ -61,7 +66,7 @@ class SalesComp extends Component {
       <div>Loading...</div>
     ) : (
       <div>
-        <Table dark>
+        <Table dark responsive size="sm">
           <thead>
             <tr>
               <th>{t("barCode")}</th>
@@ -70,7 +75,7 @@ class SalesComp extends Component {
               <th>{t("buyPrice")}</th>
               <th>{t("sellPrice")}</th>
               <th>{t("profit")}</th>
-              <th />
+              <th>{t("actions")}</th>
             </tr>
           </thead>
           <tbody>
@@ -92,14 +97,12 @@ class SalesComp extends Component {
                       (dat.sellPrice - dat.buyPrice)
                     ).toFixed(2)}
                   </td>
-                  <td>
-                    <button onClick={() => this.handleClick(dat.id)}>
-                      {t("edit")}
-                    </button>
-                    <button onClick={() => this.handleDelete(dat.id)}>
-                      {t("delete")}
-                    </button>
-                  </td>
+                  <Button size="sm" color="secondary" onClick={() => handleEdit(dat.id)}>
+                    {t("edit")}
+                  </Button>
+                  <Button size="sm" color="danger" onClick={() => handleDelete(dat.id)}>
+                    {t("delete")}
+                  </Button>
                 </tr>
               )
             })}

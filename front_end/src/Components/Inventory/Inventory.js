@@ -91,7 +91,7 @@ class SalesComp extends Component {
     return (
       <div className="inventory">
         <h3 id="shitjetShumice">Current Inventory</h3>
-        <Table dark>
+        <Table dark responsive size="sm">
           <thead>
             <tr>
               <th>{t("barCode")}</th>

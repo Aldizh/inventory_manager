@@ -190,12 +190,12 @@ class App extends Component {
         {this.renderRadioButtons()}
         <Container>
           <Row>
-            <Col xs="6">
+            <Col lg="6" sm="12" xs="12">
               <div className="centeredRight">
                 <Inventory initialData={data} refreshData={this.refreshData} />
               </div>
             </Col>
-            <Col xs="6">
+            <Col lg="6" sm="12" xs="12">
               <h3>{t("dataCorrection")}</h3>
               <div className="editDiv">
                 <Input
