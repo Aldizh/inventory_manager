@@ -6,6 +6,7 @@ import axios from "axios"
 import { langToCurrMap } from "../utils/string"
 import { salesData } from "../mock_data"
 import Totals from "./Totals"
+import "./styles.scss"
 
 class SalesComp extends Component {
   state = { data: salesData, isLoading: false, conversionRate: 1 }
@@ -97,12 +98,14 @@ class SalesComp extends Component {
                       (dat.sellPrice - dat.buyPrice)
                     ).toFixed(2)}
                   </td>
-                  <Button size="sm" color="secondary" onClick={() => handleEdit(dat.id)}>
-                    {t("edit")}
-                  </Button>
-                  <Button size="sm" color="danger" onClick={() => handleDelete(dat.id)}>
-                    {t("delete")}
-                  </Button>
+                  <td className="btnsSales">
+                    <Button size="sm" className="btnEdit" color="secondary" onClick={() => handleEdit(dat.id)}>
+                      {t("edit")}
+                    </Button>
+                    <Button size="sm" className="btnDelete" color="danger" onClick={() => handleDelete(dat.id)}>
+                      {t("delete")}
+                    </Button>
+                  </td>
                 </tr>
               )
             })}

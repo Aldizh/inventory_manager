@@ -1,0 +1,10 @@
+.btnsSales {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+}
+
+.btnEdit,
+.btnDelete {
+  margin-right: 5px;
+}
