@@ -2,7 +2,7 @@
 import React, { Component } from "react"
 import { connect } from "react-redux"
 import { withTranslation } from "react-i18next"
-import { Container, Row, Col, Input } from "reactstrap"
+import { Container, Row, Col, Input, Alert } from "reactstrap"
 import axios from "axios"
 import { findIndex, isNil, propEq } from "ramda"
 import "bootstrap/dist/css/bootstrap.min.css"
@@ -28,10 +28,13 @@ class App extends Component {
       id: 0,
       editMode: false,
       language: defaultLang,
+      alertOpen: false,
+      alertMessage: ""
     }
     this.updateArticles = this.updateArticles.bind(this)
     this.refreshData = this.refreshData.bind(this)
     this.deleteArticle = this.deleteArticle.bind(this)
+    this.handleAlert = this.handleAlert.bind(this)
   }
 
   // when component mounts, first thing it does is fetch all existing data in our db
@@ -74,6 +77,7 @@ class App extends Component {
       if (deleteIndex === -1) {
         alert("No such records exist in our database")
       } else {
+        this.setState({ alertOpen: true, alertMessage: "Item deleted successfully" })
         this.refreshData()
       }
     }
@@ -89,6 +93,8 @@ class App extends Component {
     const existingDat = data.data
 
     if (editMode) {
+      this.setState({ alertOpen: true, alertMessage: "Item updated successfully" })
+
       recordToUpdate = {
         ...existingDat,
         name: escapeHTML(name) || existingDat.name,
@@ -102,6 +108,10 @@ class App extends Component {
           if (response.status === 200) this.refreshData()
         })
     } else this.createArticle()
+  }
+
+  handleAlert() {
+    this.setState({ alertOpen: false })
   }
 
   onIdUpdate = (e) => {
@@ -189,6 +199,9 @@ class App extends Component {
       <div>
         {this.renderRadioButtons()}
         <Container>
+          <Alert isOpen={this.state.alertOpen} toggle={this.handleAlert} variant="primary">
+            {this.state.alertMessage}
+          </Alert>
           <Row>
             <Col lg="6" sm="12" xs="12">
               <div className="centeredRight">
