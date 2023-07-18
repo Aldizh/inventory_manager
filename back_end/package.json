@@ -15,7 +15,7 @@
     "mocha": "^6.0.2",
     "mongodb-stitch-core-services-mongodb-remote": "^4.3.2",
     "mongodb-stitch-server-sdk": "^4.3.2",
-    "mongoose": "5.13.15",
+    "mongoose": "5.13.20",
     "morgan": "^1.9.1",
     "uuid": "^8.3.2"
   }
