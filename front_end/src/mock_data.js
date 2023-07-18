@@ -1,41 +1,25 @@
+import { faker } from '@faker-js/faker'
+
 export const inventoryData = [
   {
-    name: "Kiwis",
+    name: faker.commerce.product(),
     quantity: 120,
-    buyPrice: 1.2,
+    buyPrice: faker.commerce.price({ min: 0, max: 1000 }),
   },
   {
-    name: "Oranges",
+    name: faker.commerce.product(),
     quantity: 140,
-    buyPrice: 0.9,
+    buyPrice: faker.commerce.price({ min: 0, max: 1000 }),
   },
   {
-    name: "Grapes",
-    quantity: 200,
-    buyPrice: 1.2,
+    name: faker.commerce.product(),
+    quantity: 100,
+    buyPrice: faker.commerce.price({ min: 0, max: 1000 }),
   },
 ]
 
-export const salesData = [
-  {
-    name: "Kiwis",
-    quantity: 120,
-    buyPrice: 1.2,
-    sellPrice: 1.5,
-    category: "small",
-  },
-  {
-    name: "Oranges",
-    quantity: 140,
-    buyPrice: 0.9,
-    sellPrice: 1.1,
-    category: "large",
-  },
-  {
-    name: "Grapes",
-    quantity: 200,
-    buyPrice: 1.2,
-    sellPrice: 1.4,
-    category: "large",
-  },
-]
+export const salesData = inventoryData.map(item => ({
+  ...item,
+  sellPrice: item.buyPrice + item.buyPrice * 0.15, // add 15% to the original price
+  category: "large",
+}))
