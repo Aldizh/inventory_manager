@@ -14,7 +14,7 @@
     },
     "sourceType": "module"
   },
-  "plugins": ["eslint-plugin-react", "prettier"],
+  "plugins": ["prettier"],
   "rules": {
     // rules we want to override
     "semi": ["warn", "never"],
