@@ -6,7 +6,7 @@ const ArticleSchema = new Schema(
   {
     // serves as the barcode
     id: {
-      type: String,
+      type: Number,
       unique: true,
       required: [true, "Id is required"]
     },
