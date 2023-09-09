@@ -10,12 +10,12 @@
   "license": "ISC",
   "dependencies": {
     "body-parser": "^1.18.3",
+    "config": "^3.3.9",
     "cors": "^2.8.5",
+    "dotenv": "^8.2.0",
     "express": "^4.17.3",
     "mocha": "^10.2.0",
-    "mongodb-stitch-core-services-mongodb-remote": "^4.3.2",
-    "mongodb-stitch-server-sdk": "^4.3.2",
-    "mongoose": "5.13.20",
+    "mongoose": "7.5.0",
     "morgan": "^1.9.1",
     "uuid": "^8.3.2"
   }

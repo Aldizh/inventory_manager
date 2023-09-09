@@ -35,7 +35,7 @@ class SalesComp extends Component {
   // our first get method that uses our backend api to
   // fetch data from our data base
   getCurrentPageData(pageNumber = 0) {
-    fetch(`/api/articles?pageNumber=${pageNumber}`)
+    axios.get(`/api/articles?pageNumber=${pageNumber}`)
       .then((data) => data.json())
       .then((res) => {
         this.props.updatePageData(res.data)

@@ -53,13 +53,12 @@ class App extends Component {
   // our first get method that uses our backend api to
   // fetch data from our data base
   refreshData() {
-    fetch(`/api/articles`)
-      .then((data) => data.json())
+    axios.get(`/api/articles`)
       .then((res) => {
         this.props.updatePageData(res.data)
         this.props.updateTotalCount(res.totalCount)
         this.setState({ data: res.data })
-      })
+      }).catch(err => console.log('error...', err))
   }
 
   // Delete article with the given ID
@@ -122,7 +121,7 @@ class App extends Component {
       this.setState({ item: {} })
       return
     }
-    fetch(`/api/articles/${id}`)
+    axios.get(`/api/articles/${id}`)
       .then((data) => data.json())
       .then((res) => {
         if (res.data) this.setState({ item: res.data, editMode: true })

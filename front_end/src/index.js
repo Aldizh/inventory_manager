@@ -13,7 +13,7 @@ import {
   loginAnonymous,
   loginWithKey,
   logoutUser,
-} from "./Stitch"
+} from "./Realm"
 import Login from "./Login"
 import * as serviceWorker from "./serviceWorker"
 import "./index.css"

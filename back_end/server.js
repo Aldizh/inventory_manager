@@ -7,26 +7,27 @@ const morgan = require("morgan");
 const apiRouter = require("./routes/api");
 require('dotenv').config()
 
-const PORT = process.env.PORT || 5000;
+const PORT = process.env.PORT || 5001;
 
 const app = express();
+app.get('/', (req, res) => {
+  console.log("req cookies", req.cookies)
+  return res.send('Hello world!');
+})
 app.use(cors()); // allows requests from our react app
 
 // ES6 promises
 mongoose.Promise = global.Promise;
 
 // connects our back end code with the database
-mongoose.connect(process.env.ATLAS_URI, {
-  useNewUrlParser: true,
-  useCreateIndex: true
-});
+mongoose.connect(process.env.ATLAS_URI, {});
 
 mongoose.connection
   .once("open", () => console.log("connected to the database"))
   .on("error", console.error.bind(console, "MongoDB connection error:"));
 
 // bodyParser, parses the request body to be a readable json format
-app.use(bodyParser.urlencoded({ extended: false }));
+app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 
 // (optional) only made for logging

@@ -11,21 +11,16 @@ const router = express.Router()
  * @param {req.query} - Mongo DB query
  * @return {res} Express response
 */
-router.get("/articles", (req, res) => {
+router.get("/articles", async (req, res) => {
   const pageNumber = req.query.pageNumber || 0
   const resultsPerPage = 10
 
-  const resPromise = Article.find()
-    .skip(resultsPerPage * pageNumber)
-    .limit(resultsPerPage)
-  const countPromise = Article.find().countDocuments()
-  Promise.all([resPromise, countPromise])
-    .then((results) => {
-      return res.json({ success: true, data: results[0], totalCount: results[1] });
-    }).catch(err => {
-      console.log('err', err)
-      return res.json({ success: false, error: err });
-    })
+  const articles = await Article
+    .find()
+      .skip(resultsPerPage * pageNumber)
+      .limit(resultsPerPage)
+    .catch(err => res.json({ success: false, err }))
+  return res.json({ success: true, data: articles, totalCount: articles[1] });
 });
 
 
@@ -36,6 +31,7 @@ router.get("/articles", (req, res) => {
  * @return {res} Express response
 */
 router.get("/articles/all", (req, res) => {
+  console.log('got articles request...')
   const resPromise = Article.find({})
   const countPromise = Article.find().countDocuments()
   Promise.all([resPromise, countPromise])
@@ -147,12 +143,11 @@ router.delete("/articles", (req, res, next) => {
 
 // SALES ROUTES
 // fetches all available records from our database
-router.get("/sales", (req, res) => {
-  Sale.find({}).then((data) => {
-    return res.json({ success: true, data });
-  }).catch(err => {
+router.get("/sales", async (req, res) => {
+  const data = await Sale.find({}).catch(err => {
     return res.json({ success: false, error: err });
   })
+  return res.json({ success: true, data });
 });
 
 // get data by id

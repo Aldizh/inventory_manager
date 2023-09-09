@@ -6,10 +6,7 @@ mongoose.Promise = global.Promise;
 
 before(function(done) {
   // connect to db before tests run
-  mongoose.connect(process.env.TEST_DB_URI, {
-    useNewUrlParser: true,
-    useCreateIndex: true
-  });
+  mongoose.connect(process.env.TEST_DB_URI, {});
   mongoose.connection
     .once("open", function() {
       console.log("Connection made");
