@@ -35,10 +35,9 @@ class SalesComp extends Component {
   // our first get method that uses our backend api to
   // fetch data from our data base
   getCurrentPageData(pageNumber = 0) {
-    fetch(`/api/articles?pageNumber=${pageNumber}`)
-      .then((data) => data.json())
-      .then((res) => {
-        this.props.updatePageData(res.data)
+    axios.get(`/api/articles?pageNumber=${pageNumber}`)
+      .then(({ data }) => {
+        this.props.updatePageData(data.data)
       })
   }
 
@@ -58,7 +57,7 @@ class SalesComp extends Component {
       .post("/api/articles", inventoryData)
       .then((res) => {
         console.log("successfully inserted these records: ", res.data.data)
-        this.props.refreshData() // ensures redux state is updated properly
+        this.props.refreshArticles() // ensures redux state is updated properly
         const totalCount = this.props.totalCount
         let pageNum = Math.ceil(totalCount / this.state.recordsPerPage)
         this.updateCurrentPage(pageNum || 1)
@@ -73,14 +72,14 @@ class SalesComp extends Component {
       })
       .then((res) => {
         if (res.status === 200) console.log("successfully deleted test data")
-        this.props.refreshData()
+        this.props.refreshArticles()
       })
       .catch((err) => console.log("bulk delete failed", err))
   }
 
   render() {
     const { currentPage, recordsPerPage } = this.state
-    const { t, totalCount, pageData } = this.props
+    const { t, totalCount, pageData  } = this.props
 
     // Logic for displaying page numbers
     const pageNumbers = []
@@ -103,8 +102,8 @@ class SalesComp extends Component {
           <tbody>
             {pageData.map((dat, index) => {
               return (
-                <tr key={`${index} - ${dat.id}`}>
-                  <th>{dat.id}</th>
+                <tr key={`${index} - ${dat._id}`}>
+                  <th>{dat._id}</th>
                   <td>{dat.name}</td>
                   <td>{dat.quantity}</td>
                   <td>{formatPrice(dat.buyPrice)}</td>

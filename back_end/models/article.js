@@ -4,12 +4,6 @@ const { Schema } = mongoose;
 // this is the structure for an article in the inventory
 const ArticleSchema = new Schema(
   {
-    // serves as the barcode
-    id: {
-      type: Number,
-      unique: true,
-      required: [true, "Id is required"]
-    },
     name: {
       type: String,
       default: '',

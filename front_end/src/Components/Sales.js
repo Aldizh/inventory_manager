@@ -4,25 +4,23 @@ import { Table, Button } from "reactstrap"
 import axios from "axios"
 
 import { langToCurrMap } from "../utils/string"
-import { salesData } from "../mock_data"
 import Totals from "./Totals"
 import "./styles.scss"
 
 class SalesComp extends Component {
-  state = { data: salesData, isLoading: false, conversionRate: 1 }
+  state = { data: [], isLoading: false, conversionRate: 1 }
 
   async componentDidMount() {
     this.setState({ isLoading: true })
     const salesPromise = axios.get("/api/sales")
-    const currencyPromise = axios(
-      `https://api.exchangerate.host/latest/?base=USD&amount=1&symbols=USD,ALL`,
-    )
+    const currencyPromise = axios.get("/reference/currencies")
     return Promise.all([salesPromise, currencyPromise])
       .then((res) => {
         const [{ data: salesData }, { data: currencyData }] = res
+
         this.setState({
           isLoading: false,
-          conversionRate: currencyData.rates[langToCurrMap()],
+          conversionRate: currencyData.data.rates[langToCurrMap()],
           data: salesData.data.filter(
             (sale) => sale.category === this.props.category,
           ),
@@ -85,8 +83,8 @@ class SalesComp extends Component {
               totalSales += dat.quantity * dat.sellPrice
               totalProfit += dat.quantity * (dat.sellPrice - dat.buyPrice)
               return (
-                <tr key={`${index} - ${dat.id}`}>
-                  <th scope="row">{dat.id}</th>
+                <tr key={`${index} - ${dat._id}`}>
+                  <th scope="row">{dat._id}</th>
                   <td>{dat.name}</td>
                   <td>{dat.quantity}</td>
                   <td>{(dat.buyPrice * conversionRate).toFixed(2)}</td>
@@ -99,10 +97,10 @@ class SalesComp extends Component {
                     ).toFixed(2)}
                   </td>
                   <td className="btnsSales">
-                    <Button size="sm" className="btnEdit" color="secondary" onClick={() => handleEdit(dat.id)}>
+                    <Button size="sm" className="btnEdit" color="secondary" onClick={() => handleEdit(dat._id)}>
                       {t("edit")}
                     </Button>
-                    <Button size="sm" className="btnDelete" color="danger" onClick={() => handleDelete(dat.id)}>
+                    <Button size="sm" className="btnDelete" color="danger" onClick={() => handleDelete(dat._id)}>
                       {t("delete")}
                     </Button>
                   </td>

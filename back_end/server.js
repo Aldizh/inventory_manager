@@ -4,29 +4,37 @@ const path = require("path");
 const cors = require("cors");
 const bodyParser = require("body-parser");
 const morgan = require("morgan");
-const apiRouter = require("./routes/api");
-require('dotenv').config()
+const axios = require("axios");
 
-const PORT = process.env.PORT || 5000;
+const apiRouter = require("./routes/api");
+require("dotenv").config() // to use process.env
+
+const cp = require("cookie-parser")
+const jwt = require("jsonwebtoken")
+
+const PORT = process.env.PORT || 5001;
 
 const app = express();
-app.use(cors()); // allows requests from our react app
+
+// for local development
+app.use(cors());
+
+// Init Middleware
+app.use(express.json({ extended: false })); // for put, post requests
+app.use(cp()) // for authorization
 
 // ES6 promises
 mongoose.Promise = global.Promise;
 
 // connects our back end code with the database
-mongoose.connect(process.env.ATLAS_URI, {
-  useNewUrlParser: true,
-  useCreateIndex: true
-});
+mongoose.connect(process.env.ATLAS_URI, {});
 
 mongoose.connection
   .once("open", () => console.log("connected to the database"))
   .on("error", console.error.bind(console, "MongoDB connection error:"));
 
 // bodyParser, parses the request body to be a readable json format
-app.use(bodyParser.urlencoded({ extended: false }));
+app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 
 // (optional) only made for logging
@@ -35,9 +43,21 @@ app.use(morgan("dev"));
 // appends api to all server requests
 app.use("/api", apiRouter);
 
-// custom middleware for errr parsing
-// ORDER is VERY important here, has to be right after apiRouter config
+app.get("/reference/currencies", (req, res, next) => {
+  const baseUrl = "http://api.exchangerate.host/latest?amount=1"
+  const apiKey = process.env.CUREENCY_API_KEY
+  axios(`${baseUrl}&symbols=USD,ALL&access_key=${apiKey}`)
+    .then(({ data }) => {
+      return res.json({ success: true, data })
+    }).catch(err => {
+      return res.status(400).json({ success: false, error: err})
+    })
+});
+
+// fallback middleware to handle malformed requests
 app.use(function(err, req, res, next) {
+  console.log('err...', err)
+  console.log('type err...', typeof err)
   res.status(422).send({ error: err.message });
 });
 
@@ -48,6 +68,26 @@ if (process.env.NODE_ENV === 'production') {
 
 app.get('*', (req, res) => {
   res.sendFile(path.join(__dirname, '../front_end/build/index.html'));
+})
+
+app.get("/set/cookie", (req, res) => {
+  const payload = {
+    name: "Aldi",
+    profession: "coder"
+  }
+  const token = jwt.sign(payload, "inventory")
+
+  return res.setCookie("token", token, {
+    httpOnly: true
+  }).send("Cookie shipped")
+})
+
+app.get("/get/cookie", (req, res) => {
+  const token = req.cookies.token
+  const payload = jwt.verify(token, "inventory")
+  console.log("token...", token)
+  console.log("payload...", payload)
+  return res.json({token, payload})
 })
 
 // launch our backend into the specified port

@@ -1,9 +1,10 @@
 import React from "react"
 import { withTranslation } from "react-i18next"
+import { Button } from 'reactstrap';
 import useBeforeFirstRender from "../hooks/useBeforeFirstRender"
 import "./styles.css"
 
-const NavBar = ({ t, i18n }) => {
+const NavBar = ({ t, i18n, handleLogout, isLoggedIn }) => {
   useBeforeFirstRender(() => {
     const lang = localStorage.getItem("language")
     if (lang && lang.length) {
@@ -22,8 +23,15 @@ const NavBar = ({ t, i18n }) => {
       <li>
         <a href="/shumice">{t("big")}</a>
       </li>
-      <li style={{ float: "right" }}>
+      <li style={{ float: "right", display: "inline-flex" }}>
         <a href="/">{t("home")}</a>
+        {isLoggedIn() && <Button
+          secondary="true"
+          size="sm"
+          block={false}
+          onClick={(e) => handleLogout(e)}
+        >Logout
+        </Button>}
       </li>
     </ul>
   )

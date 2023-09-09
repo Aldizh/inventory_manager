@@ -30,25 +30,21 @@ class Create extends Component {
     this.setState({ editMode: !this.state.editMode })
   }
 
-  updateRecord(updated) {
+  onSubmit(updated) {
     axios
       .put(`/api/sales/${updated.id}`, updated)
       .then((response) => {
         if (response.status === 200) {
-          console.log("successfully updated")
+          const parentLocation =
+            this.state.sale.category === "big" ? "/shumice" : "/pakice"
+    
+          // go back to parent page
+          window.location = parentLocation
         }
       })
-      .catch((err) => console.log("error", err))
-  }
-
-  onSubmit(updated) {
-    this.updateRecord(updated)
-    const parentLocation =
-      this.state.sale.category === "big" ? "/shumice" : "/pakice"
-
-    // go back to parent page and reload to refelect the update
-    window.location.reload()
-    window.location = parentLocation
+      .catch((err) => {
+        console.log("error", err)
+      })
   }
 
   render() {

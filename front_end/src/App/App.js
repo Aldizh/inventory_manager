@@ -1,15 +1,17 @@
-// /client/App.js
 import React, { Component } from "react"
 import { connect } from "react-redux"
 import { withTranslation } from "react-i18next"
 import { Container, Row, Col, Input, Alert } from "reactstrap"
 import axios from "axios"
 import { findIndex, isNil, propEq } from "ramda"
-import "bootstrap/dist/css/bootstrap.min.css"
+
 import "../i18n"
 import Inventory from "../Components/Inventory/"
 import ButtonGroup from "../Components/ButtonGroup"
 import { escapeHTML } from "../utils/string"
+
+// bootstrap styles
+import "bootstrap/dist/css/bootstrap.min.css"
 import "./styles.scss"
 
 class App extends Component {
@@ -32,7 +34,7 @@ class App extends Component {
       alertMessage: ""
     }
     this.updateArticles = this.updateArticles.bind(this)
-    this.refreshData = this.refreshData.bind(this)
+    this.refreshArticles = this.refreshArticles.bind(this)
     this.deleteArticle = this.deleteArticle.bind(this)
     this.handleAlert = this.handleAlert.bind(this)
   }
@@ -47,38 +49,35 @@ class App extends Component {
         if (err) return console.log("something went wrong loading", err)
       })
     }
-    this.refreshData()
+    this.refreshArticles()
   }
 
   // our first get method that uses our backend api to
   // fetch data from our data base
-  refreshData() {
-    fetch(`/api/articles`)
-      .then((data) => data.json())
+  refreshArticles() {
+    axios.get(`/api/articles`)
       .then((res) => {
-        this.props.updatePageData(res.data)
-        this.props.updateTotalCount(res.totalCount)
-        this.setState({ data: res.data })
-      })
+        const { data, success } = res.data
+        this.props.updatePageData(data)
+        this.props.updateTotalCount(data.length)
+        this.setState({ data })
+      }).catch(err => console.log('error...', err))
   }
 
   // Delete article with the given ID
   async deleteArticle() {
-    const idToDelete = this.state.item.id
-    const { data: record } = await axios.get(`/api/articles/${idToDelete}`)
+    const { _id } = this.state.item
     const { data: allArticles } = await axios.get(`/api/articles/all`)
-    const deleteRes = await axios.delete(`/api/articles/${idToDelete}`, {
-      data: record.data,
-    })
-    if (deleteRes.status === 200) {
-      const deleteIndex = findIndex(propEq("id", record.data.id))(
+    const { data: deleted, status } = await axios.delete(`/api/articles/${_id}`)
+    if (status === 200) {
+      const deleteIndex = findIndex(propEq("_id", deleted.data._id))(
         allArticles.data,
       )
       if (deleteIndex === -1) {
         alert("No such records exist in our database")
       } else {
-        this.setState({ alertOpen: true, alertMessage: "Item deleted successfully" })
-        this.refreshData()
+        this.setState({ id: "", item: {}, alertOpen: true, alertMessage: "Item deleted successfully" })
+        this.refreshArticles()
       }
     }
   }
@@ -88,7 +87,7 @@ class App extends Component {
   async updateArticles() {
     let recordToUpdate = {}
     const { item, editMode } = this.state
-    const { id: idToUpdate, name = "", quantity, buyPrice } = item
+    const { _id: idToUpdate, name = "", quantity, buyPrice } = item
     const { data } = await axios.get(`/api/articles/${idToUpdate}`)
     const existingDat = data.data
 
@@ -105,7 +104,7 @@ class App extends Component {
       axios
         .put(`/api/articles/${idToUpdate}`, recordToUpdate)
         .then((response) => {
-          if (response.status === 200) this.refreshData()
+          if (response.status === 200) this.refreshArticles()
         })
     } else this.createArticle()
   }
@@ -116,16 +115,15 @@ class App extends Component {
 
   onIdUpdate = (e) => {
     let id = e.target.value
-    this.setState({ id: e.target.value, editMode: false })
+    this.setState({ id, editMode: false })
 
     if (isNil(id) || id === "") {
       this.setState({ item: {} })
       return
     }
-    fetch(`/api/articles/${id}`)
-      .then((data) => data.json())
+    axios.get(`/api/articles/${id}`)
       .then((res) => {
-        if (res.data) this.setState({ item: res.data, editMode: true })
+        if (res.data.success) this.setState({ item: res.data.data, editMode: true })
         else this.setState({ item: {}, editMode: false })
       })
   }
@@ -171,10 +169,7 @@ class App extends Component {
   // to create new query into our data base
   createArticle() {
     const { name, quantity, buyPrice, category } = this.state.item
-    const currentIds = this.state.data.map((data) => data.id)
-    const id = currentIds.length
     const newRecord = {
-      id,
       name,
       quantity,
       buyPrice,
@@ -192,8 +187,7 @@ class App extends Component {
   // This is our main UI (dashboard) entry point
   render() {
     const { t } = this.props
-    const { data } = this.state
-    const { item } = this.state
+    const { data, item } = this.state
 
     return (
       <div>
@@ -205,7 +199,7 @@ class App extends Component {
           <Row>
             <Col lg="6" sm="12" xs="12">
               <div className="centeredRight">
-                <Inventory initialData={data} refreshData={this.refreshData} />
+                <Inventory initialData={data} refreshArticles={this.refreshArticles} />
               </div>
             </Col>
             <Col lg="6" sm="12" xs="12">

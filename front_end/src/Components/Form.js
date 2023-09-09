@@ -11,7 +11,7 @@ class Form extends Component {
     this.submitHandler = this.submitHandler.bind(this)
 
     const {
-      id,
+      _id = "",
       name = "",
       quantity = "",
       buyPrice = "",
@@ -20,7 +20,7 @@ class Form extends Component {
     } = this.props.sale
 
     this.state = {
-      id,
+      id: _id,
       name,
       quantity,
       buyPrice,

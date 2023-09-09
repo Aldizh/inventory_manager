@@ -33,7 +33,7 @@ const Router = (props) => (
               exact
               path="/dashboard"
               render={(innerProps) => (
-                <Dashboard handleLogout={props.handleLogout} {...innerProps} />
+                <Dashboard {...innerProps} />
               )}
             />
           </Switch>
