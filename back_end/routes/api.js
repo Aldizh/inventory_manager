@@ -12,6 +12,7 @@ const router = express.Router()
  * @return {res} Express response
 */
 router.get("/articles", async (req, res) => {
+  res.header("Access-Control-Allow-Origin", "*");
   const pageNumber = req.query.pageNumber || 0
   const resultsPerPage = 10
 
