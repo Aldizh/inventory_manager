@@ -51,6 +51,7 @@ describe("test that CRUD operations are working as expected", () => {
     })
   })
 
+<<<<<<< HEAD
   it("creates a new document", done => {
     const newRec = new Article(secondDocument)
     newRec.save().then(saved => {
@@ -68,6 +69,22 @@ describe("test that CRUD operations are working as expected", () => {
         })
         done()
       })
+=======
+  it("creates a new document", async () => {
+    const newRec = new Article(secondDocument)
+    const rec2 = await newRec.save()
+    assert(rec2.id === secondDocument.id)
+    assert(rec2.name === secondDocument.name)
+    
+    const results = await Article.find({
+      category: 'Produce'
+    })
+    assert(results.length === 2)
+    
+    // insert of existing records should fail
+    Article.insertMany(results).then(res => assert(res.ok === 1)).catch(err => {
+      assert(err.result.nInserted === 0)
+>>>>>>> 5d94e5c3252200a698ee4fdcb3f45c229ba91acc
     })
   })
 
