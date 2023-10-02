@@ -110,7 +110,7 @@ class App extends Component {
   }
 
   handleAlert() {
-    this.setState({ alertOpen: false })
+    this.setState({ alertOpen: !this.state.alertOpen })
   }
 
   onIdUpdate = (e) => {
@@ -193,7 +193,12 @@ class App extends Component {
       <div>
         {this.renderRadioButtons()}
         <Container>
-          <Alert isOpen={this.state.alertOpen} toggle={this.handleAlert} variant="primary">
+          <Alert
+            isOpen={this.state.alertOpen}
+            toggle={this.handleAlert}
+            color="success"
+            fade={true}
+          >
             {this.state.alertMessage}
           </Alert>
           <Row>

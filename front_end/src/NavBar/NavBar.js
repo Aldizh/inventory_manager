@@ -1,10 +1,15 @@
-import React from "react"
+import React, { useState } from "react"
 import { withTranslation } from "react-i18next"
-import { Button } from 'reactstrap';
+import { Navbar, Nav, NavItem, NavLink, NavbarToggler, Collapse, Button } from 'reactstrap';
 import useBeforeFirstRender from "../hooks/useBeforeFirstRender"
 import "./styles.css"
 
 const NavBar = ({ t, i18n, handleLogout, isLoggedIn }) => {
+
+  const [isOpen, setIsOpen] = useState(true)
+
+  const toggleNavbar = () => setIsOpen(!isOpen)
+
   useBeforeFirstRender(() => {
     const lang = localStorage.getItem("language")
     if (lang && lang.length) {
@@ -13,27 +18,35 @@ const NavBar = ({ t, i18n, handleLogout, isLoggedIn }) => {
   })
 
   return (
-    <ul>
-      <li>
-        <a href="/create">{t("dataEntry")}</a>
-      </li>
-      <li>
-        <a href="/pakice">{t("small")}</a>
-      </li>
-      <li>
-        <a href="/shumice">{t("big")}</a>
-      </li>
-      <li style={{ float: "right", display: "inline-flex" }}>
-        <a href="/">{t("home")}</a>
+    <Navbar color="light" light expand="md">
+      <NavbarToggler onClick={toggleNavbar} />
+      <Collapse isOpen={isOpen} navbar>
+        <Nav className="ml-auto" fill pills navbar>
+          <NavItem>
+            <NavLink href="/dashboard">{t("home")}</NavLink>
+          </NavItem>
+          <NavItem>
+            <NavLink href="/create">{t("dataEntry")}</NavLink>
+          </NavItem>
+          <NavItem>
+            <NavLink href="/pakice">{t("small")}</NavLink>
+          </NavItem>
+          <NavItem>
+            <NavLink href="/shumice">{t("big")}</NavLink>
+          </NavItem>
+        </Nav>
+      </Collapse>
+      <div>
         {isLoggedIn() && <Button
           secondary="true"
           size="sm"
           block={false}
           onClick={(e) => handleLogout(e)}
+          className="navButton"
         >Logout
         </Button>}
-      </li>
-    </ul>
+      </div>
+    </Navbar>
   )
 }
 

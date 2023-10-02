@@ -4,12 +4,10 @@ import { CardFooter } from "reactstrap"
 import "./styles.css"
 
 const Footer = (props) => (
-  <div className="footer">
-    <CardFooter>
-      &copy;
-      {new Date().getFullYear()} {props.t("title")}. All Rights Reserved.
-    </CardFooter>
-  </div>
+  <CardFooter className="footer">
+    &copy;
+    {new Date().getFullYear()} {props.t("title")}. All Rights Reserved.
+  </CardFooter>
 )
 
 export default withTranslation()(Footer)
