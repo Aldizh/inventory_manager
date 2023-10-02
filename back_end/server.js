@@ -64,11 +64,10 @@ app.use(function(err, req, res, next) {
 // Serve static files in production
 if (process.env.NODE_ENV === 'production') {
 	app.use(express.static(path.join(__dirname, '../front_end/build')));
+  app.get('*', (req, res) => {
+    res.sendFile(path.join(__dirname, '../front_end/build/index.html'));
+  })
 }
-
-app.get('*', (req, res) => {
-  res.sendFile(path.join(__dirname, '../front_end/build/index.html'));
-})
 
 app.get("/set/cookie", (req, res) => {
   const payload = {

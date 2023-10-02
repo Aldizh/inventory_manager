@@ -37,14 +37,14 @@ const NavBar = ({ t, i18n, handleLogout, isLoggedIn }) => {
         </Nav>
       </Collapse>
       <div>
-        {isLoggedIn() && <Button
+        {isLoggedIn() ? <Button
           secondary="true"
           size="sm"
           block={false}
           onClick={(e) => handleLogout(e)}
           className="navButton"
         >Logout
-        </Button>}
+        </Button> : <div />}
       </div>
     </Navbar>
   )

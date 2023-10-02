@@ -2,12 +2,12 @@
   "name": "inventory",
   "description": "Manages inventory for a gracery store",
   "version": "1.0.0",
-  "main": "index.js",
+  "main": "back_end/server.js",
   "scripts": {
     "test": "cd back_end && yarn test",
     "start:dev": "concurrently 'cd back_end && nodemon server.js' 'cd front_end && yarn && yarn start'",
     "start": "cd back_end && yarn && node server.js",
-    "heroku-postbuild": "cd front_end && yarn && yarn build"
+    "heroku-postbuild": "NPM_CONFIG_PRODUCTION=false cd front_end && yarn && yarn build"
   },
   "keywords": [],
   "author": "",

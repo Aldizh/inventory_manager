@@ -12,6 +12,12 @@ _A full stack application using React JS for the front end, Node JS for the back
 npm config set strict-ssl false
 ```
 
+4. Change the proxy to the following when working on development
+
+```
+"proxy": "http://localhost:5001"
+```
+
 4. Starting the app in a development environment (starts both server and client simultaneously)
 
 ```
