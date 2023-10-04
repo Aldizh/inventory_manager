@@ -1,3 +1,16 @@
+.login {
+  margin: auto;
+  width: 20%;
+}
+
+/* center nav contents on mobile */
+@media (max-width: 480px) {
+  .login {
+    width: 100%;
+  }
+}
+
+
 .loginBtns {
   display: flex;
   flex-direction: row;

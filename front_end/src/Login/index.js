@@ -1,10 +1,34 @@
 import React from "react"
-import LoginForm from "./Form"
+import { Button, Container, Form } from "reactstrap"
+import { withTranslation } from "react-i18next"
+import PropTypes from "prop-types"
+import "./styles.scss"
 
-const Login = (props) => (
-  <div style={{ margin: "auto", textAlign: "center", width: "20%" }}>
-    <LoginForm {...props} />
-  </div>
-)
+const LoginForm = ({ loginAnonymous, loginWithKey, t }) => {
+  const handleLogin = () => {
+    loginAnonymous().then(() => {
+      window.location.reload()
+    })
+  }
 
-export default Login
+  const handleLoginWithKey = () => {
+    loginWithKey().then(() => {
+      window.location.reload()
+    })
+  }
+
+  return (
+    <Form className="login">
+      <Container className="loginBtns">
+        <Button size="sm" className="loginBtn" onClick={handleLogin}>{t("anonymous")}</Button>
+        <Button size="sm" className="loginBtn" onClick={handleLoginWithKey}>{t("authenticated")}</Button>
+      </Container>
+    </Form>
+  )
+}
+
+LoginForm.propTypes = {
+  loginAnonymous: PropTypes.any,
+}
+
+export default withTranslation()(LoginForm)
