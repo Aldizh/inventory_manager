@@ -4,6 +4,7 @@ import Dashboard from "./App"
 import Create from "./CreateSale"
 import Show from "./ShowSale"
 import Sales from "./Components/Sales"
+import Login from "./Login"
 
 const Router = (props) => (
   <BrowserRouter>
@@ -23,6 +24,11 @@ const Router = (props) => (
         exact
         path="/pakice"
         render={(innerProps) => <Sales {...innerProps} category={"small"} />}
+      />
+      <Route
+        exact
+        path="/login"
+        render={(innerProps) => <Login {...innerProps} />}
       />
       <Route path="/sales/:saleId" component={Show} />
       <Route

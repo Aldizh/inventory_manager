@@ -2,7 +2,9 @@ import React, { Component } from "react"
 import { withTranslation } from "react-i18next"
 import { Table, Button } from "reactstrap"
 import axios from "axios"
+import { Redirect } from "react-router"
 
+import { isLoggedIn  } from "../Realm"
 import { langToCurrMap } from "../utils/string"
 import Totals from "./Totals"
 import "./styles.scss"
@@ -60,6 +62,10 @@ class SalesComp extends Component {
     let totalBuys = 0.0
     let totalSales = 0.0
     let totalProfit = 0.0
+
+    if (!isLoggedIn()) {
+      return <Redirect to='/login'/>;
+    }
 
     return isLoading ? (
       <div>Loading...</div>

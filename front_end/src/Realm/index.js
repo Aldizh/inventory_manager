@@ -8,7 +8,8 @@ import {
   isLoggedIn,
   loginAnonymous,
   loginWithKey,
+  loginWithGoogle,
   logoutUser,
 } from "./authentication"
 
-export { app, isLoggedIn, loginAnonymous, loginWithKey, logoutUser }
+export { app, isLoggedIn, loginAnonymous, loginWithKey, loginWithGoogle, logoutUser }

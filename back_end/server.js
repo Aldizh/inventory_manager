@@ -40,6 +40,20 @@ app.use(bodyParser.json());
 // (optional) only made for logging
 app.use(morgan("dev"));
 
+// cookie verification middleware
+// app.use((req, res, next) => {
+//   const token = req.cookies.token
+
+//   try {
+//     const payload = jwt.verify(token, process.env.JWT_SECRET)
+//     if (payload.client === process.env.CLIENT_ID) next()
+//     else res.status(500).json({ success: false, msg: "Check the gcp client id"  })
+//   } catch (err) {
+//     res.clearCookie("token")
+//     return res.redirect("/login")
+//   }
+// })
+
 // appends api to all server requests
 app.use("/api", apiRouter);
 
@@ -69,24 +83,22 @@ if (process.env.NODE_ENV === 'production') {
   })
 }
 
-app.get("/set/cookie", (req, res) => {
-  const payload = {
-    name: "Aldi",
-    profession: "coder"
-  }
-  const token = jwt.sign(payload, "inventory")
+function parseJwt(token) {
+  return JSON.parse(Buffer.from(token.split('.')[1], 'base64').toString());
+}
 
-  return res.setCookie("token", token, {
-    httpOnly: true
-  }).send("Cookie shipped")
-})
-
-app.get("/get/cookie", (req, res) => {
+// cookie verification middleware
+app.use((req, res, next) => {
   const token = req.cookies.token
-  const payload = jwt.verify(token, "inventory")
-  console.log("token...", token)
-  console.log("payload...", payload)
-  return res.json({token, payload})
+
+  try {
+    const payload = jwt.verify(token, process.env.JWT_SECRET)
+    if (payload.client === process.env.CLIENT_ID) next()
+    else res.status(500).json({ success: false, msg: "Check the gcp client id"  })
+  } catch (err) {
+    res.clearCookie("token")
+    return res.redirect("/login")
+  }
 })
 
 // launch our backend into the specified port

@@ -1,7 +1,9 @@
 import React, { Component } from "react"
+import { Redirect } from "react-router"
 import axios from "axios"
 import { withTranslation } from "react-i18next"
 
+import { isLoggedIn  } from "../Realm"
 import Form from "../Components/Form"
 import "./styles.scss"
 
@@ -44,6 +46,11 @@ class Create extends Component {
 
   render() {
     const { t } = this.props
+
+    if (!isLoggedIn()) {
+      return <Redirect to='/login'/>;
+    }
+
     return (
       <Form
         t={t}

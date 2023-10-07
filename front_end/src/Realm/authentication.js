@@ -2,8 +2,6 @@ import * as Realm from "realm-web";
 
 import { app } from "./"
 
-// const key = new UserApiKeyCredential("5c9cfd634da69303ebaf53d4")
-
 // Log in a user with the specified email and password
 // Note: The user must already be registered with the Realm app.
 // See https://docs.mongodb.com/Realm/authentication/userpass/#create-a-new-user-account
@@ -27,6 +25,14 @@ export async function loginAnonymous() {
   const user = await app.logIn(credentials);
   // `App.currentUser` updates to match the logged in user
   console.assert(user.id === app.currentUser.id);
+  return user;
+}
+
+export async function loginWithGoogle(idToken) {
+  // Configure and instantiate Google OAuth2.0 client    
+  const credentials = Realm.Credentials.google({idToken});
+  const user = await app.logIn(credentials);
+  console.log("signed in as Realm user", user.id);
   return user;
 }
 

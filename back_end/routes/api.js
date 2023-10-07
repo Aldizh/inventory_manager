@@ -1,10 +1,76 @@
 const express = require('express');
 const mongoose = require("mongoose");
+const { google } = require('googleapis');
+const jwt = require("jsonwebtoken")
+require("dotenv").config() // to use process.env
 
 const Article = require('../models/article')
 const Sale = require('../models/sale')
 
 const router = express.Router()
+const OAuth2 = google.auth.OAuth2;
+
+const port = 3006;
+const baseURL = `http://localhost:${port}`;
+const CONFIG = {
+  // The secret for the encryption of the jsonwebtoken
+  JWTsecret: process.env.JWT_SECRET,
+  baseURL: baseURL,
+  port: port,
+  // The credentials and information for OAuth2
+  oauth2Credentials: {
+    client_id: process.env.CLIENT_ID,
+    project_id: process.env.PROJECT_ID, // The name of your project
+    auth_uri: "https://accounts.google.com/o/oauth2/auth",
+    token_uri: "https://oauth2.googleapis.com/token",
+    auth_provider_x509_cert_url: "https://www.googleapis.com/oauth2/v1/certs",
+    client_secret: process.env.CLIENT_SECRET,
+    redirect_uris: [
+      `${baseURL}/api/auth_callback`
+    ],
+    scopes: [
+      "https://www.googleapis.com/auth/userinfo.email",
+      "https://www.googleapis.com/auth/userinfo.profile",
+      "openid",
+      // any other scopes you might require. View all here - https://developers.google.com/identity/protocols/oauth2/scopes
+    ],
+  }
+};
+
+const oauth2Client = new OAuth2(
+  CONFIG.oauth2Credentials.client_id,
+  CONFIG.oauth2Credentials.client_secret,
+  CONFIG.oauth2Credentials.redirect_uris[0]
+);
+
+router.get("/login", async (req, res) => {
+  // Obtain the google login link to which we'll send our users to give us access
+  const authUrl = oauth2Client.generateAuthUrl({
+    access_type: 'offline', // Indicates that we need to be able to access data continously without the user constantly giving us consent
+    scope: CONFIG.oauth2Credentials.scopes // Using the access scopes from our config file
+  });
+
+  return res.json({ success: true, authUrl });
+});
+
+router.get('/auth_callback', function (req, res) {
+  // Create an OAuth2 client object from the credentials in our config file
+  const oauth2Client = new OAuth2(CONFIG.oauth2Credentials.client_id, CONFIG.oauth2Credentials.client_secret, CONFIG.oauth2Credentials.redirect_uris[0]);
+  if (req.query?.code) {
+    return oauth2Client.getToken(req.query.code, function(err, data) {
+      if (err) console.log(err.message)
+
+      // Store the credentials given by google into a jsonwebtoken in a cookie called 'jwt'
+      const token = jwt.sign({
+        client: CONFIG.oauth2Credentials.client_id
+      }, CONFIG.JWTsecret, { expiresIn: "1h" });
+      res.cookie('token', token, {
+        httpOnly: true,
+        // secure: true
+      }).json({ success: true, data });
+    });
+  } else return res.status(400).json({ success: false, msg: "No code provided" })
+})
 
 /*
  * Fetch available records from our database

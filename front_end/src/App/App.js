@@ -1,4 +1,5 @@
 import React, { Component } from "react"
+import { Redirect } from "react-router"
 import { connect } from "react-redux"
 import { withTranslation } from "react-i18next"
 import { Container, Row, Col, Input, Alert } from "reactstrap"
@@ -9,6 +10,7 @@ import "../i18n"
 import Inventory from "../Components/Inventory/"
 import ButtonGroup from "../Components/ButtonGroup"
 import { escapeHTML } from "../utils/string"
+import { isLoggedIn  } from "../Realm"
 
 // bootstrap styles
 import "bootstrap/dist/css/bootstrap.min.css"
@@ -188,6 +190,10 @@ class App extends Component {
   render() {
     const { t } = this.props
     const { data, item } = this.state
+
+    if (!isLoggedIn()) {
+      return <Redirect to='/login'/>;
+    }
 
     return (
       <div>
