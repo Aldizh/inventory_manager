@@ -1,12 +1,12 @@
 import React from "react"
 import { withTranslation } from "react-i18next"
-import { CardFooter } from "reactstrap"
-import "./styles.css"
+import { CardFooter, CardText } from "reactstrap"
+import "./styles.scss"
 
 const Footer = (props) => (
   <CardFooter className="footer">
-    &copy;
-    {new Date().getFullYear()} {props.t("title")}. All Rights Reserved.
+    <CardText>&copy; {new Date().getFullYear()} {props.t("title")}.</CardText>
+    <CardText>All Rights Reserved.</CardText>
   </CardFooter>
 )
 

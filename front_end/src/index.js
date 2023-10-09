@@ -13,7 +13,6 @@ import {
   logoutUser,
 } from "./Realm"
 import * as serviceWorker from "./serviceWorker"
-import "./index.css"
 
 export const history = createBrowserHistory()
 

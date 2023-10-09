@@ -71,7 +71,7 @@ class SalesComp extends Component {
       <div>Loading...</div>
     ) : (
       <div>
-        <Table dark responsive size="sm">
+        <Table responsive size="sm">
           <thead>
             <tr>
               <th>{t("barCode")}</th>

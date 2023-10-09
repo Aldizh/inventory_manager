@@ -19,4 +19,10 @@
 
 .loginBtn {
   margin: 5px;
+  background-color: #198754;
+}
+
+.loginBtn:hover {
+  background-color: #157347;
+  opacity: 0.9;
 }
