@@ -4,7 +4,7 @@ import { withTranslation } from "react-i18next"
 
 import Form from "../Components/Form"
 
-class Create extends Component {
+class ShowSale extends Component {
   constructor(props) {
     super(props)
     this.onSubmit = this.onSubmit.bind(this)
@@ -64,4 +64,4 @@ class Create extends Component {
   }
 }
 
-export default withTranslation()(Create)
+export default withTranslation()(ShowSale)

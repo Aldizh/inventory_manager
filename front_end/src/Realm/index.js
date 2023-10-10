@@ -1,8 +1,8 @@
-import * as Realm from "realm-web";
+import * as Realm from "realm-web"
 
 const REALM_APP_ID = "stock_viewer-szhrv"
 
-const app = new Realm.App({ id: REALM_APP_ID });
+const app = new Realm.App({ id: REALM_APP_ID })
 
 import {
   isLoggedIn,

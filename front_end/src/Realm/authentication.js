@@ -1,4 +1,4 @@
-import * as Realm from "realm-web";
+import * as Realm from "realm-web"
 
 import { app } from "./"
 
@@ -7,12 +7,12 @@ import { app } from "./"
 // See https://docs.mongodb.com/Realm/authentication/userpass/#create-a-new-user-account
 export async function loginEmailPassword(email, password) {
   // Create an email/password credential
-  const credentials = Realm.Credentials.emailPassword(email, password);
+  const credentials = Realm.Credentials.emailPassword(email, password)
   // Authenticate the user
-  const user = await app.logIn(credentials);
+  const user = await app.logIn(credentials)
   // `App.currentUser` updates to match the logged in user
-  console.assert(user.id === app.currentUser.id);
-  return user;
+  console.assert(user.id === app.currentUser.id)
+  return user
 }
 
 // Log in a user anonymously.
@@ -20,32 +20,32 @@ export async function loginEmailPassword(email, password) {
 // See https://docs.mongodb.com/Realm/authentication/anonymous/
 export async function loginAnonymous() {
   // Create an anonymous credential
-  const credentials = Realm.Credentials.anonymous();
+  const credentials = Realm.Credentials.anonymous()
   // Authenticate the user
-  const user = await app.logIn(credentials);
+  const user = await app.logIn(credentials)
   // `App.currentUser` updates to match the logged in user
-  console.assert(user.id === app.currentUser.id);
-  return user;
+  console.assert(user.id === app.currentUser.id)
+  return user
 }
 
 export async function loginWithGoogle(idToken) {
   // Configure and instantiate Google OAuth2.0 client    
-  const credentials = Realm.Credentials.google({idToken});
-  const user = await app.logIn(credentials);
-  console.log("signed in as Realm user", user.id);
-  return user;
+  const credentials = Realm.Credentials.google({idToken})
+  const user = await app.logIn(credentials)
+  console.log("signed in as Realm user", user.id)
+  return user
 }
 
 // Log in a user using API key
 // TO DO: In production we need to make sure this is moved to a config file
 export async function loginWithKey(apiKey) {
   // Create an API Key credential
-  const credentials = Realm.Credentials.apiKey(process.env.REACT_APP_REALM_API_KEY);
+  const credentials = Realm.Credentials.apiKey(process.env.REACT_APP_REALM_API_KEY)
   // Authenticate the user
-  const user = await app.logIn(credentials);
+  const user = await app.logIn(credentials)
   // `App.currentUser` updates to match the logged in user
-  console.assert(user.id === app.currentUser.id);
-  return user;
+  console.assert(user.id === app.currentUser.id)
+  return user
 }
 
 export function hasLoggedInUser() {
@@ -65,7 +65,7 @@ export async function logoutUser() {
   // the app and will appear in the result of app.auth.listUsers()
   const userId = Object.keys(app.allUsers)[0]
   const user = app.allUsers[userId]
-  await user.logOut();
+  await user.logOut()
   await app.removeUser(user)
 
   window.location = "/" // redirect home

@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react"
 import axios from "axios"
 
 import { withTranslation } from "react-i18next"
-import { Navbar, Nav, NavItem, NavLink, NavbarToggler, Collapse, Button } from 'reactstrap';
+import { Navbar, Nav, NavItem, NavLink, NavbarToggler, Collapse, Button } from 'reactstrap'
 import useBeforeFirstRender from "../hooks/useBeforeFirstRender"
 import "./styles.css"
 

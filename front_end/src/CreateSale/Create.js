@@ -1,4 +1,4 @@
-import React, { Component } from "react"
+import React, { useState, useEffect } from "react"
 import { Redirect } from "react-router"
 import axios from "axios"
 import { withTranslation } from "react-i18next"
@@ -7,28 +7,23 @@ import { isLoggedIn  } from "../Realm"
 import Form from "../Components/Form"
 import "./styles.scss"
 
-class Create extends Component {
-  constructor(props) {
-    super(props)
-    this.onSubmit = this.onSubmit.bind(this)
-    this.state = { data: [] }
-  }
+const Create = (props) => {
+  const [data, setData] = useState([])
 
-  // This is to ensure we get current sales data
-  componentDidMount() {
+  useEffect(() => {
     fetch("/api/sales")
       .then((data) => data.json())
-      .then((res) => this.setState({ data: res.data }))
-  }
+      .then((res) => setData(res.data))
+  }, [])
 
   // our put method that uses our backend api
   // to create new query into our data base
-  putDataToDB(newRecord) {
+  const putDataToDB = (newRecord) => {
     axios
       .post("/api/sales", newRecord)
       .then((response) => {
         if (response.status === 200) {
-          const newData = this.state.data
+          const newData = data
           newData.push(newRecord)
           this.setState({ data: newData })
         }
@@ -36,36 +31,26 @@ class Create extends Component {
       .catch((err) => console.log("error", err))
   }
 
-  onSubmit(updated) {
-    this.putDataToDB(updated)
+  const onSubmit = async (updated) => {
+    putDataToDB(updated)
 
     // go back to home after insertion
     // TO DO: Show success notification then redirect
     window.location = "/"
   }
 
-  render() {
-    const { t } = this.props
-
-    if (!isLoggedIn()) {
-      return <Redirect to='/login'/>;
-    }
-
-    return (
-      <Form
-        t={t}
-        onSubmit={this.onSubmit}
-        showEdit={false}
-        sale={{
-          name: "",
-          quantity: "",
-          buyPrice: "",
-          sellPrice: "",
-          category: "big",
-        }}
-      />
-    )
+  if (!isLoggedIn()) {
+    return <Redirect to='/login'/>
   }
+
+  return (
+    <Form
+      t={props.t}
+      onSubmit={onSubmit}
+      showEdit={false}
+      sale={{}}
+    />
+  )
 }
 
 export default withTranslation()(Create)

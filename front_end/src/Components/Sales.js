@@ -9,13 +9,28 @@ import { langToCurrMap } from "../utils/string"
 import Totals from "./Totals"
 import "./styles.scss"
 
+// track network call so we can cancel on unmount
+let source = axios.CancelToken.source()
 class SalesComp extends Component {
-  state = { data: [], isLoading: false, conversionRate: 1 }
+  constructor(props) {
+    super(props)
+    this.state = {
+      data: [],
+      isLoading: false,
+      conversionRate: 1
+    }
+
+    source = axios.CancelToken.source()
+  }
 
   async componentDidMount() {
     this.setState({ isLoading: true })
-    const salesPromise = axios.get("/api/sales")
-    const currencyPromise = axios.get("/reference/currencies")
+    const salesPromise = axios.get("/api/sales", {
+      cancelToken: source.token
+    })
+    const currencyPromise = axios.get("/reference/currencies", {
+      cancelToken: source.token
+    })
     return Promise.all([salesPromise, currencyPromise])
       .then((res) => {
         const [{ data: salesData }, { data: currencyData }] = res
@@ -44,10 +59,16 @@ class SalesComp extends Component {
       .then((response) => {
         if (response.status === 200) {
           console.log("successfully deleted")
-          window.location = '/dashboard'
+          window.location.reload()
         }
       })
       .catch((err) => console.log("error", err))
+  }
+
+  componentWillUnmount() {
+    if (source) {
+      source.cancel("Landing Component got unmounted")
+    }
   }
 
   render() {
@@ -64,7 +85,7 @@ class SalesComp extends Component {
     let totalProfit = 0.0
 
     if (!isLoggedIn()) {
-      return <Redirect to='/login'/>;
+      return <Redirect to='/login'/>
     }
 
     return isLoading ? (

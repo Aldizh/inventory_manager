@@ -192,7 +192,7 @@ class App extends Component {
     const { data, item } = this.state
 
     if (!isLoggedIn()) {
-      return <Redirect to='/login'/>;
+      return <Redirect to='/login'/>
     }
 
     return (
