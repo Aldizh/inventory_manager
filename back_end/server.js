@@ -40,20 +40,6 @@ app.use(bodyParser.json());
 // (optional) only made for logging
 app.use(morgan("dev"));
 
-// cookie verification middleware
-// app.use((req, res, next) => {
-//   const token = req.cookies.token
-
-//   try {
-//     const payload = jwt.verify(token, process.env.JWT_SECRET)
-//     if (payload.client === process.env.CLIENT_ID) next()
-//     else res.status(500).json({ success: false, msg: "Check the gcp client id"  })
-//   } catch (err) {
-//     res.clearCookie("token")
-//     return res.redirect("/login")
-//   }
-// })
-
 // appends api to all server requests
 app.use("/api", apiRouter);
 
@@ -89,10 +75,11 @@ function parseJwt(token) {
 
 // cookie verification middleware
 app.use((req, res, next) => {
-  const token = req.cookies.token
+  const { token } = req.cookies
 
   try {
     const payload = jwt.verify(token, process.env.JWT_SECRET)
+    console.log('hitting cookie verification...')
     if (payload.client === process.env.CLIENT_ID) next()
     else res.status(500).json({ success: false, msg: "Check the gcp client id"  })
   } catch (err) {

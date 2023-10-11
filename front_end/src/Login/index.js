@@ -10,10 +10,12 @@ import "./styles.scss"
 const LoginForm = ({ t }) => {
   const handleGoogleLogin = () => {
     axios.get("/api/login").then(res => {
-      // hits the google servers, once authenticated it will redirect to
-      // the uri provided (api/auth_callback)
-      window.location.href = res.data.authUrl // hit the google servers
-    }).catch(err => console.log('error logging in', err))
+      const { authUrl } = res.data
+      // auth url is generated used gcp account credentials
+      // this url will hit the google servers, and once authenticated
+      // will redirect to the callback uri (in our case: api/auth_callback)
+      window.location.href = authUrl
+    }).catch(err => { throw new Error('error with google authentication', err) })
   }
 
   const handleAnonymousLogin = () => {

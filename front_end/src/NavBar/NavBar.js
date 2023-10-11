@@ -17,8 +17,10 @@ const NavBar = ({ t, i18n, handleLogout, isLoggedIn, loginWithGoogle, history })
     const code = url.searchParams.get('code')
 
     if (!isLoggedIn() && code) {
+      console.log('got code...', code)
       axios.get(`/api/auth_callback?code=${code}`).then(res => {
         const token = res.data?.data?.id_token
+        console.log('git backend res...',  res.data)
         if (token) loginWithGoogle(token).then(() => {
           history.replace("/dashboard")
           // TO DO: Consider alternative to this reload
