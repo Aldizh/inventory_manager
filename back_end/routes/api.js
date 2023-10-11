@@ -10,13 +10,11 @@ const Sale = require('../models/sale')
 const router = express.Router()
 const OAuth2 = google.auth.OAuth2;
 
-const port = 3006;
-const baseURL = `http://localhost:${port}`;
+const baseURL = process.env.HOST
 const CONFIG = {
   // The secret for the encryption of the jsonwebtoken
   JWTsecret: process.env.JWT_SECRET,
-  baseURL: baseURL,
-  port: port,
+  baseURL,
   // The credentials and information for OAuth2
   oauth2Credentials: {
     client_id: process.env.CLIENT_ID,
