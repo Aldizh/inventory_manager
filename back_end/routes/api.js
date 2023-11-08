@@ -10,7 +10,12 @@ const Sale = require('../models/sale')
 const router = express.Router()
 const OAuth2 = google.auth.OAuth2;
 
-const baseURL = process.env.HOST
+let baseURL = process.env.HOST
+
+if (process.env.NODE_ENV === "development") {
+  baseURL = `${baseURL}:3006`
+}
+
 const CONFIG = {
   // The secret for the encryption of the jsonwebtoken
   JWTsecret: process.env.JWT_SECRET,
@@ -24,7 +29,7 @@ const CONFIG = {
     auth_provider_x509_cert_url: "https://www.googleapis.com/oauth2/v1/certs",
     client_secret: process.env.CLIENT_SECRET,
     redirect_uris: [
-      `${baseURL}/api/auth_callback`
+      `${baseURL}/login`
     ],
     scopes: [
       "https://www.googleapis.com/auth/userinfo.email",
@@ -42,7 +47,7 @@ const oauth2Client = new OAuth2(
 );
 
 router.get("/login", async (req, res) => {
-  // Obtain the google login link to which we'll send our users to give us access
+  // obtain the google login link which we'll send our users
   const authUrl = oauth2Client.generateAuthUrl({
     access_type: 'offline', // Indicates that we need to be able to access data continously without the user constantly giving us consent
     scope: CONFIG.oauth2Credentials.scopes // Using the access scopes from our config file
@@ -53,7 +58,10 @@ router.get("/login", async (req, res) => {
 
 router.get('/auth_callback', function (req, res) {
   // Create an OAuth2 client object from the credentials in our config file
-  const oauth2Client = new OAuth2(CONFIG.oauth2Credentials.client_id, CONFIG.oauth2Credentials.client_secret, CONFIG.oauth2Credentials.redirect_uris[0]);
+  const oauth2Client = new OAuth2(
+    CONFIG.oauth2Credentials.client_id,
+    CONFIG.oauth2Credentials.client_secret, CONFIG.oauth2Credentials.redirect_uris[0]
+  );
   if (req.query?.code) {
     return oauth2Client.getToken(req.query.code, function(err, data) {
       if (err) console.log(err.message)
