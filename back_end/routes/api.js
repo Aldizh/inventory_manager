@@ -88,11 +88,19 @@ router.get("/articles", async (req, res) => {
   const pageNumber = req.query.pageNumber || 0
   const resultsPerPage = 10
 
-  const articles = await Article
-    .find({})
+  let articles = []
+
+  if (pageNumber) {
+    articles = await Article
+      .find({})
       .skip(resultsPerPage * pageNumber)
       .limit(resultsPerPage)
-    .catch(err => res.json({ success: false, data: [], err }))
+      .catch(err => res.json({ success: false, data: [], err }))
+  } else {
+    articles = await Article
+      .find({})
+      .catch(err => res.json({ success: false, data: [], err }))
+  }
 
   return res.json({ success: true, data: articles });
 });

@@ -15,13 +15,15 @@ class SalesComp extends Component {
     this.state = {
       isLoading: false,
       recordsPerPage: 10,
-      currentPage: 1,
+      currentPage: 0,
+      totalCount: 0,
     }
 
     this.handlePageClick = this.handlePageClick.bind(this)
     this.handleCreateUpdate = this.handleCreateUpdate.bind(this)
     this.handleDelete = this.handleDelete.bind(this)
     this.getCurrentPageData = this.getCurrentPageData.bind(this)
+    this.getAllPageData = this.getAllPageData.bind(this)
     this.updateCurrentPage = this.updateCurrentPage.bind(this)
   }
 
@@ -30,6 +32,7 @@ class SalesComp extends Component {
   // changed and implement those changes into our UI
   componentDidMount() {
     this.getCurrentPageData(0)
+    this.getAllPageData()
   }
 
   // our first get method that uses our backend api to
@@ -38,6 +41,13 @@ class SalesComp extends Component {
     axios.get(`/api/articles?pageNumber=${pageNumber}`)
       .then(({ data }) => {
         this.props.updatePageData(data.data)
+      })
+  }
+
+  getAllPageData() {
+    axios.get(`/api/articles`)
+      .then(({ data }) => {
+        this.setState({totalCount: data.data.length})
       })
   }
 
@@ -52,29 +62,48 @@ class SalesComp extends Component {
     this.updateCurrentPage(pageIndex + 1)
   }
 
-  handleCreateUpdate() {
-    axios
-      .post("/api/articles", inventoryData)
-      .then((res) => {
-        console.log("successfully inserted these records: ", res.data.data)
-        this.props.refreshArticles() // ensures redux state is updated properly
-        const totalCount = this.props.totalCount
-        let pageNum = Math.ceil(totalCount / this.state.recordsPerPage)
-        this.updateCurrentPage(pageNum || 1)
-      })
-      .catch((err) => console.log("bulk insert failed", err))
+  async handleCreateUpdate() {
+    this.setState({ isLoading: true });
+    await axios.post("/api/articles", inventoryData).catch((err) => {
+      console.log("bulk insert failed", err);
+      this.setState({ isLoading: false });
+    });
+
+    const updated = await axios.get("/api/articles")
+    const totalCount = updated.data.data.length
+
+    this.setState({ totalCount })
+
+    // pagination data
+    let currentPage = Math.ceil(totalCount / recordsPerPage)
+    this.setState({ currentPage })
+
+    refreshArticles(); // ensures redux state is updated properly
+    this.setState({ isLoading: false });
   }
 
-  handleDelete() {
-    axios
-      .delete("/api/articles", {
-        data: inventoryData,
-      })
-      .then((res) => {
-        if (res.status === 200) console.log("successfully deleted test data")
-        this.props.refreshArticles()
-      })
-      .catch((err) => console.log("bulk delete failed", err))
+  async handleDelete () {
+    this.setState({ isLoading: true });
+    const res = await axios.delete("/api/articles", {
+      data: inventoryData,
+    }).catch((err) => {
+      console.log("bulk delete failed", err);
+      this.setState({ isLoading: false });
+    });
+
+    this.setState({ isLoading: false });
+    if (res.status === 200) {
+      console.log("successfully deleted test data");
+      refreshArticles();
+    }
+
+    const updated = await axios.get("/api/articles")
+
+    // pagination
+    const totalCount = updated.data.data.length
+    this.setState({ totalCount })
+    let currentPage = Math.ceil(totalCount / recordsPerPage)
+    this.setState({ currentPage })
   }
 
   render() {

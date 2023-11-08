@@ -9,6 +9,7 @@ import { findIndex, isNil, propEq } from "ramda"
 import "../i18n"
 import Inventory from "../Components/Inventory/"
 import ButtonGroup from "../Components/ButtonGroup"
+import Translator from "../Components/Translator"
 import { escapeHTML } from "../utils/string"
 import { isLoggedIn  } from "../Realm"
 
@@ -139,34 +140,6 @@ class App extends Component {
     })
   }
 
-  renderRadioButtons = () => (
-    <div
-      style={{
-        textAlign: "center",
-        margin: "auto",
-        width: "50%",
-        marginBottom: "5px",
-      }}
-    >
-      <input
-        checked={this.state.language === "en"}
-        name="language"
-        onChange={(e) => this.onLanguageHandle(e)}
-        value="en"
-        type="radio"
-      />
-      English &nbsp;
-      <input
-        name="language"
-        value="al"
-        checked={this.state.language === "al"}
-        type="radio"
-        onChange={(e) => this.onLanguageHandle(e)}
-      />
-      Albanian
-    </div>
-  )
-
   // our put method that uses our backend api
   // to create new query into our data base
   createArticle() {
@@ -197,7 +170,10 @@ class App extends Component {
 
     return (
       <div>
-        {this.renderRadioButtons()}
+        <Translator 
+          onLanguageHandle={this.onLanguageHandle}
+          currentLanguage={this.state.language}
+        />
         <Container>
           <Alert
             isOpen={this.state.alertOpen}
